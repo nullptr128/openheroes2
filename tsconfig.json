@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "declaration": false ,
+        "target": "es6" ,
+        "module": "commonjs" ,
+        "moduleResolution": "node" ,
+        "noImplicitAny": true ,
+        "noImplicitReturns": true ,
+        "noImplicitThis": true ,
+        "strictNullChecks": true ,
+        "allowSyntheticDefaultImports": true ,
+        "sourceMap": true ,
+        "jsx": "react" ,
+        "baseUrl": "../src" ,
+        "experimentalDecorators": true ,
+        "emitDecoratorMetadata": true ,
+        "lib": [ "es6" , "dom" ]
+    } ,
+    "include": [
+        "./src/**/*"
+    ]
+}
