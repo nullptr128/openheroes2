@@ -1,3 +1,4 @@
+.nyc_output
 node_modules/
 bin/editor.js
 bin/editor.js.map
