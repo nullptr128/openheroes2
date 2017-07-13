@@ -1,3 +1,13 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class represents a binary file. With this class,
+ * you can open binary file and extract some part of it
+ * as Buffer objects.
+ * 
+ * This class should not be used directly, Files.openBinaryFile()
+ * serves as loader and factory function instead (and its in DI).
+ */
 
 import * as FS from 'fs';
 

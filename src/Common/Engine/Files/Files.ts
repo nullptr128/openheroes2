@@ -1,3 +1,11 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class wraps all file-based operations for ease of use,
+ * promise (async/await) support and future abstraction when
+ * project will be deployed on a platform without 'FS' module
+ * (like phonegap).
+ */
 
 import * as FS from 'fs';
 import BinaryFile from './BinaryFile';

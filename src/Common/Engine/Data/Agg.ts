@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * This file opens, parses and extracts contents of Heroes2 AGG
+ * archives.
+ */
 
 import Injectable from '../../IOC/Injectable';
 import Files from '../Files/Files';

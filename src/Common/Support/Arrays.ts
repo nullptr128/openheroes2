@@ -1,4 +1,6 @@
 /**
+ * OpenHeroes2
+ * 
  * Arrays - this helper class is used for managing some unusual array operations.
  */
 
