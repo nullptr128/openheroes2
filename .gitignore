@@ -4,3 +4,5 @@ bin/editor.js
 bin/editor.js.map
 bin/build/editor.js
 bin/build/editor.js.map
+coverage/
+h2data/

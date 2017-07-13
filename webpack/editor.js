@@ -6,7 +6,7 @@ module.exports = {
     devtool: 'sourcemap' ,
 
     entry: {
-        'editor': [ './src/Editor/Editor.ts' ] ,
+        'editor': [ 'reflect-metadata' , './src/Editor/Editor.ts' ] ,
     } ,
 
     output: {

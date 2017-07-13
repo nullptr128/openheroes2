@@ -15,6 +15,15 @@ class Tools {
         return new Promise<void>( resolve => setTimeout( resolve , miliseconds ) );
     }
 
+    /**
+     * Extracts file name from full path specified.
+     * @param filePath full path to file with either windows or unix separators
+     * @return name of file in path
+     */
+    public static extractFileName( filePath: string ): string {
+        return filePath.replace( /^.*[\\\/]/ , '' );
+    }
+
 }
 
 export default Tools;
