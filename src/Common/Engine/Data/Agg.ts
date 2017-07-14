@@ -45,7 +45,7 @@ class Agg {
      */
     private getName( buffer: Buffer , offset: number ): string {
         let fileName: string = '';
-        for( let j = 0; j < FILENAME_LENGTH ; ++j ) {
+        for( let j = 0; j < FILENAME_LENGTH - 2 ; ++j ) {
             const chr = buffer.readUInt8( offset + j );
             if ( chr != 0 ) {
                 fileName += String.fromCharCode(chr);
@@ -107,6 +107,8 @@ class Agg {
 
         // finally, save opened agg file as we should close it before destroying application
         this.fOpenAggs.push( file );
+
+        console.log( files );
 
     }
 
