@@ -1,12 +1,13 @@
 
 var webpack = require( 'webpack' );
+var path = require( 'path' );
 
 module.exports = {
 
     devtool: 'sourcemap' ,
 
     entry: {
-        'editor': [ './src/Editor/Application.ts' ] ,
+        'editor': [ './src/EditorLauncher.ts' ] ,
     } ,
 
     output: {
@@ -16,8 +17,8 @@ module.exports = {
 
     resolve: {
         modules: [
-            'node_modules' ,
-            'src' ,
+            path.resolve( __dirname , '../node_modules' ) ,
+            path.resolve( __dirname , '../src' ) ,
         ] ,
         extensions: [ '.js' , '.ts' ] ,
     } ,

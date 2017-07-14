@@ -1,5 +1,6 @@
 
 var webpack = require( 'webpack' );
+var path = require( 'path' );
 
 module.exports = {
 
@@ -16,9 +17,9 @@ module.exports = {
 
     resolve: {
         modules: [
-            'node_modules' ,
-            'src' ,
-            'style' ,
+            path.resolve( __dirname , '../node_modules' ) ,
+            path.resolve( __dirname , '../src' ) ,
+            path.resolve( __dirname , '../style' ) ,
         ] ,
         extensions: [ '.js' , '.ts' , '.tsx' ] ,
     } ,
