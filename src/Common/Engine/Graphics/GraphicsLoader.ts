@@ -75,7 +75,7 @@ class GraphicsLoader {
         }
     }
 
-    private getH2SpriteByIndex( buffer: Buffer , index: number ): IH2Sprite {
+    private internalLoadSprite( buffer: Buffer , index: number ): IH2Sprite {
 
         // calculate byte index of header, first header starts
         // at byte #6 and takes 13 bytes
@@ -103,6 +103,14 @@ class GraphicsLoader {
 
     }
 
+    public async getH2SpriteByIndex( icnFileName: string , index: number ): Promise<IH2Sprite> {
+
+        // get original h2 sprite binary file
+        const icnFile: Buffer = await this.gAgg.getFile( icnFileName );
+        return this.internalLoadSprite( icnFile , index );
+
+    }
+
     public async getH2Sprites( icnFileName: string ): Promise<IH2Sprite[]> {
 
         // get original h2 sprite binary file
@@ -116,12 +124,42 @@ class GraphicsLoader {
 
         // load all sprites
         for( let i = 0 ; i < numberOfSprites ; ++i ) {
-            const sprite: IH2Sprite = this.getH2SpriteByIndex( icnFile , i );
-            return;
+            const sprite: IH2Sprite = this.internalLoadSprite( icnFile , i );
             result.push( sprite );
         }
 
         return result;
+
+    }
+
+    public async getAsDataUrl( icnFileName: string , index: number ): Promise<string> {
+
+        const sprite: IH2Sprite = await this.getH2SpriteByIndex( icnFileName , index );
+        const canvas: HTMLCanvasElement = document.createElement( 'canvas' );
+
+        canvas.width = sprite.width;
+        canvas.height = sprite.height;
+
+        const context = canvas.getContext( '2d' );
+        
+        if ( !context ) {
+            throw new Error( 'Cannot create 2d canvas context.' );
+        }
+
+        const imageData = context.createImageData( sprite.width , sprite.height );
+
+        for( let x = 0 ; x < sprite.width ; ++x ) {
+            for( let y = 0 ; y < sprite.height ; ++y ) {
+                const pixelOffset: number = ( y * sprite.width + x ) * 4;
+                imageData.data[pixelOffset+0] = sprite.pixmap[x][y].r;
+                imageData.data[pixelOffset+1] = sprite.pixmap[x][y].g;
+                imageData.data[pixelOffset+2] = sprite.pixmap[x][y].g;
+                imageData.data[pixelOffset+3] = sprite.pixmap[x][y].a;
+            }   
+        }
+
+        context.putImageData( imageData , 0 , 0 );
+        return canvas.toDataURL();
 
     }
 

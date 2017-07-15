@@ -13,7 +13,11 @@ async function test() {
     await container.get( Engine ).initialize();
 
     const graphicsLoader: GraphicsLoader = container.get( GraphicsLoader );
-    console.log( await graphicsLoader.getH2Sprites( 'MOUSE.ICN' ) );
+    const imageData: string = await graphicsLoader.getAsDataUrl( 'MOUSE.ICN' , 0 );
+
+    const image: HTMLImageElement = document.createElement( 'img' );
+    image.src = imageData;
+    document.body.appendChild( image );
 
 }
 
