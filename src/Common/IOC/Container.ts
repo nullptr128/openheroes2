@@ -9,6 +9,7 @@
 
 import * as Inversify from 'inversify';
 import InversifyInjectDecorators from 'inversify-inject-decorators';
+import IProvider from './IProvider';
 
 class Container {
 
@@ -37,6 +38,10 @@ class Container {
             this.fInternalContainer.bind( key ).to( implementation as any ).inSingletonScope();
         }
 
+    }
+
+    public use( provider: IProvider ): void {
+        provider( this );
     }
 
     /**

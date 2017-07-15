@@ -24,6 +24,22 @@ class Tools {
         return filePath.replace( /^.*[\\\/]/ , '' );
     }
 
+    public static numToHex( value: number , digits: number = 4 ): string {
+        
+        if ( value < 0 ) {
+            value = 0xFFFFFFFF + value + 1;
+        }
+        
+        let retValue = value.toString(16).toUpperCase();
+        
+        while( retValue.length < digits ) {
+            retValue = '0' + retValue;
+        }
+
+        return retValue;
+
+    }
+
 }
 
 export default Tools;

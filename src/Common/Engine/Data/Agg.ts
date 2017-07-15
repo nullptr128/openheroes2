@@ -143,6 +143,10 @@ class Agg {
         }
     }
 
+    public getFileList(): string[] {
+        return Array.from( this.fFiles.keys() );
+    }
+
 }
 
 export default Agg;

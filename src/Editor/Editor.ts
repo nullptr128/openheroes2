@@ -1,24 +1,19 @@
 
-import Files from '../Common/Engine/Files/Files';
-import BinaryFile from '../Common/Engine/Files/BinaryFile';
 import Container from '../Common/IOC/Container';
+import EngineProvider from '../Common/Providers/EngineProvider';
+import GraphicsLoader from '../Common/Engine/Graphics/GraphicsLoader';
 import Agg from '../Common/Engine/Data/Agg';
+import Engine from '../Common/Engine/Engine';
 
 const container: Container = new Container();
-container.bind( Files );
-container.bind( Agg );
+container.use( EngineProvider );
 
 async function test() {
 
-    try {
-        
-        const agg: Agg = container.get( Agg );
-        await agg.loadAggFile( './h2data/Heroes2.agg' );
-        await agg.loadAggFile( './h2data/Heroes2x.agg' );
+    await container.get( Engine ).initialize();
 
-    } catch( err ) {
-        console.log( 'Err:' , err );
-    }
+    const graphicsLoader: GraphicsLoader = container.get( GraphicsLoader );
+    console.log( await graphicsLoader.getH2Sprites( 'MOUSE.ICN' ) );
 
 }
 
