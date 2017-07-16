@@ -66,12 +66,17 @@ class Icn {
 
         // block read loop
         while( 1 ) {
+            
             const command: number = getByte();
+
             if ( command == 0x00 ) {
+                
                 // 0x00 byte: end of line command
                 imagePosition.x = 0;
                 imagePosition.y++;
+
             } else if ( command >= 0x01 && command <= 0x7F ) {
+                
                 // 0x01..0x7F bytes: amount of colored pixels
                 const amountOfPixels: number = command;
                 for( let i = 0 ; i < amountOfPixels; ++i ) {
@@ -79,23 +84,37 @@ class Icn {
                     result[imagePosition.x][imagePosition.y] = this.gPal.getColor( paletteIndex );
                     incImagePos(1);
                 }
+
             } else if ( command == 0x80 ) {
+
                 // 0x80 - end of sprite command
                 return result;
+
             } else if ( command >= 0x81 && command <= 0xBF ) {
+
                 // 0x81..0xBF - amount of transparent pixels to skip. 128 must be subtracted from
                 // this value in order to get real amount of pixels to skip
                 const amountOfPixels: number = command - 0x80;
                 // we will just move x-pointer as image is initially transparent
                 incImagePos(amountOfPixels);
+
             } else if ( command == 0xC0 ) {
+
                 // 0xC0 - amount of 'shadow' pixels
-                const shadowValue = getByte();
-                if ( shadowValue % 4 == 0 ) {
-                    getByte();
+                const shadowValue: number = getByte();
+                let amountOfPixels: number;
+                if ( shadowValue % 4 != 0 ) {
+                    amountOfPixels = shadowValue % 4;
+                } else {
+                    amountOfPixels = getByte();
                 }
-                console.warn( 'Unsupported pixmap command: 0xC0' );
+                for( let i = 0 ; i < amountOfPixels ; ++i ) {
+                    result[imagePosition.x][imagePosition.y] = this.gPal.getShadowColor();
+                    incImagePos(1);
+                }
+
             } else if ( command == 0xC1 ) {
+
                 // 0xC1 - next byte is the number of next pixels of same color; 2nd next byte
                 // is color of these pixels (run length encoding)
                 const amountOfPixels: number = getByte();
@@ -104,7 +123,9 @@ class Icn {
                     result[imagePosition.x][imagePosition.y] = this.gPal.getColor( paletteIndex );
                     incImagePos(1);
                 }
+
             } else if ( command >= 0xC2 && command <= 0xFF ) {
+
                 // 0xC2..0xFF - amount of pixels plus 0xC0, with next byte being 
                 // color of all pixels (run length encoding)
                 const amountOfPixels: number = command - 0xC0;
@@ -113,6 +134,7 @@ class Icn {
                     result[imagePosition.x][imagePosition.y] = this.gPal.getColor( paletteIndex );
                     incImagePos(1);
                 }
+                
             } else {
                 throw new Error( 'Not supported command: ' + Tools.numToHex( command ) );
             }

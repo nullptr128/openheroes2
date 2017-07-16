@@ -42,6 +42,10 @@ class Pal {
         return this.fPalette[ colorIndex ];
     }
 
+    public getShadowColor(): Readonly<IColor> {
+        return { r: 0 , g: 0 , b: 0 , a: 64 };
+    }
+
 }
 
 export default Pal;

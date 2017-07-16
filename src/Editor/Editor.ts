@@ -14,7 +14,7 @@ async function test() {
     await container.get( Engine ).initialize();
 
     const graphicsLoader: GraphicsLoader = container.get( GraphicsLoader );
-    const imageData: string = await graphicsLoader.getAsDataUrl( 'ARCHER.ICN' , 4 );
+    const imageData: string = await graphicsLoader.getAsDataUrl( 'UNICORN.ICN' , 4 );
 
     const image: HTMLImageElement = document.createElement( 'img' );
     image.src = imageData;
