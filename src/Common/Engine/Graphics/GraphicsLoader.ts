@@ -67,29 +67,19 @@ class GraphicsLoader {
     @Inject( PixmapLoader )
     private gPixmapLoader: PixmapLoader;
 
-    private getSpriteType( u8byte: number ): 'normal'|'monochrome' {
-        if ( u8byte == 0 ) {
-            return 'normal';
-        } else {
-            return 'monochrome';
-        }
-    }
-
     private internalLoadSprite( buffer: Buffer , index: number ): IH2Sprite {
 
         // calculate byte index of header, first header starts
         // at byte #6 and takes 13 bytes
         const headerStartIndex: number = 6 + index*13;
 
-        // calculate sprite type
-        const spriteType: 'normal'|'monochrome' = this.getSpriteType( buffer.readUInt8( headerStartIndex + 8 ) );
-
         // get sprite metadata from header
         const offsetX: number = buffer.readInt16LE( headerStartIndex + 0 );
         const offsetY: number = buffer.readInt16LE( headerStartIndex + 2 );
         const width: number = buffer.readUInt16LE( headerStartIndex + 4 );
         const height: number = buffer.readUInt16LE( headerStartIndex + 6 );
-        const type: 'normal'|'monochrome' = spriteType;
+        const type: number = buffer.readUInt8( headerStartIndex + 8 );
+        const dataOffset: number = buffer.readUInt32LE( headerStartIndex + 9 );
 
         // read sprite data 
         return {
@@ -98,7 +88,7 @@ class GraphicsLoader {
             width ,
             height ,
             type ,
-            pixmap: this.gPixmapLoader.getPixmap( buffer , width , height , spriteType , headerStartIndex + 9 ) ,
+            pixmap: this.gPixmapLoader.getPixmap( buffer , width , height , type , dataOffset + 6 ) ,
         };
 
     }
@@ -153,7 +143,7 @@ class GraphicsLoader {
                 const pixelOffset: number = ( y * sprite.width + x ) * 4;
                 imageData.data[pixelOffset+0] = sprite.pixmap[x][y].r;
                 imageData.data[pixelOffset+1] = sprite.pixmap[x][y].g;
-                imageData.data[pixelOffset+2] = sprite.pixmap[x][y].g;
+                imageData.data[pixelOffset+2] = sprite.pixmap[x][y].b;
                 imageData.data[pixelOffset+3] = sprite.pixmap[x][y].a;
             }   
         }

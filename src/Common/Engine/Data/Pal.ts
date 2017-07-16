@@ -31,6 +31,7 @@ class Pal {
                 r: buffer.readUInt8( i*3 + 0 ) * 4 ,
                 g: buffer.readUInt8( i*3 + 1 ) * 4 ,
                 b: buffer.readUInt8( i*3 + 2 ) * 4 ,
+                a: 255 ,
             };
             this.fPalette.push( color );
         }

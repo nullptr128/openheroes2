@@ -6,7 +6,7 @@ interface IH2Sprite {
     offsetY: number;
     width: number;
     height: number;
-    type: 'normal' | 'monochrome';
+    type: number;
     pixmap: IColor[][];
 }
 

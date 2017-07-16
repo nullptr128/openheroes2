@@ -26,9 +26,9 @@ class PixmapLoader {
         0xC2 to 0xFF - number of pixels of same color plus 0xC0. Next byte is the color of these pixels.
     */
 
-    public getPixmap( buffer: Buffer , width: number , height: number , type: 'normal'|'monochrome' , byteStartIndex: number ): IColor[][] {
+    public getPixmap( buffer: Buffer , width: number , height: number , type: number , byteStartIndex: number ): IColor[][] {
         switch ( type ) {
-            case 'normal':
+            case 0:
                 return this.getPixmapNormal( buffer , width , height , byteStartIndex );
             default:
                 throw new Error( 'getPixmap() type ' + type + ' is not supported!' );
@@ -57,30 +57,23 @@ class PixmapLoader {
 
         // this function increases image.x position with wrapping support
         function incImagePos( amount: number ): void {
-            //console.log( 'iPos -> ' + imagePosition.x + '/' + imagePosition.y );
             imagePosition.x += amount;
-            while ( imagePosition.x >= width ) {
+            while ( imagePosition.x > width ) {
                 imagePosition.x -= width;
                 imagePosition.y++;
             }
-            //console.log( 'iPos[+' + amount + '] -> ' + imagePosition.x + '/' + imagePosition.y );
         }
-
-        console.log( 'Image size: ' , width , height );
 
         // block read loop
         while( 1 ) {
             const command: number = getByte();
-            console.log( 'Command: ' + Tools.numToHex(command,2) + ' ; buffer: ' + bufferPosition + ' ; img: ' + imagePosition.x + '/' + imagePosition.y );
             if ( command == 0x00 ) {
                 // 0x00 byte: end of line command
                 imagePosition.x = 0;
                 imagePosition.y++;
-                console.log( 'Going to newline' );
             } else if ( command >= 0x01 && command <= 0x7F ) {
                 // 0x01..0x7F bytes: amount of colored pixels
                 const amountOfPixels: number = command;
-                console.log( 'Reading ' + amountOfPixels + ' colored pixels..' );
                 for( let i = 0 ; i < amountOfPixels; ++i ) {
                     const paletteIndex: number = getByte();
                     result[imagePosition.x][imagePosition.y] = this.gPal.getColor( paletteIndex );
@@ -93,7 +86,6 @@ class PixmapLoader {
                 // 0x81..0xBF - amount of transparent pixels to skip. 128 must be subtracted from
                 // this value in order to get real amount of pixels to skip
                 const amountOfPixels: number = command - 0x80;
-                console.log( 'Reading ' + amountOfPixels + ' transparent pixels..' );
                 // we will just move x-pointer as image is initially transparent
                 incImagePos(amountOfPixels);
             } else if ( command == 0xC0 ) {
@@ -108,7 +100,6 @@ class PixmapLoader {
                 // is color of these pixels (run length encoding)
                 const amountOfPixels: number = getByte();
                 const paletteIndex: number = getByte();
-                console.log( 'Reading RLE ' + amountOfPixels + ' pixels...' );
                 for( let i = 0 ; i < amountOfPixels ; ++i ) {
                     result[imagePosition.x][imagePosition.y] = this.gPal.getColor( paletteIndex );
                     incImagePos(1);
@@ -116,9 +107,8 @@ class PixmapLoader {
             } else if ( command >= 0xC2 && command <= 0xFF ) {
                 // 0xC2..0xFF - amount of pixels plus 0xC0, with next byte being 
                 // color of all pixels (run length encoding)
-                const amountOfPixels: number = command + 0xC0;
+                const amountOfPixels: number = command - 0xC0;
                 const paletteIndex: number = getByte();
-                console.log( 'Reading RLE ' + amountOfPixels + ' pixels...' );
                 for( let i = 0 ; i < amountOfPixels ; ++i ) {
                     result[imagePosition.x][imagePosition.y] = this.gPal.getColor( paletteIndex );
                     incImagePos(1);
