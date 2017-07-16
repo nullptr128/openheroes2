@@ -7,7 +7,7 @@ import Arrays from '../../Support/Arrays';
 import Tools from '../../Support/Tools';
 
 @Injectable() 
-class PixmapLoader {
+class Icn {
 
     @Inject( Pal )
     private gPal: Pal;
@@ -124,4 +124,4 @@ class PixmapLoader {
 
 }
 
-export default PixmapLoader;
+export default Icn;

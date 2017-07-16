@@ -5,7 +5,7 @@ import Inject from '../../IOC/Inject';
 import Pal from '../Data/Pal';
 import IColor from '../../Types/IColor';
 import IH2Sprite from './IH2Sprite';
-import PixmapLoader from './PixmapLoader';
+import Icn from '../Data/Icn';
 
 /*
 All the numbers are encoded in little-endians.
@@ -64,8 +64,8 @@ class GraphicsLoader {
     @Inject( Pal )
     private gPal: Pal;
 
-    @Inject( PixmapLoader )
-    private gPixmapLoader: PixmapLoader;
+    @Inject( Icn )
+    private gIcn: Icn;
 
     private internalLoadSprite( buffer: Buffer , index: number ): IH2Sprite {
 
@@ -88,7 +88,7 @@ class GraphicsLoader {
             width ,
             height ,
             type ,
-            pixmap: this.gPixmapLoader.getPixmap( buffer , width , height , type , dataOffset + 6 ) ,
+            pixmap: this.gIcn.getPixmap( buffer , width , height , type , dataOffset + 6 ) ,
         };
 
     }
