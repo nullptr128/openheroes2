@@ -14,12 +14,17 @@ async function test() {
     await container.get( Engine ).initialize();
 
     const graphicsLoader: GraphicsLoader = container.get( GraphicsLoader );
-    const imageData: string = await graphicsLoader.getAsDataUrl( 'UNICORN.ICN' , 4 );
+    const imageData: string = await graphicsLoader.getIcnAsDataUrl( 'UNICORN.ICN' , 4 );
+    const tilData: string = await graphicsLoader.getTilAsDataUrl( 'GROUND32.TIL' , 48 );
 
     const image: HTMLImageElement = document.createElement( 'img' );
     image.src = imageData;
     //image.style.width = '60px';
     document.body.appendChild( image );
+
+    const til: HTMLImageElement = document.createElement( 'img' );
+    til.src = tilData;
+    document.body.appendChild( til );
 
 }
 

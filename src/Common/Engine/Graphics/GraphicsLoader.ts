@@ -6,6 +6,8 @@ import Pal from '../Data/Pal';
 import IColor from '../../Types/IColor';
 import IH2Sprite from './IH2Sprite';
 import Icn from '../Data/Icn';
+import IH2Tile from './IH2Tile';
+import Til from '../Data/Til';
 
 /*
 All the numbers are encoded in little-endians.
@@ -67,6 +69,9 @@ class GraphicsLoader {
     @Inject( Icn )
     private gIcn: Icn;
 
+    @Inject( Til )
+    private gTil: Til;
+
     private internalLoadSprite( buffer: Buffer , index: number ): IH2Sprite {
 
         // calculate byte index of header, first header starts
@@ -122,7 +127,7 @@ class GraphicsLoader {
 
     }
 
-    public async getAsDataUrl( icnFileName: string , index: number ): Promise<string> {
+    public async getIcnAsDataUrl( icnFileName: string , index: number ): Promise<string> {
 
         const sprite: IH2Sprite = await this.getH2SpriteByIndex( icnFileName , index );
         const canvas: HTMLCanvasElement = document.createElement( 'canvas' );
@@ -145,6 +150,44 @@ class GraphicsLoader {
                 imageData.data[pixelOffset+1] = sprite.pixmap[x][y].g;
                 imageData.data[pixelOffset+2] = sprite.pixmap[x][y].b;
                 imageData.data[pixelOffset+3] = sprite.pixmap[x][y].a;
+            }   
+        }
+
+        context.putImageData( imageData , 0 , 0 );
+        return canvas.toDataURL();
+
+    }
+
+    private async getH2TileByIndex( tilFileName: string , index: number ): Promise<IH2Tile> {
+        
+        const tilFile: Buffer = await this.gAgg.getFile( tilFileName );
+        return this.gTil.getTile( tilFile , index );
+
+    }
+
+    public async getTilAsDataUrl( tilFileName: string , index: number ): Promise<string> {
+
+        const tile: IH2Tile = await this.getH2TileByIndex( tilFileName , index );
+        const canvas: HTMLCanvasElement = document.createElement( 'canvas' );
+
+        canvas.width = tile.width;
+        canvas.height = tile.height;
+        
+        const context = canvas.getContext( '2d' );
+
+        if ( !context ) {
+            throw new Error( 'Cannot create 2d canvas context.' );
+        }
+
+        const imageData = context.createImageData( tile.width , tile.height );
+
+        for( let x = 0 ; x < tile.width ; ++x ) {
+            for( let y = 0 ; y < tile.height ; ++y ) {
+                const pixelOffset: number = ( y * tile.width + x ) * 4;
+                imageData.data[pixelOffset+0] = tile.pixmap[x][y].r;
+                imageData.data[pixelOffset+1] = tile.pixmap[x][y].g;
+                imageData.data[pixelOffset+2] = tile.pixmap[x][y].b;
+                imageData.data[pixelOffset+3] = tile.pixmap[x][y].a;
             }   
         }
 
