@@ -5,6 +5,8 @@ import GraphicsLoader from '../Common/Engine/Graphics/GraphicsLoader';
 import Agg from '../Common/Engine/Data/Agg';
 import Engine from '../Common/Engine/Engine';
 import PerfCounter from '../Common/Support/PerfCounter';
+import Snd from '../Common/Engine/Data/Snd';
+import * as FS from 'fs';
 
 const container: Container = new Container();
 container.use( EngineProvider );
@@ -25,6 +27,15 @@ async function test() {
     const til: HTMLImageElement = document.createElement( 'img' );
     til.src = tilData;
     document.body.appendChild( til );
+
+    //
+    //
+    //
+    const sndFile: Buffer = await container.get( Agg ).getFile( 'BLIND.82M' );
+    const wav: Buffer = container.get( Snd ).getWav( sndFile );
+
+    FS.writeFileSync( './test.82m' , sndFile );
+    FS.writeFileSync( './test.wav' , wav );
 
 }
 

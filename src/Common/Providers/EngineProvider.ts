@@ -7,12 +7,14 @@ import Files from '../Engine/Files/Files';
 import GraphicsLoader from '../Engine/Graphics/GraphicsLoader';
 import Icn from '../Engine/Data/Icn';
 import Til from '../Engine/Data/Til';
+import Snd from '../Engine/Data/Snd';
 
 export default function EngineProvider( container: Container ): void {
     container.bind( Agg );
     container.bind( Pal );
     container.bind( Icn );
     container.bind( Til );
+    container.bind( Snd );
     container.bind( Engine );
     container.bind( BinaryFile );
     container.bind( Files );
