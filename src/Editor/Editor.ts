@@ -7,8 +7,8 @@ import Engine from '../Common/Engine/Engine';
 import PerfCounter from '../Common/Support/PerfCounter';
 import Snd from '../Common/Engine/Data/Snd';
 import * as FS from 'fs';
-import AudioLoader from '../Common/Engine/Graphics/AudioLoader';
 import Tools from '../Common/Support/Tools';
+import AudioLoader from '../Common/Engine/Audio/AudioLoader';
 
 const container: Container = new Container();
 container.use( EngineProvider );

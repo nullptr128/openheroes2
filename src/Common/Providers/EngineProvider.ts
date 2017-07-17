@@ -8,7 +8,7 @@ import GraphicsLoader from '../Engine/Graphics/GraphicsLoader';
 import Icn from '../Engine/Data/Icn';
 import Til from '../Engine/Data/Til';
 import Snd from '../Engine/Data/Snd';
-import AudioLoader from '../Engine/Graphics/AudioLoader';
+import AudioLoader from '../Engine/Audio/AudioLoader';
 
 export default function EngineProvider( container: Container ): void {
     container.bind( Agg );
