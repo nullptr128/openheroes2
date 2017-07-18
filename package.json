@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha ./test/**/*.ts --recursive"
+    "test": "nyc mocha ./test/**/*.ts --recursive" ,
+    "editor-dev": "node ./scripts/editor-dev.js" ,
+    "editor": "electron ./bin/editor/launch-editor.js" ,
+    "build-editor": "webpack --config ./webpack/editor-launcher.js && webpack --config ./webpack/editor.js"
   },
   "author": "",
   "license": "ISC",
@@ -31,7 +34,7 @@
     "ts-node": "^3.2.0",
     "typescript": "^2.3.4",
     "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.4.5"
+    "webpack-dev-server": "^2.5.1"
   },
   "dependencies": {
     "@types/lodash": "^4.14.65",

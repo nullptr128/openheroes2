@@ -7,11 +7,11 @@ module.exports = {
     devtool: 'sourcemap' ,
 
     entry: {
-        'editor': [ './src/EditorLauncher.ts' ] ,
+        'launch-editor': [ './src/EditorLauncher.ts' ] ,
     } ,
 
     output: {
-        path: __dirname + '/../bin' ,
+        path: __dirname + '/../bin/editor' ,
         filename: '[name].js' ,
     } ,
 

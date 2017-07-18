@@ -11,18 +11,25 @@ module.exports = {
     } ,
 
     output: {
-        path: __dirname + '/../bin' ,
+        path: __dirname + '/../bin/editor' ,
         filename: 'build/[name].js' ,
+        publicPath: 'http://localhost:8080/' ,
     } ,
 
     resolve: {
         modules: [
             path.resolve( __dirname , '../node_modules' ) ,
             path.resolve( __dirname , '../src' ) ,
-            path.resolve( __dirname , '../style' ) ,
+            path.resolve( __dirname , '../resource' ) ,
         ] ,
         extensions: [ '.js' , '.ts' , '.tsx' ] ,
     } ,
+
+    devServer: {
+        contentBase: './bin/editor' ,
+        publicPath: 'http://localhost:8080/' ,
+        hot: true ,
+    },
 
     module: {
         loaders: [
@@ -51,7 +58,8 @@ module.exports = {
         ] ,
     } ,
 
-    plugins: [] ,
+    plugins: [
+    ] ,
 
     target: 'electron-renderer' ,
 

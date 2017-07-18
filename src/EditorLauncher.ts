@@ -5,7 +5,10 @@
  */
 
 import * as Electron from 'electron';
+import * as Process from 'process';
 import Nullable from './Common/Support/Nullable';
+
+const isDevServer: boolean = ( Process.argv.find( arg => arg == '--dev' ) != null );
 
 //
 let mainWindow: Nullable<Electron.BrowserWindow> = null;
@@ -19,7 +22,12 @@ function createWindow(): void {
 
     //
     const path: string = process.cwd();
-    mainWindow.loadURL( `file://${path}/bin/editor.html` );
+
+    if ( isDevServer ) {
+        mainWindow.loadURL( `file://${path}/bin/editor/editor-dev.html` );
+    } else {
+        mainWindow.loadURL( `file://${path}/bin/editor/editor.html` );
+    }
 
     //
     mainWindow.on( 'closed' , () => {

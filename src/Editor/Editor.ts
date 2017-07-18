@@ -1,4 +1,6 @@
 
+import 'style/editor/editor.scss';
+
 import Container from '../Common/IOC/Container';
 import EngineProvider from '../Common/Providers/EngineProvider';
 import GraphicsLoader from '../Common/Engine/Graphics/GraphicsLoader';
