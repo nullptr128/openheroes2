@@ -1,10 +1,2 @@
 
-> Code comments and refactoring
-> Add locale support
-> Change AppBar from menu+map name to iconic buttons
-> Change editor icons from ICN ones to static ones
-> Add locales on editor
-> Add async initialization support for editor
-> Change toolbar buttons to static ones
-> Improve editor component structure
 > Add license to all files

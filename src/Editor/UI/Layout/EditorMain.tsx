@@ -1,7 +1,7 @@
 
 import * as React from 'react';
-import EditorScene from '../Main/EditorScene';
-import EditorPanel from '../Main/EditorPanel';
+import EditorScene from '../Block/EditorScene';
+import EditorPanel from '../Block/EditorPanel';
 
 export default class EditorMain extends React.Component {
 

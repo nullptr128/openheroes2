@@ -17,7 +17,7 @@ class Files {
     /**
      * Opens file from path as binary file, returning
      * BinaryFile instance for easier read.
-     * @param path path for file
+     * @param path path to file
      */
     public openBinaryFile( path: string ): Promise<BinaryFile> {
         return new Promise<BinaryFile>( (resolve,reject) => {
@@ -32,6 +32,27 @@ class Files {
                             resolve( new BinaryFile( fd , stats.size ) );
                         }
                     } );
+                }
+            } );
+        } );
+    }
+
+    /**
+     * Reads entire content of JSON file from path
+     * and returns it as object.
+     * @param path path to file
+     */
+    public getJSONFile( path: string ): Promise<any> {
+        return new Promise<any>( (resolve,reject) => {
+            FS.readFile( path , 'utf-8' , (err,data) => {
+                if ( err ) {
+                    reject( err );
+                } else {
+                    try {
+                        resolve( JSON.parse( data ) );
+                    } catch ( err ) {
+                        reject( err );
+                    }
                 }
             } );
         } );

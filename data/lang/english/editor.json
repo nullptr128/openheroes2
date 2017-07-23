@@ -1,0 +1,39 @@
+{
+    "AppBar": {
+        "NewMap": "New map" ,
+        "LoadMap": "Load map" ,
+        "SaveMap": "Save map" ,
+        "SaveMapAs": "Save map as" ,
+        "Players": "Players" ,
+        "Settings": "Map settings" ,
+        "TimedEvents": "Timed events" ,
+        "Copy": "Copy" ,
+        "Cut": "Cut" ,
+        "Paste": "Paste" ,
+        "Delete": "Delete"
+    } ,
+    "Toolbar": {
+        "Terrain": "Terrain" ,
+        "Rivers": "Rivers" ,
+        "Roads": "Roads" ,
+        "Obstacles": "Obstacles" ,
+        "Water": "Water" ,
+        "Grass": "Grass" ,
+        "Dirt": "Dirt" ,
+        "Snow": "Snow" ,
+        "Swamp": "Swamp" ,
+        "Lava": "Lava" ,
+        "Rough": "Rough" ,
+        "Desert": "Desert" ,
+        "Sand": "Sand" ,
+        "Objects": "Other objects" ,
+        "Towns": "Towns" ,
+        "Heroes": "Heroes" ,
+        "Artifacts": "Artifacts" ,
+        "Resources": "Resources" ,
+        "Monsters": "Monsters" 
+    } ,
+    "Misc": {
+        "BlankMapName": "Unnamed map"
+    } 
+}

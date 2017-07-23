@@ -10,11 +10,13 @@
     height: 100%;
     
     .editor-main-scene {
+        position: relative;
         flex-basis: 0;
         flex-grow: 1;
     }
 
     .editor-main-panel {
+        position: relative;
         width: 275px;
         background-color: rgb(232, 232, 232);
     }

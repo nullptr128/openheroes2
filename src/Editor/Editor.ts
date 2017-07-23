@@ -4,6 +4,7 @@
  * Editor index file.
  */
 
+import 'font-awesome/css/font-awesome.css';
 import * as InjectTapEventPlugin from 'react-tap-event-plugin';
 import 'style/editor/editor.scss';
 import * as React from 'react';
@@ -21,18 +22,16 @@ window.addEventListener( 'load' , async () => {
     // this one is required by react-material-ui
     InjectTapEventPlugin();
 
-    // get EditorCore class from editor service Container
-    const core: EditorCore = EditorContainer.get( EditorCore );
-
-    // run editor
-    await core.run();
-
     // find element with #app id
     const appElement: Nullable<HTMLElement> = document.getElementById( 'app' );
 
     // inject React if possible
     if ( appElement ) {
         ReactDom.render( React.createElement( EditorApp ) , appElement );
+        // get EditorCore class from editor service Container
+        const core: EditorCore = EditorContainer.get( EditorCore );
+        // run editor
+        await core.run();
     } else {    
         throw new Error( 'Mailformed HTML file - no #app element present.' );
     }
