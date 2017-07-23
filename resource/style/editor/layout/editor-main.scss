@@ -1,0 +1,22 @@
+
+.editor-main {
+    
+    display: flex;
+    align-items: stretch;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    
+    .editor-main-scene {
+        flex-basis: 0;
+        flex-grow: 1;
+    }
+
+    .editor-main-panel {
+        width: 275px;
+        background-color: rgb(232, 232, 232);
+    }
+
+}

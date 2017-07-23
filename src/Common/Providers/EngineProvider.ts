@@ -1,3 +1,10 @@
+/**
+ * OpenHeroes2
+ * 
+ * Prepares container for Engine usage, registering
+ * various graphics/audio/file related classes.
+ */
+
 import Container from '../IOC/Container';
 import Agg from '../Engine/Data/Agg';
 import Pal from '../Engine/Data/Pal';

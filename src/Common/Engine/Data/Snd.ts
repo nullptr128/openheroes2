@@ -1,9 +1,21 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class is responsible for opening, reading and 
+ * converting .82M audio files into .WAV format.
+ */
 
 import Injectable from '../../IOC/Injectable';
 
 @Injectable()
 class Snd {
 
+    /**
+     * Convers .82M file from buffer passed as
+     * method arg, returning audio/wav compatabile
+     * buffer.
+     * @param sndFile buffer with .82M file
+     */
     public getWav( sndFile: Buffer ): Buffer {
 
         const audioDataSize: number = sndFile.byteLength;
@@ -43,6 +55,7 @@ class Snd {
         wavHeader.writeUInt32LE( 0x61746164 , 36 );
         // #40 -> subchunk 2 size
         wavHeader.writeUInt32LE( audioDataSize , 40 );
+        
         // return combined wave header + raw audio data from .82m file.
         return Buffer.concat( [ wavHeader , sndFile ] );
 

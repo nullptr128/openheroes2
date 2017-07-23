@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class is responsible for bootstrapping and managing
+ * OpenHeroes2 engine.
+ */
 
 import Injectable from '../IOC/Injectable';
 import Agg from './Data/Agg';
@@ -17,7 +23,7 @@ class Engine {
      * Initializes OpenHeroes2 engine.
      */
     public async initialize(): Promise<void> {
-        
+
         // load Heroes2.agg and Heroes2x.agg 
         await this.gAgg.loadAggFile( 'h2data/Heroes2.agg' );
         await this.gAgg.loadAggFile( 'h2data/Heroes2x.agg' );

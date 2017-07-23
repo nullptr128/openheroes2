@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * IH2Sprite describes a single sprite loaded
+ * from .ICN file.
+ */
 
 import IColor from '../../Types/IColor';
 

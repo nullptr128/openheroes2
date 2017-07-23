@@ -1,3 +1,10 @@
+/**
+ * OpenHeroes2
+ * 
+ * This file is responsible for loading graphic files
+ * from .AGG files. It handles reading file from AGG and
+ * passing it to correct services that will decrypt them.
+ */
 
 import Injectable from '../../IOC/Injectable';
 import Agg from '../Data/Agg';
@@ -8,54 +15,6 @@ import IH2Sprite from './IH2Sprite';
 import Icn from '../Data/Icn';
 import IH2Tile from './IH2Tile';
 import Til from '../Data/Til';
-
-/*
-All the numbers are encoded in little-endians.
-
-The icn file contains a number n of images, we will name sprites. This is the structure of the file :
-
-2 bytes : the number of sprites
-4 bytes : the total size of the file (excluding the 6 first bytes)
-13n bytes : representing n sprites headers (see below)
-total_size - (count_sprite*13) bytes : concatenation of the data of the sprites.
-icn sprite header
-
-s16 offsetX; // positionning offset of the sprite on X axis
-s16 offsetY; // positionning offset of the sprite on Y axis
-u16 width; // sprite's width
-u16 height; // sprite's height
-u8 type; // type of sprite : 0 = Normal, 32 = Monochromatic shape
-u32 offsetData; // beginning of the data
-icn sprite data
-
-Each sprite's pixel has a color taken from a "palette". The palette is an array of 256 colors defined in the file "kb.pal". The format of this file is describe above. The pixel can also be a shadow pixel. The shadow color will be represented by a black pixel with an alpha channel of 64 (0 represents a fully transparent color, and 255 represents a fully opaque color).
-
-The following sheme is repeated many times, describing how to fill pixels. By default a pixel will be transparent.
-
-Scheme for normal sprite
-
-There is one byte for command followed by 0 or more bytes of data. The command byte can be :
-
-0x00 - end of line reached, go to the first pixel of next line.
-0x01 to 0x7F - number n of data. The next n bytes are the colors of the next n pixels.
-0x80 - end of data. The sprite is yet totaly describe.
-0x81 to 0xBF - number of pixels to skip + 0x80. The (n - 128) pixels are transparents.
-0xC0 - put here n pixels of shadow. If the next byte module 4 is not null, n equals the next pixel modulo 4, otherwise n equals the second next byte.
-0xC1 - next byte is the number of next pixels of same color. The second next byte is the color of these pixels.
-0xC2 to 0xFF - number of pixels of same color plus 0xC0. Next byte is the color of these pixels.
-Scheme for monochromatic shape
-
-The pixels can only be in two states (transparent or black). So the rules are simplified.
-
-Command bytes are :
-
-0x00 - end of line reached, go to the first pixel of next line.
-0x01 to 0x7F - number of black pixels
-0x80 - end of data. The sprite is yet totaly describe.
-0x81 to 0xFF - number of pixels to skip + 0x80. The (n - 128) pixels are transparents.
-
-Source: https://thaddeus002.github.io/fheroes2-WoT/infos/informations.html
-*/
 
 @Injectable()
 class GraphicsLoader {
@@ -72,6 +31,12 @@ class GraphicsLoader {
     @Inject( Til )
     private gTil: Til;
 
+    /**
+     * Loads sprite from .ICN file from particular index, returning
+     * IH2Sprite structure. This is helper method.
+     * @param buffer buffer with .ICN file
+     * @param index index of sprite we want to read
+     */
     private internalLoadSprite( buffer: Buffer , index: number ): IH2Sprite {
 
         // calculate byte index of header, first header starts
@@ -98,6 +63,11 @@ class GraphicsLoader {
 
     }
 
+    /**
+     * Receives H2Sprite struct from ICN for a proper index.
+     * @param icnFileName name of ICN file 
+     * @param index index of sprite we want to fetch
+     */
     public async getH2SpriteByIndex( icnFileName: string , index: number ): Promise<IH2Sprite> {
 
         // get original h2 sprite binary file
@@ -106,6 +76,10 @@ class GraphicsLoader {
 
     }
 
+    /**
+     * Receives all sprites from particular ICN file.
+     * @param icnFileName name of ICN file
+     */
     public async getH2Sprites( icnFileName: string ): Promise<IH2Sprite[]> {
 
         // get original h2 sprite binary file
@@ -127,6 +101,12 @@ class GraphicsLoader {
 
     }
 
+    /**
+     * Receives sprite from ICN file with correct index, returning data-url string
+     * for that sprite.
+     * @param icnFileName name of icn file
+     * @param index index of sprite
+     */
     public async getIcnAsDataUrl( icnFileName: string , index: number ): Promise<string> {
 
         const sprite: IH2Sprite = await this.getH2SpriteByIndex( icnFileName , index );
@@ -158,6 +138,11 @@ class GraphicsLoader {
 
     }
 
+    /**
+     * Receives Heroes2 tile from .TIL file and returns H2Tile struct
+     * @param tilFileName name of .TIL file
+     * @param index index of floor tile
+     */
     private async getH2TileByIndex( tilFileName: string , index: number ): Promise<IH2Tile> {
         
         const tilFile: Buffer = await this.gAgg.getFile( tilFileName );
@@ -165,6 +150,11 @@ class GraphicsLoader {
 
     }
 
+    /**
+     * Reads Hereso2 tile from .TIL file and returns data-url string for that tile.
+     * @param tilFileName name of .TIL file
+     * @param index index of floor tile
+     */
     public async getTilAsDataUrl( tilFileName: string , index: number ): Promise<string> {
 
         const tile: IH2Tile = await this.getH2TileByIndex( tilFileName , index );

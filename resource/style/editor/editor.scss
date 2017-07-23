@@ -1,2 +1,27 @@
 
 @import "../common/basic.scss";
+@import "./layout/editor-main.scss";
+@import "./widgets/toolbar-button.scss";
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.editor-app {
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+    .editor-app-top {
+        flex-grow: 0;
+    }
+
+    .editor-app-main {
+        position: relative;
+        flex-grow: 1;
+    }
+
+}

@@ -1,3 +1,8 @@
+/**
+ * OpenHeroes2
+ * 
+ * IH2Tile describes single tile readed from .TIL file.
+ */
 
 import IColor from '../../Types/IColor';
 

@@ -40,6 +40,12 @@ class Container {
 
     }
 
+    /**
+     * Accepts provider function and calls it, passing container as argument.
+     * Providers are functions that will register multiple classes into container.
+     * Example: EngineProvider
+     * @param provider 
+     */
     public use( provider: IProvider ): void {
         provider( this );
     }

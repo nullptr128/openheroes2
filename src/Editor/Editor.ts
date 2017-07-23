@@ -1,45 +1,40 @@
+/**
+ * OpenHeroes2
+ * 
+ * Editor index file.
+ */
 
+import * as InjectTapEventPlugin from 'react-tap-event-plugin';
 import 'style/editor/editor.scss';
+import * as React from 'react';
+import * as ReactDom from 'react-dom';
+import Nullable from '../Common/Support/Nullable';
+import EditorApp from "./UI/EditorApp";
+import EditorCore from './Core/EditorCore';
+import EditorContainer from './Core/EditorContainer';
 
-import Container from '../Common/IOC/Container';
-import EngineProvider from '../Common/Providers/EngineProvider';
-import GraphicsLoader from '../Common/Engine/Graphics/GraphicsLoader';
-import Agg from '../Common/Engine/Data/Agg';
-import Engine from '../Common/Engine/Engine';
-import PerfCounter from '../Common/Support/PerfCounter';
-import Snd from '../Common/Engine/Data/Snd';
-import * as FS from 'fs';
-import Tools from '../Common/Support/Tools';
-import AudioLoader from '../Common/Engine/Audio/AudioLoader';
+window.addEventListener( 'load' , async () => {
 
-const container: Container = new Container();
-container.use( EngineProvider );
+    // clear console for auto-reload purposes
+    console.clear();
 
-async function test() {
+    // this one is required by react-material-ui
+    InjectTapEventPlugin();
 
-    await container.get( Engine ).initialize();
+    // get EditorCore class from editor service Container
+    const core: EditorCore = EditorContainer.get( EditorCore );
 
-    const graphicsLoader: GraphicsLoader = container.get( GraphicsLoader );
-    const imageData: string = await graphicsLoader.getIcnAsDataUrl( 'UNICORN.ICN' , 4 );
-    const tilData: string = await graphicsLoader.getTilAsDataUrl( 'GROUND32.TIL' , 48 );
+    // run editor
+    await core.run();
 
-    const image: HTMLImageElement = document.createElement( 'img' );
-    image.src = imageData;
-    //image.style.width = '60px';
-    document.body.appendChild( image );
+    // find element with #app id
+    const appElement: Nullable<HTMLElement> = document.getElementById( 'app' );
 
-    const til: HTMLImageElement = document.createElement( 'img' );
-    til.src = tilData;
-    document.body.appendChild( til );
+    // inject React if possible
+    if ( appElement ) {
+        ReactDom.render( React.createElement( EditorApp ) , appElement );
+    } else {    
+        throw new Error( 'Mailformed HTML file - no #app element present.' );
+    }
 
-    //
-    //
-    //
-    const audioLoader: AudioLoader = container.get( AudioLoader );
-    const cnt = new PerfCounter();
-    const snd: string = await audioLoader.getSoundAsDataUrl( 'BLIND.82M' );
-    console.log( cnt.delta() );
-
-}
-
-test().catch( err => console.log(err) );
+} );

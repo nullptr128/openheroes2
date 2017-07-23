@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha ./test/**/*.ts --recursive" ,
-    "editor-dev": "node ./scripts/editor-dev.js" ,
-    "editor": "electron ./bin/editor/launch-editor.js" ,
+    "test": "nyc mocha ./test/**/*.ts --recursive",
+    "editor-dev": "node ./scripts/editor-dev.js",
+    "editor": "electron ./bin/editor/launch-editor.js",
     "build-editor": "webpack --config ./webpack/editor-launcher.js && webpack --config ./webpack/editor.js"
   },
   "author": "",
@@ -38,9 +38,12 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.65",
+    "@types/material-ui": "^0.17.17",
     "inversify": "^4.1.1",
     "inversify-inject-decorators": "^3.0.1",
     "lodash": "https://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
+    "material-ui": "^0.18.6",
+    "react-tap-event-plugin": "^2.0.1",
     "reflect-metadata": "^0.1.10",
     "reset-css": "^2.2.0"
   },

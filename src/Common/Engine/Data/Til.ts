@@ -1,3 +1,24 @@
+/**
+ * OpenHeroes2 
+ * 
+ * This class is responsible for reading .TIL files and converting
+ * them to pixelmaps.
+ * 
+ * TIL files contains tiles for the maps. In these files, the first three groups of 2 bytes are :
+
+ * the number of tiles (n)
+ * tiles' width
+ * tiles' height
+ * Then there are n times, width * height bytes, that are the colors' index in the palette of the tiles' pixels.
+
+ * The data contains three TIL files :
+
+ * clof32.til : four dark tiles (nigth sky?)
+ * ground32.til : tiles for all terrain's type in the main map.
+ * ston.til : stone ground tiles.
+ * 
+ * Source: https://thaddeus002.github.io/fheroes2-WoT/infos/informations.html
+ */
 
 import Injectable from '../../IOC/Injectable';
 import Inject from '../../IOC/Inject';
@@ -12,23 +33,13 @@ class Til {
     @Inject( Pal )
     private gPal: Pal;
 
+    /**
+     * Reads data from .TIL buffer and returns IH2Tile structure
+     * with data and tile pixelmap.
+     * @param tilFile buffer with .TIL file
+     * @param index number of tile (0..TOTAL-1) we want to read
+     */
     public getTile( tilFile: Buffer , index: number ): IH2Tile {
-
-        /*
-        TIL files contains tiles for the maps. In these files, the first three groups of 2 bytes are :
-
-        the number of tiles (n)
-        tiles' width
-        tiles' height
-        Then there are n times, width * height bytes, that are the colors' index in the palette of the tiles' pixels.
-
-        The data contains three TIL files :
-
-        clof32.til : four dark tiles (nigth sky?)
-        ground32.til : tiles for all terrain's type in the main map.
-        ston.til : stone ground tiles.
-        */
-
 
         const numberOfTiles: number = tilFile.readUInt16LE( 0 );
         const tilesWidth: number = tilFile.readUInt16LE( 2 );

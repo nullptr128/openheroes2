@@ -24,6 +24,12 @@ class Tools {
         return filePath.replace( /^.*[\\\/]/ , '' );
     }
 
+    /**
+     * Converts number value into hex string representation with
+     * certain amount of digits forced.
+     * @param value real value of variable
+     * @param digits amount of digits to display
+     */
     public static numToHex( value: number , digits: number = 4 ): string {
         
         if ( value < 0 ) {

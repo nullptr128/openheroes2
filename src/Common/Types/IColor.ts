@@ -1,3 +1,8 @@
+/**
+ * OpenHeroes2
+ * 
+ * IColor describes shape for pixelmap RGBA color.
+ */
 
 interface IColor {
     r: number;

@@ -1,3 +1,23 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class converts .ICN files to IColor[][] pixelmaps. The data works like this:
+ * 
+ * Scheme for normal sprite
+ *
+ * There is one byte for command followed by 0 or more bytes of data. The command byte can be :
+ *
+ *  0x00 - end of line reached, go to the first pixel of next line.
+ *  0x01 to 0x7F - number n of data. The next n bytes are the colors of the next n pixels.
+ *  0x80 - end of data. The sprite is yet totaly describe.
+ *  0x81 to 0xBF - number of pixels to skip + 0x80. The (n - 128) pixels are transparents.
+ *  0xC0 - put here n pixels of shadow. If the next byte module 4 is not null, n equals the next pixel modulo 4, otherwise n equals the second next byte.
+ *  0xC1 - next byte is the number of next pixels of same color. The second next byte is the color of these pixels.
+ *  0xC2 to 0xFF - number of pixels of same color plus 0xC0. Next byte is the color of these pixels.
+ * 
+ * Source: https://thaddeus002.github.io/fheroes2-WoT/infos/informations.html
+ * 
+ */
 
 import Injectable from '../../IOC/Injectable';
 import IColor from '../../Types/IColor';
@@ -12,20 +32,14 @@ class Icn {
     @Inject( Pal )
     private gPal: Pal;
 
-    /*  
-        Scheme for normal sprite
-
-        There is one byte for command followed by 0 or more bytes of data. The command byte can be :
-
-        0x00 - end of line reached, go to the first pixel of next line.
-        0x01 to 0x7F - number n of data. The next n bytes are the colors of the next n pixels.
-        0x80 - end of data. The sprite is yet totaly describe.
-        0x81 to 0xBF - number of pixels to skip + 0x80. The (n - 128) pixels are transparents.
-        0xC0 - put here n pixels of shadow. If the next byte module 4 is not null, n equals the next pixel modulo 4, otherwise n equals the second next byte.
-        0xC1 - next byte is the number of next pixels of same color. The second next byte is the color of these pixels.
-        0xC2 to 0xFF - number of pixels of same color plus 0xC0. Next byte is the color of these pixels.
-    */
-
+    /**
+     * Gets PixMap from .ICN buffer, based on its type
+     * @param buffer buffer with .ICN file
+     * @param width width of sprite
+     * @param height height of sprite
+     * @param type type of sprite
+     * @param byteStartIndex index of byte with sprite data
+     */
     public getPixmap( buffer: Buffer , width: number , height: number , type: number , byteStartIndex: number ): IColor[][] {
         switch ( type ) {
             case 0:
@@ -35,6 +49,13 @@ class Icn {
         }
     }
 
+    /**
+     * Reads ICN buffer in type=0 (colored sprite).
+     * @param buffer buffer with .ICN file
+     * @param width width of sprite
+     * @param height height of sprite
+     * @param byteStartIndex index of byte with sprite data
+     */
     private getPixmapNormal( buffer: Buffer , width: number , height: number , byteStartIndex: number ): IColor[][] {
 
         // first of all, create result array with correct with and height, filling it with transparent pixels
