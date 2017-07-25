@@ -1,2 +1,11 @@
 
 > Add license to all files
+> Create BaseMap
+> Create EditorMapFactory 
+> Implement view for terrain tab
+> Implement view for rivers/roads
+> Implement view for obstacles
+> Implement views for objects
+
+> Implement minimap display
+> Implement tiles-only map display
