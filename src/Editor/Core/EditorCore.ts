@@ -25,13 +25,13 @@ class EditorCore {
 
     public async run(): Promise<void> {
         this.gEditorStore.initialize();
-        this.gMinimapDisplay.setMapSize( this.gEditorStore.map.getMap().size );
+        this.gMinimapDisplay.setMapSize( this.gEditorStore.map.getMapSize() );
         this.initMinimap();
         await this.gEngine.initialize();
     }
 
     private initMinimap(): void {
-        this.gMinimapDisplay.setTerrainFunc( (x,y) => this.gEditorStore.map.getMap().tiles[x][y].terrain );
+        this.gMinimapDisplay.setTerrainFunc( (x,y) => this.gEditorStore.map.getMapTile(x,y).terrain );
     }
 
 }

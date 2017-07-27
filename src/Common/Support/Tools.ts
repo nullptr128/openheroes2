@@ -46,6 +46,10 @@ class Tools {
 
     }
 
+    public static inRange( value: number , range: { min: number , max: number } ): boolean {
+        return ( value >= range.min ) && ( value <= range.max );
+    }
+
 }
 
 export default Tools;

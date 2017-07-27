@@ -9,3 +9,4 @@
 
 > Implement minimap display
 > Implement tiles-only map display
+> Add VSCode check-all-source script.
