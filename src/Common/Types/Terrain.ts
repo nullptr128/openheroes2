@@ -9,6 +9,7 @@ enum Terrain {
     ROUGH ,
     DESERT ,
     SAND ,
+    HIDDEN ,
 }
 
 export default Terrain;

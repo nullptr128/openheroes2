@@ -8,6 +8,8 @@ import ETabChanged from '../Events/ETabChanged';
 import EditorUIStore from '../Store/EditorUIStore';
 import EditorMapFactory from './EditorMapFactory';
 import EditorMapStore from '../Store/EditorMapStore';
+import * as SerializeJS from 'serialijse';
+import PerfCounter from '../../Common/Support/PerfCounter';
 
 @Injectable()
 class EditorStore {
@@ -27,7 +29,7 @@ class EditorStore {
         this.fState = {
             activeTab: EditorActiveTab.TERRAIN ,
             map: this.gEditorMapFactory.createBlankMap( 'Unnamed map' , '' , 72 ) ,
-            isModified: false
+            isModified: false ,
         };
         this.ui = new EditorUIStore( this.fState , this.gEvents );
         this.map = new EditorMapStore( this.fState , this.gEvents );

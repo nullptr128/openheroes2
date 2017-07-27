@@ -8,9 +8,11 @@
 import Container from '../../Common/IOC/Container';
 import EngineProvider from '../../Common/Providers/EngineProvider';
 import EditorProvider from './EditorProvider';
+import RenderProvider from '../../Common/Providers/RenderProvider';
 
 const EditorContainer: Container = new Container();
 EditorContainer.use( EngineProvider );
 EditorContainer.use( EditorProvider );
+EditorContainer.use( RenderProvider );
 
 export default EditorContainer;

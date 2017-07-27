@@ -1,6 +1,7 @@
 import Injectable from '../../Common/IOC/Injectable';
 import IEditorState from '../Model/IEditorState';
 import Events from '../../Common/Events/Events';
+import IMap from '../../Common/Model/IMap';
 
 @Injectable()
 class EditorMapStore {
@@ -13,7 +14,9 @@ class EditorMapStore {
         this.gEvents = events;
     }
 
-    
+    public getMap(): Readonly<IMap> {
+        return this.fState.map;
+    }
 
 }
 
