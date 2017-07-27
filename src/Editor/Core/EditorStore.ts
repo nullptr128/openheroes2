@@ -1,3 +1,10 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class serves as main access point for editor state.
+ * It holds the state and implements submodules that have
+ * functions to retrieve and mutate state.
+ */
 
 import Injectable from '../../Common/IOC/Injectable';
 import IEditorState from '../Model/IEditorState';
@@ -25,12 +32,17 @@ class EditorStore {
     public ui: EditorUIStore;
     public map: EditorMapStore;
 
+    /**
+     * Initializes EditorStore
+     */
     public initialize(): void {
+        // create initial store
         this.fState = {
             activeTab: EditorActiveTab.TERRAIN ,
             map: this.gEditorMapFactory.createBlankMap( 'Unnamed map' , '' , 72 ) ,
             isModified: false ,
         };
+        // create helper modules
         this.ui = new EditorUIStore( this.fState , this.gEvents );
         this.map = new EditorMapStore( this.fState , this.gEvents );
     }

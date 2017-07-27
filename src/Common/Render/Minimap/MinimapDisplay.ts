@@ -1,3 +1,12 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class is reponsible for drawing minimap on target canvas. It automatically
+ * handles different map sizes, scaling them as neccessary.
+ * 
+ * To use this class, you must call setMapSize, setRenderTarget and
+ * setTerrainFunc first.
+ */
 
 import Injectable from '../../IOC/Injectable';
 import Nullable from '../../Support/Nullable';
@@ -6,6 +15,7 @@ import IColor from '../../Types/IColor';
 import Terrain from '../../Types/Terrain';
 import TerrainColor from './TerrainColor';
 
+// function that retrieves terrain type of tile from position
 type GetTerrainFunc = ( x: number , y: number ) => Terrain;
 
 @Injectable()
@@ -16,6 +26,10 @@ class MinimapDisplay {
     private fSize: number;
     private fGetTerrainFunc: GetTerrainFunc;
 
+    /**
+     * This internal function creates canvas with target size.
+     * @param size size of canvas in pixels (both width and height)
+     */
     private createCanvas( size: number ): HTMLCanvasElement {
         const result: HTMLCanvasElement = document.createElement( 'canvas' );
         result.width = size;
@@ -23,19 +37,36 @@ class MinimapDisplay {
         return result;
     }
 
+    /**
+     * Updates size of map we will be rendering.
+     * @param mapSize new map size
+     */
     public setMapSize( mapSize: number ): void {
         this.fInternalCanvas = this.createCanvas( mapSize );
         this.fSize = mapSize;
     }
 
+    /**
+     * Sets target canvas where map should be drawn
+     * @param targetCanvas canvas where map should be drawn
+     */
     public setRenderTarget( targetCanvas: HTMLCanvasElement ): void {
         this.fTarget = targetCanvas;
     }
 
+    /**
+     * Sets function that will return terrain type from x/y
+     * @param terrainFunc terrain function
+     */
     public setTerrainFunc( terrainFunc: GetTerrainFunc ): void {
         this.fGetTerrainFunc = terrainFunc;
     }
 
+    /**
+     * Redraws map on canvas set by setRenderTarget, using
+     * function set by setTerrainFunc to retrieve terrain types
+     * of map.
+     */
     public redrawMap(): void {
         
         if ( !this.fInternalCanvas || !this.fTarget ) {
@@ -66,6 +97,11 @@ class MinimapDisplay {
 
     }
 
+    /**
+     * Retrieves color of minimap pixel on tile x/y
+     * @param x x-offset of tile
+     * @param y y-offset of tile
+     */
     public getTileColor( x: number , y: number ): Readonly<IColor> {
         const terrain: Terrain = this.fGetTerrainFunc( x , y );
         return TerrainColor[ terrain ];

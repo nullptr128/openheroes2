@@ -1,3 +1,10 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class serves as helper module for EditorStore.
+ * This one targets map-based retrieval and updates.
+ */
+
 import Injectable from '../../Common/IOC/Injectable';
 import IEditorState from '../Model/IEditorState';
 import Events from '../../Common/Events/Events';
@@ -16,10 +23,18 @@ class EditorMapStore {
         this.gEvents = events;
     }
 
+    /**
+     * Returns size of current map.
+     */
     public getMapSize(): number {
         return this.fState.map.size;
     }
 
+    /**
+     * Retrieves read-only tile of current map.
+     * @param x x-position of tile
+     * @param y y-position of tile
+     */
     public getMapTile( x: number , y: number ): Readonly<ITile> {
         const mapSize: number = this.getMapSize();
         if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {

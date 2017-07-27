@@ -1,3 +1,8 @@
+/**
+ * OpenHeroes2
+ * 
+ * This interface defines a shape of basic OpenHeroes2 map.
+ */
 
 import ITile from './ITile';
 

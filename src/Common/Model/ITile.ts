@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * This interface defines a shape of basic OpenHeroes2 map tile.
+ */
+
 import Terrain from '../Types/Terrain';
 
 interface ITile {

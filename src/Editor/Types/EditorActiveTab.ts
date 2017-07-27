@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * This module exports enum that holds possible editor
+ * tabs from toolbar.
+ */
 
 enum EditorActiveTab {
     TERRAIN ,

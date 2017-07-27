@@ -23,6 +23,9 @@ class EditorCore {
     @Inject( MinimapDisplay )
     private gMinimapDisplay: MinimapDisplay;
 
+    /**
+     * Prepares editor to run on launch.
+     */
     public async run(): Promise<void> {
         this.gEditorStore.initialize();
         this.gMinimapDisplay.setMapSize( this.gEditorStore.map.getMapSize() );
@@ -30,6 +33,9 @@ class EditorCore {
         await this.gEngine.initialize();
     }
 
+    /**
+     * Initializes minimap
+     */
     private initMinimap(): void {
         this.gMinimapDisplay.setTerrainFunc( (x,y) => this.gEditorStore.map.getMapTile(x,y).terrain );
     }

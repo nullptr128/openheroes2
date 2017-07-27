@@ -1,3 +1,8 @@
+/**
+ * OpenHeroes2
+ * 
+ * This file contains enum with terrain type.
+ */
 
 enum Terrain {
     WATER ,

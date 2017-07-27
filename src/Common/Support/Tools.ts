@@ -46,6 +46,11 @@ class Tools {
 
     }
 
+    /**
+     * Checks if target number fits in range of [min..max]
+     * @param value number to check
+     * @param range object with minimum and maximum value
+     */
     public static inRange( value: number , range: { min: number , max: number } ): boolean {
         return ( value >= range.min ) && ( value <= range.max );
     }
