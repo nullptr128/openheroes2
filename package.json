@@ -7,7 +7,8 @@
     "test": "nyc mocha ./test/**/*.ts --recursive",
     "editor-dev": "node ./scripts/editor-dev.js",
     "editor": "electron ./bin/editor/launch-editor.js",
-    "build-editor": "webpack --config ./webpack/editor-launcher.js && webpack --config ./webpack/editor.js"
+    "build-editor": "webpack --config ./webpack/editor-launcher.js && webpack --config ./webpack/editor.js",
+    "codecheck": "node ./scripts/vscode-check.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "@types/electron": "^1.4.38",
     "@types/glob": "^5.0.30",
     "@types/mocha": "^2.2.41",
+    "@types/pixi.js": "^4.5.2",
     "@types/react": "^15.0.27",
     "@types/react-dom": "^15.5.0",
     "@types/react-tap-event-plugin": "0.0.30",
@@ -46,6 +48,7 @@
     "inversify-inject-decorators": "^3.0.1",
     "lodash": "https://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
     "material-ui": "^0.18.6",
+    "pixi.js": "^4.5.4",
     "react-tap-event-plugin": "^2.0.1",
     "reflect-metadata": "^0.1.10",
     "reset-css": "^2.2.0",
