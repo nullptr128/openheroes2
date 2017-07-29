@@ -10,6 +10,7 @@ import Engine from '../../Common/Engine/Engine';
 import EditorStore from './EditorStore';
 import MinimapDisplay from '../../Common/Render/Minimap/MinimapDisplay';
 import ETabChanged from '../Events/ETabChanged';
+import MapDisplay from '../../Common/Render/MapDisplay/MapDisplay';
 
 @Injectable()
 class EditorCore {
@@ -23,21 +24,29 @@ class EditorCore {
     @Inject( MinimapDisplay )
     private gMinimapDisplay: MinimapDisplay;
 
+    @Inject( MapDisplay )
+    private gMapDisplay: MapDisplay;
+
     /**
      * Prepares editor to run on launch.
      */
     public async run(): Promise<void> {
         this.gEditorStore.initialize();
         this.gMinimapDisplay.setMapSize( this.gEditorStore.map.getMapSize() );
-        this.initMinimap();
+        this.initMinimapDisplay();
+        this.initMapDisplay();
         await this.gEngine.initialize();
     }
 
     /**
      * Initializes minimap
      */
-    private initMinimap(): void {
+    private initMinimapDisplay(): void {
         this.gMinimapDisplay.setTerrainFunc( (x,y) => this.gEditorStore.map.getMapTile(x,y).terrain );
+    }
+
+    private initMapDisplay(): void {
+        this.gMapDisplay.startRender();
     }
 
 }
