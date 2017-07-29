@@ -11,6 +11,8 @@ import EditorStore from './EditorStore';
 import MinimapDisplay from '../../Common/Render/Minimap/MinimapDisplay';
 import ETabChanged from '../Events/ETabChanged';
 import MapDisplay from '../../Common/Render/MapDisplay/MapDisplay';
+import MapDisplayBasicPipeline from '../../Common/Render/MapDisplay/MapDisplayBasicPipeline';
+import Render from '../../Common/Engine/Render/Render';
 
 @Injectable()
 class EditorCore {
@@ -27,15 +29,24 @@ class EditorCore {
     @Inject( MapDisplay )
     private gMapDisplay: MapDisplay;
 
+    @Inject( MapDisplayBasicPipeline )
+    private gMapDisplayBasicPipeline: MapDisplayBasicPipeline;
+
+    @Inject( Render )
+    private gRender: Render;
+
     /**
      * Prepares editor to run on launch.
      */
     public async run(): Promise<void> {
+        
         this.gEditorStore.initialize();
-        this.gMinimapDisplay.setMapSize( this.gEditorStore.map.getMapSize() );
-        this.initMinimapDisplay();
-        this.initMapDisplay();
+        this.gMinimapDisplay.setMapSize( this.gEditorStore.map.getMapSize() );                
         await this.gEngine.initialize();
+
+        this.initMinimapDisplay();        
+        this.initMapDisplay();
+
     }
 
     /**
@@ -43,10 +54,14 @@ class EditorCore {
      */
     private initMinimapDisplay(): void {
         this.gMinimapDisplay.setTerrainFunc( (x,y) => this.gEditorStore.map.getMapTile(x,y).terrain );
+        this.gMinimapDisplay.redrawMap();
     }
 
     private initMapDisplay(): void {
-        this.gMapDisplay.startRender();
+        this.gMapDisplay.setPipeline( [...this.gMapDisplayBasicPipeline.getPipelines() ] );
+        this.gRender.startRender( stage => {
+            this.gMapDisplay.render( stage );
+        } );
     }
 
 }

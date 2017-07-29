@@ -24,6 +24,7 @@ class Render {
         canvas.style.height = targetHeight + 'px';
         canvas.width = targetWidth;
         canvas.height = targetHeight;
+        this.fRenderer.resize( targetWidth , targetHeight );
         return canvas;
     }
 
@@ -43,6 +44,8 @@ class Render {
             if ( this.fRenderFunc ) {
                 // call render func with correct delta time
                 this.fRenderFunc( this.fStage );
+                // render stage
+                this.fRenderer.render( this.fStage );
                 // request next redraw
                 requestAnimationFrame( internalRender );       
             }

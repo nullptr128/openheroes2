@@ -23,6 +23,10 @@ class EditorMapStore {
         this.gEvents = events;
     }
 
+    public getMap(): IMap {
+        return this.fState.map;
+    }
+
     /**
      * Returns size of current map.
      */

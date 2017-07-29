@@ -10,7 +10,6 @@ export default class Minimap extends React.Component {
 
     public componentDidMount(): void {
         this.gMinimapDisplay.setRenderTarget( this.refs.canvas as HTMLCanvasElement );
-        this.gMinimapDisplay.redrawMap();
     }
 
     public render(): JSX.Element {

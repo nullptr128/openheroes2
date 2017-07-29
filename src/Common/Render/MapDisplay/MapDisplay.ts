@@ -11,8 +11,8 @@ import Inject from '../../IOC/Inject';
 import Position from '../../Types/Position';
 import Container from '../../IOC/Container';
 import IMap from '../../Model/IMap';
-import MapDisplayPipelineFunction from './MapDisplayPipelineFunction';
 import Nullable from '../../Support/Nullable';
+import IMapDisplayPipelineElement from './IMapDisplayPipelineElement';
 
 @Injectable()
 class MapDisplay {
@@ -23,7 +23,7 @@ class MapDisplay {
     private fCanvas: HTMLCanvasElement;
     private fCameraPosition: Position = new Position( 0 , 0 );
     private fCameraDelta: Position = new Position( 0.000 , 0.000 );
-    private fPipeline: MapDisplayPipelineFunction[] = [];
+    private fPipeline: IMapDisplayPipelineElement[] = [];
     private fMapContainer: Nullable<Pixi.Container>;
 
     public createAndGetCanvas( baseWidth: number , baseHeight: number ): HTMLCanvasElement {
@@ -31,19 +31,11 @@ class MapDisplay {
         return this.fCanvas;
     }
 
-    public setPipeline( pipeline: MapDisplayPipelineFunction[] ): void {
+    public setPipeline( pipeline: IMapDisplayPipelineElement[] ): void {
         this.fPipeline = pipeline;
     }
 
-    public startRender(): void {
-        this.gRender.startRender( (stage) => this.render(stage) );
-    }
-
-    private getTileSize(): number {
-        return 32;
-    }
-
-    private render( stage: Pixi.Container ): void {
+    public render( stage: Pixi.Container ): void {
 
         if ( !this.fCanvas ) {
             return;
@@ -57,6 +49,10 @@ class MapDisplay {
             this.updateContainer();
         }
 
+    }
+
+    private getTileSize(): number {
+        return 32;
     }
 
     private redraw( stage: Pixi.Container ): void {
@@ -77,6 +73,7 @@ class MapDisplay {
 
         // create new container
         this.fMapContainer = new Pixi.Container();
+        stage.addChild( this.fMapContainer );
 
         // push container through rendering pipeline
         // iterating from bottom-right to top-left
@@ -96,7 +93,7 @@ class MapDisplay {
         const drawY: number = ( tileY - startY ) * tileSize;
         const scale: number = tileSize / 32.000;
 
-        this.fPipeline.forEach( fn => fn( this.fMapContainer! , tileX , tileY , drawX , drawY , scale ) );
+        this.fPipeline.forEach( el => el.redraw( this.fMapContainer! , tileX , tileY , drawX , drawY , scale ) );
 
     }
 
