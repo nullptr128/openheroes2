@@ -19,6 +19,7 @@ import AudioLoader from '../Engine/Audio/AudioLoader';
 import Paths from '../Engine/Misc/Paths';
 import Locale from '../Engine/Misc/Locale';
 import Events from '../Events/Events';
+import Render from '../Engine/Render/Render';
 
 export default function EngineProvider( container: Container ): void {
     container.bind( Agg );
@@ -34,4 +35,5 @@ export default function EngineProvider( container: Container ): void {
     container.bind( Paths );
     container.bind( Locale );
     container.bind( Events );
+    container.bind( Render );
 }

@@ -12,6 +12,7 @@ import Pal from './Data/Pal';
 import Locale from './Misc/Locale';
 import Events from '../Events/Events';
 import EEditorLoaded from '../../Editor/Events/EEditorLoaded';
+import Render from './Render/Render';
 
 @Injectable()
 class Engine {
@@ -28,6 +29,9 @@ class Engine {
     @Inject( Events )
     private gEvents: Events;
 
+    @Inject( Render )
+    private gRender: Render;
+
     /**
      * Initializes OpenHeroes2 engine.
      */
@@ -42,6 +46,9 @@ class Engine {
 
         // load locale files
         await this.gLocale.loadLocale( 'english' );
+
+        // initialize render engine
+        await this.gRender.initialize( 256 , 256 );
 
         // notify other that we are ready
         this.gEvents.trigger( EEditorLoaded );
