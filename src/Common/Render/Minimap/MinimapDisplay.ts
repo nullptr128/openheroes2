@@ -13,7 +13,7 @@ import Nullable from '../../Support/Nullable';
 import IMap from '../../Model/IMap';
 import IColor from '../../Types/IColor';
 import Terrain from '../../Types/Terrain';
-import TerrainColor from './TerrainColor';
+import TerrainData from '../../Game/Terrain/TerrainData';
 
 // function that retrieves terrain type of tile from position
 type GetTerrainFunc = ( x: number , y: number ) => Terrain;
@@ -104,7 +104,7 @@ class MinimapDisplay {
      */
     public getTileColor( x: number , y: number ): Readonly<IColor> {
         const terrain: Terrain = this.fGetTerrainFunc( x , y );
-        return TerrainColor[ terrain ];
+        return TerrainData[ terrain ].color;
     }
 
 }

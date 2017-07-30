@@ -35,7 +35,7 @@ class Arrays {
 
     }
 
-    public static createNumberArray( from: number , to: number ): number[] {
+    public static createRange( from: number , to: number ): number[] {
         const count: number = to - from;
         const result: number[] = [];
         for( let i = 0 ; i < count ; ++i ){

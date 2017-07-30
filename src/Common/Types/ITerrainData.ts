@@ -11,6 +11,7 @@ interface ITerrainData {
     decorationTiles: number[];
     junctionBorders: ITerrainBorders;
     basicBorders: ITerrainBorders;
+    multiBorders: number[];
 }
 
 export default ITerrainData;
