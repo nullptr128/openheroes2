@@ -64,6 +64,44 @@ class Til {
 
     }
 
+    /**
+     * Reads data from .TIL buffer and returns all tiles 
+     * as H2Tile[] array with data and tile pixelmap.
+     * @param tilFile buffer with .TIL file
+     * @param index number of tile (0..TOTAL-1) we want to read
+     */
+    public getTiles( tilFile: Buffer ): IH2Tile[] {
+
+        const numberOfTiles: number = tilFile.readUInt16LE( 0 );
+        const tilesWidth: number = tilFile.readUInt16LE( 2 );
+        const tilesHeight: number = tilFile.readUInt16LE( 4 );
+
+        const result: IH2Tile[] = [];
+
+        for( let index = 0 ; index < numberOfTiles ; ++index ) {
+
+            const startByte: number = (tilesWidth*tilesHeight) * index + 6;
+            const pixmap: IColor[][] = Arrays.create2dArray( tilesWidth , tilesHeight , () => ({ r: 0 , g: 0 , b: 0 , a: 0 }) );
+
+            for( let x = 0 ; x < tilesWidth ; ++x ) {
+                for( let y = 0 ; y < tilesHeight ; ++y ) {
+                    const paletteIndex: number = tilFile.readUInt8( startByte + (y*tilesWidth) + x );
+                    pixmap[x][y] = this.gPal.getColor( paletteIndex );
+                }
+            }
+
+            result.push( {
+                width: tilesWidth ,
+                height: tilesHeight ,
+                pixmap: pixmap ,
+            } );
+
+        }
+
+        return result;
+
+    }
+
 }
 
 export default Til;

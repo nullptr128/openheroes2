@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class is responsible for creating and managing Pixi.js
+ * renderer.
+ */
 
 import * as Pixi from 'pixi.js';
 import Injectable from '../../IOC/Injectable';
@@ -10,14 +16,26 @@ type IPixiRenderer = Pixi.CanvasRenderer | Pixi.WebGLRenderer;
 class Render {
 
     private fRenderer: IPixiRenderer;
-    private fRenderFunc: Nullable<RenderFunction>;
     private fStage: Pixi.Container;
 
+    /**
+     * Initializes Pixi renderer with target width and height.
+     * Width and height does not matter as renderer will be
+     * resized to fit sizes in getCanvas() function anyway.
+     * @param baseWidth 
+     * @param baseHeight 
+     */
     public initialize( baseWidth: number , baseHeight: number ): void {
         this.fRenderer = Pixi.autoDetectRenderer( baseWidth , baseHeight );
         this.fStage = new Pixi.Container();
     }
 
+    /**
+     * Returns html canvas element associated with renderer, also scaling
+     * both canvas and renderer to target sizes.
+     * @param targetWidth size of viewport
+     * @param targetHeight size of viewport
+     */
     public getCanvas( targetWidth: number , targetHeight: number ): HTMLCanvasElement {
         const canvas: HTMLCanvasElement = this.fRenderer.view;
         canvas.style.width = targetWidth + 'px';
@@ -28,31 +46,13 @@ class Render {
         return canvas;
     }
 
-    public startRender( renderFunction: RenderFunction ): void {
-        this.fRenderFunc = renderFunction;
-        this.renderLoop();
-    }
-
-    public stopRender(): void {
-        this.fRenderFunc = null;
-    }
-
-    public renderLoop(): void {
-
-        const internalRender = () => {
-            // we will only run render function if it was not detached...
-            if ( this.fRenderFunc ) {
-                // call render func with correct delta time
-                this.fRenderFunc( this.fStage );
-                // render stage
-                this.fRenderer.render( this.fStage );
-                // request next redraw
-                requestAnimationFrame( internalRender );       
-            }
-        };
-
-        requestAnimationFrame( internalRender );
-
+    /**
+     * Renders single animation frame using particular render function.
+     * @param renderFunction function to use in rendering
+     */
+    public render( renderFunction: RenderFunction ): void {
+        renderFunction( this.fStage );
+        this.fRenderer.render( this.fStage );
     }
 
 }

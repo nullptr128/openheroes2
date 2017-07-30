@@ -20,6 +20,8 @@ import Paths from '../Engine/Misc/Paths';
 import Locale from '../Engine/Misc/Locale';
 import Events from '../Events/Events';
 import Render from '../Engine/Render/Render';
+import Resources from '../Engine/Resource/Resources';
+import Textures from '../Engine/Resource/Textures';
 
 export default function EngineProvider( container: Container ): void {
     container.bind( Agg );
@@ -36,4 +38,6 @@ export default function EngineProvider( container: Container ): void {
     container.bind( Locale );
     container.bind( Events );
     container.bind( Render );
+    container.bind( Resources );
+    container.bind( Textures );
 }

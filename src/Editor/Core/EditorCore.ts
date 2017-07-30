@@ -47,6 +47,8 @@ class EditorCore {
         this.initMinimapDisplay();        
         this.initMapDisplay();
 
+        this.mainLoop();
+
     }
 
     /**
@@ -57,11 +59,28 @@ class EditorCore {
         this.gMinimapDisplay.redrawMap();
     }
 
+    /**
+     * Initializes map display
+     */
     private initMapDisplay(): void {
+        this.gMapDisplayBasicPipeline.setMap( this.gEditorStore.map.getMap() );
         this.gMapDisplay.setPipeline( [...this.gMapDisplayBasicPipeline.getPipelines() ] );
-        this.gRender.startRender( stage => {
-            this.gMapDisplay.render( stage );
-        } );
+    }
+
+    /**
+     * Creates main editor 'loop'
+     */
+    private mainLoop(): void {
+
+        const doMainLoop = () => {
+            this.gRender.render( stage => {
+                this.gMapDisplay.render( stage );
+            } );
+            requestAnimationFrame( doMainLoop );
+        };
+
+        doMainLoop();
+
     }
 
 }

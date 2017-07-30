@@ -1,3 +1,8 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class holds arbitary position.
+ */
 
 class Position {
     
