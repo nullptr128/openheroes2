@@ -12,6 +12,10 @@ import IMapDisplayPipelineElement from './IMapDisplayPipelineElement';
 import * as Pixi from 'pixi.js';
 import Inject from '../../IOC/Inject';
 import Resources from '../../Engine/Resource/Resources';
+import Terrain from '../../Types/Terrain';
+import TerrainData from '../../Game/Terrain/TerrainData';
+import ITerrainData from '../../Types/ITerrainData';
+import ITile from '../../Model/ITile';
 
 @Injectable()
 class MapDisplayBasicPipeline {
@@ -45,11 +49,17 @@ class MapDisplayBasicPipeline {
     public getTerrainPipeline(): IMapDisplayPipelineElement {
         return {
             redraw: ( container , tileX , tileY , destX , destY , scale ) => {
-                const texture: Pixi.Texture = this.gResources.getTilTexture( 'GROUND32.TIL' , 16 );
-                const sprite: Pixi.Sprite = new Pixi.Sprite( texture );
-                sprite.position.set( destX , destY );
-                sprite.scale.set( scale );
-                container.addChild( sprite );
+
+                if ( tileX > 0 && tileX < this.fMap.size && tileY > 0 && tileY < this.fMap.size ) {
+                    const tile: ITile = this.fMap.tiles[tileX][tileY];
+
+                    const texture: Pixi.Texture = this.gResources.getTilTexture( 'GROUND32.TIL' , tile.spriteId );
+                    const sprite: Pixi.Sprite = new Pixi.Sprite( texture );
+                    sprite.position.set( destX , destY );
+                    sprite.scale.set( scale );
+                    container.addChild( sprite );
+                }
+
             }
         };
     }
