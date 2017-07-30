@@ -1,3 +1,4 @@
+import Tools from './Tools';
 /**
  * OpenHeroes2
  * 
@@ -35,6 +36,12 @@ class Arrays {
 
     }
 
+    /**
+     * Creates array with numbers of certain range, like createRange(3,6) will
+     * create an array: [3,4,5,6].
+     * @param from starting number
+     * @param to ending number
+     */
     public static createRange( from: number , to: number ): number[] {
         const count: number = to - from;
         const result: number[] = [];
@@ -42,6 +49,18 @@ class Arrays {
             result.push( from + i );
         }
         return result;
+    }
+
+    /**
+     * Retrieves random element from array.
+     * @param array a non-empty array
+     */
+    public static randomElement<T>( array: Array<T> ): T {
+        if ( array.length == 0 ) {
+            throw new Error( 'randomElement() - provided array is empty!' );
+        } else {
+            return array[ Tools.random( 0 , array.length - 1 ) ];
+        }
     }
 
 }

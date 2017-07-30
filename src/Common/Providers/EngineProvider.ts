@@ -22,6 +22,7 @@ import Events from '../Events/Events';
 import Render from '../Engine/Render/Render';
 import Resources from '../Engine/Resource/Resources';
 import Textures from '../Engine/Resource/Textures';
+import Looper from '../Engine/Misc/Looper';
 
 export default function EngineProvider( container: Container ): void {
     container.bind( Agg );
@@ -40,4 +41,5 @@ export default function EngineProvider( container: Container ): void {
     container.bind( Render );
     container.bind( Resources );
     container.bind( Textures );
+    container.bind( Looper );
 }

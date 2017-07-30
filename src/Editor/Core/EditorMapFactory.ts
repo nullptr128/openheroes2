@@ -10,6 +10,8 @@ import IMap from '../../Common/Model/IMap';
 import ITile from '../../Common/Model/ITile';
 import Arrays from '../../Common/Support/Arrays';
 import Terrain from '../../Common/Types/Terrain';
+import Tools from '../../Common/Support/Tools';
+import TerrainData from '../../Common/Game/Terrain/TerrainData';
 
 @Injectable()
 class EditorMapFactory {
@@ -39,7 +41,7 @@ class EditorMapFactory {
                 x ,
                 y ,
                 terrain: Terrain.WATER ,
-                spriteId: 0 ,
+                spriteId: Arrays.randomElement( TerrainData[ Terrain.WATER ].basicTiles ) ,
             };
         } );
     }

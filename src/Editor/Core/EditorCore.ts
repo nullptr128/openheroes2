@@ -11,8 +11,11 @@ import EditorStore from './EditorStore';
 import MinimapDisplay from '../../Common/Render/Minimap/MinimapDisplay';
 import ETabChanged from '../Events/ETabChanged';
 import MapDisplay from '../../Common/Render/MapDisplay/MapDisplay';
-import MapDisplayBasicPipeline from '../../Common/Render/MapDisplay/MapDisplayBasicPipeline';
 import Render from '../../Common/Engine/Render/Render';
+import TerrainPipeline from '../../Common/Render/MapDisplay/TerrainPipeline';
+import Nullable from '../../Common/Support/Nullable';
+import ITile from '../../Common/Model/ITile';
+import Looper from '../../Common/Engine/Misc/Looper';
 
 @Injectable()
 class EditorCore {
@@ -29,11 +32,14 @@ class EditorCore {
     @Inject( MapDisplay )
     private gMapDisplay: MapDisplay;
 
-    @Inject( MapDisplayBasicPipeline )
-    private gMapDisplayBasicPipeline: MapDisplayBasicPipeline;
+    @Inject( TerrainPipeline )
+    private gTerrainPipeline: TerrainPipeline;
 
     @Inject( Render )
     private gRender: Render;
+
+    @Inject( Looper )
+    private gLooper: Looper;
 
     /**
      * Prepares editor to run on launch.
@@ -47,7 +53,8 @@ class EditorCore {
         this.initMinimapDisplay();        
         this.initMapDisplay();
 
-        this.mainLoop();
+        this.gLooper.subscribe( dt => this.timeSlice( dt ) );
+        this.gLooper.startLooper();
 
     }
 
@@ -63,23 +70,24 @@ class EditorCore {
      * Initializes map display
      */
     private initMapDisplay(): void {
-        this.gMapDisplayBasicPipeline.setMap( this.gEditorStore.map.getMap() );
-        this.gMapDisplay.setPipeline( [...this.gMapDisplayBasicPipeline.getPipelines() ] );
+        this.gTerrainPipeline.setTileFunc( (x,y) => this.getTileFunc(x,y) );
+        this.gMapDisplay.setPipeline( [
+            this.gTerrainPipeline.getPipeline()
+        ] );
     }
 
-    /**
-     * Creates main editor 'loop'
-     */
-    private mainLoop(): void {
+    private getTileFunc( x: number , y: number ): Nullable<ITile> {
+        if ( x >= 0 && y >= 0 && x < this.gEditorStore.map.getMapSize() && y < this.gEditorStore.map.getMapSize() ) {
+            return this.gEditorStore.map.getMapTile( x , y );
+        } else {
+            return null;
+        }
+    }
 
-        const doMainLoop = () => {
-            this.gRender.render( stage => {
-                this.gMapDisplay.render( stage );
-            } );
-            requestAnimationFrame( doMainLoop );
-        };
+    private timeSlice( dt: number ): void {
 
-        doMainLoop();
+        this.gMapDisplay.moveMap( dt*2.200 , dt* 2.200 );
+        this.gRender.render( stage => this.gMapDisplay.render( stage ) );
 
     }
 

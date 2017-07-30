@@ -26,6 +26,7 @@ TerrainData[ Terrain.WATER ] = {
     multiBorders: [] ,
 };
 
+// Grass
 TerrainData[ Terrain.GRASS ] = {
     color: { r: 130 , g: 168 , b: 109 , a: 255 } ,
     terrain: Terrain.GRASS ,
@@ -47,6 +48,7 @@ TerrainData[ Terrain.GRASS ] = {
     multiBorders: Arrays.createRange( 62 , 67 ) ,
 };
 
+// Dirt
 TerrainData[ Terrain.DIRT ] = {
     color: { r: 168 , g: 137 , b: 109 , a: 255 } ,
     terrain: Terrain.DIRT ,
@@ -68,6 +70,7 @@ TerrainData[ Terrain.DIRT ] = {
     multiBorders: [] ,
 };
 
+// Snow 
 TerrainData[ Terrain.SNOW ] = {
     color: { r: 224 , g: 224 , b: 224 , a: 255 } ,
     terrain: Terrain.SNOW ,
@@ -89,6 +92,7 @@ TerrainData[ Terrain.SNOW ] = {
     multiBorders: Arrays.createRange( 124 , 129 ) ,
 };
 
+// Swamp
 TerrainData[ Terrain.SWAMP ] = {
     color: { r:  82 , g:  89 , b:  77 , a: 255 } ,
     terrain: Terrain.SWAMP ,
@@ -110,6 +114,7 @@ TerrainData[ Terrain.SWAMP ] = {
     multiBorders: Arrays.createRange( 178 , 183 ) ,
 };
 
+// Lava
 TerrainData[ Terrain.LAVA ] = {
     color: { r:  91 , g:  80 , b:  80 , a: 255 } ,
     terrain: Terrain.LAVA ,
@@ -131,6 +136,7 @@ TerrainData[ Terrain.LAVA ] = {
     multiBorders: Arrays.createRange( 240 , 245 ) ,
 };
 
+// Rough
 TerrainData[ Terrain.ROUGH ] = {
     color: { r: 196 , g: 173 , b: 123 , a: 255 } ,
     terrain: Terrain.ROUGH ,
@@ -152,6 +158,7 @@ TerrainData[ Terrain.ROUGH ] = {
     multiBorders: Arrays.createRange( 393 , 398 ) ,
 };
 
+// Desert
 TerrainData[ Terrain.DESERT ] = {
     color: { r: 216 , g: 213 , b: 151 , a: 255 } ,
     terrain: Terrain.DESERT ,

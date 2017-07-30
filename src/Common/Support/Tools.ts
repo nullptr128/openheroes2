@@ -55,6 +55,15 @@ class Tools {
         return ( value >= range.min ) && ( value <= range.max );
     }
 
+    /**
+     * Generates random number in range [min..max] inclusive
+     * @param min minimum value
+     * @param max maximum value
+     */
+    public static random( min: number , max: number ): number {
+        return Math.floor( Math.random() * ((max-min)+1) ) + min;
+    }
+
 }
 
 export default Tools;

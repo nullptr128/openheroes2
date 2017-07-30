@@ -35,6 +35,7 @@ import Container from '../../IOC/Container';
 import IMap from '../../Model/IMap';
 import Nullable from '../../Support/Nullable';
 import IMapDisplayPipelineElement from './IMapDisplayPipelineElement';
+import PerfCounter from '../../Support/PerfCounter';
 
 @Injectable()
 class MapDisplay {
@@ -100,11 +101,14 @@ class MapDisplay {
         if ( needsRedraw ) {
             // fully reinitialize pixi scene, destroying and
             // recreating all sprites
+            const perfCounter: PerfCounter = new PerfCounter();
+            this.normalizeCamera();
             this.redraw( stage );
-        } else {
-            // only update container position
-            this.updateContainer();
+            console.log( 'redraw time: ' , perfCounter.delta() );
         }
+
+        // update container position
+        this.updateContainer();
 
     }
 
@@ -113,6 +117,16 @@ class MapDisplay {
      */
     private getTileSize(): number {
         return 32;
+    }
+
+    private normalizeCamera(): void {
+
+        this.fCameraPosition.x += Math.floor( this.fCameraDelta.x );
+        this.fCameraPosition.y += Math.floor( this.fCameraDelta.y );
+        
+        this.fCameraDelta.x = this.fCameraDelta.x % 1.000;
+        this.fCameraDelta.y = this.fCameraDelta.y % 1.000;
+
     }
 
     /**
@@ -166,8 +180,8 @@ class MapDisplay {
 
         // prepare data
         const tileSize: number = this.getTileSize();
-        const drawX: number = ( tileX - startX ) * tileSize;
-        const drawY: number = ( tileY - startY ) * tileSize;
+        const drawX: number = ( tileX - startX - 2 ) * tileSize;
+        const drawY: number = ( tileY - startY - 2 ) * tileSize;
         const scale: number = tileSize / 32.000;
 
         // call pipeline functions
@@ -184,9 +198,14 @@ class MapDisplay {
         const tileSize: number = this.getTileSize();
         const container: Pixi.Container = this.fMapContainer!;
 
-        container.x = this.fCameraDelta.x * tileSize;
-        container.y = this.fCameraDelta.y * tileSize;
+        container.x = Math.floor( -this.fCameraDelta.x * tileSize );
+        container.y = Math.floor( -this.fCameraDelta.y * tileSize );
 
+    }
+
+    public moveMap( offsetX: number , offsetY: number ): void {
+        this.fCameraDelta.x += offsetX;
+        this.fCameraDelta.y += offsetY;
     }
 
 }
