@@ -36,6 +36,7 @@ import IMap from '../../Model/IMap';
 import Nullable from '../../Support/Nullable';
 import IMapDisplayPipelineElement from './IMapDisplayPipelineElement';
 import PerfCounter from '../../Support/PerfCounter';
+import Tools from '../../Support/Tools';
 
 @Injectable()
 class MapDisplay {
@@ -46,6 +47,7 @@ class MapDisplay {
     private fCanvas: HTMLCanvasElement;
     private fCameraPosition: Position = new Position( 0 , 0 );
     private fCameraDelta: Position = new Position( 0.000 , 0.000 );
+    private fZoom: number = 1.000;
     private fPipeline: IMapDisplayPipelineElement[] = [];
     private fMapContainer: Nullable<Pixi.Container>;
     private fNeedRedraw: boolean = false;
@@ -116,13 +118,13 @@ class MapDisplay {
      * Returns size of tile for current zoom level.
      */
     private getTileSize(): number {
-        return 32;
+        return 32 / this.fZoom;
     }
 
     private normalizeCamera(): void {
 
-        this.fCameraPosition.x += Math.floor( this.fCameraDelta.x );
-        this.fCameraPosition.y += Math.floor( this.fCameraDelta.y );
+        this.fCameraPosition.x += Math.trunc( this.fCameraDelta.x );
+        this.fCameraPosition.y += Math.trunc( this.fCameraDelta.y );
         
         this.fCameraDelta.x = this.fCameraDelta.x % 1.000;
         this.fCameraDelta.y = this.fCameraDelta.y % 1.000;
@@ -206,6 +208,11 @@ class MapDisplay {
     public moveMap( offsetX: number , offsetY: number ): void {
         this.fCameraDelta.x += offsetX;
         this.fCameraDelta.y += offsetY;
+    }
+
+    public changeZoom( zoomDelta: number ): void {
+        this.fZoom = Tools.clamp( this.fZoom + zoomDelta , { min: 0.100 , max: 4.000 } );
+        this.forceRedraw();
     }
 
 }

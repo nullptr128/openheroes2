@@ -64,6 +64,21 @@ class Tools {
         return Math.floor( Math.random() * ((max-min)+1) ) + min;
     }
 
+    /**
+     * Clamps value to specific range
+     * @param value value to clamp
+     * @param range range 
+     */
+    public static clamp( value: number , range: { min: number , max: number } ): number {
+        if ( value < range.min ) {
+            return range.min;
+        } else if ( value > range.max ) {
+            return range.max;
+        } else {
+            return value;
+        }
+    }
+
 }
 
 export default Tools;

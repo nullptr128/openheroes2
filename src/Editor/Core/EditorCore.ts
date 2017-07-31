@@ -16,6 +16,7 @@ import TerrainPipeline from '../../Common/Render/MapDisplay/TerrainPipeline';
 import Nullable from '../../Common/Support/Nullable';
 import ITile from '../../Common/Model/ITile';
 import Looper from '../../Common/Engine/Misc/Looper';
+import MapControl from '../Actions/MapControl';
 
 @Injectable()
 class EditorCore {
@@ -35,6 +36,9 @@ class EditorCore {
     @Inject( TerrainPipeline )
     private gTerrainPipeline: TerrainPipeline;
 
+    @Inject( MapControl )
+    private gMapControl: MapControl;
+
     @Inject( Render )
     private gRender: Render;
 
@@ -53,8 +57,13 @@ class EditorCore {
         this.initMinimapDisplay();        
         this.initMapDisplay();
 
-        this.gLooper.subscribe( dt => this.timeSlice( dt ) );
+        this.gMapControl.initialize();
+
         this.gLooper.startLooper();
+
+        this.gLooper.subscribe( dt => {
+            this.gRender.render( stage => this.gMapDisplay.render( stage ) );
+        } );
 
     }
 
@@ -82,13 +91,6 @@ class EditorCore {
         } else {
             return null;
         }
-    }
-
-    private timeSlice( dt: number ): void {
-
-        this.gMapDisplay.moveMap( dt*2.200 , dt* 2.200 );
-        this.gRender.render( stage => this.gMapDisplay.render( stage ) );
-
     }
 
 }
