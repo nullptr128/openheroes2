@@ -210,9 +210,53 @@ class MapDisplay {
         this.fCameraDelta.y += offsetY;
     }
 
+    public getZoom(): number {
+        return this.fZoom;
+    }
+
     public changeZoom( zoomDelta: number ): void {
+        const centerPos: Position = this.getCenterPos();
         this.fZoom = Tools.clamp( this.fZoom + zoomDelta , { min: 0.100 , max: 4.000 } );
+        this.centerAt( centerPos.x , centerPos.y );
+    }
+
+    public getCenterPos(): Position {
+
+        // calculate width of screen in tiles (1 unit = 1 tile)
+        const tileSize: number = this.getTileSize();
+        const amountOfTilesX: number = this.fCanvas.width / tileSize;
+        const amountOfTilesY: number = this.fCanvas.height / tileSize;
+
+        // get camera top-left corner
+        const cameraPosX: number = this.fCameraPosition.x + this.fCameraDelta.x;
+        const cameraPosY: number = this.fCameraPosition.y + this.fCameraDelta.y;
+
+        // get point in middle of this range
+        return new Position( 
+            cameraPosX + ( amountOfTilesX / 2.000 ) ,
+            cameraPosY + ( amountOfTilesY / 2.000 )
+        );
+
+    }
+
+    public centerAt( x: number , y: number ): void {
+
+        // calculate width of screen in tiles (1 unit = 1 tile)
+        const tileSize: number = this.getTileSize();
+        const amountOfTilesX: number = this.fCanvas.width / tileSize;
+        const amountOfTilesY: number = this.fCanvas.height / tileSize;
+
+        const targetCameraX: number = x - ( amountOfTilesX / 2.000 );
+        const targetCameraY: number = y - ( amountOfTilesY / 2.000 );
+
+        this.fCameraPosition.x = Math.trunc( targetCameraX );
+        this.fCameraPosition.y = Math.trunc( targetCameraY );
+
+        this.fCameraDelta.x = targetCameraX % 1.000;
+        this.fCameraDelta.y = targetCameraY % 1.000;
+
         this.forceRedraw();
+
     }
 
 }

@@ -4,6 +4,7 @@ import Injectable from '../../Common/IOC/Injectable';
 import Inject from '../../Common/IOC/Inject';
 import Looper from '../../Common/Engine/Misc/Looper';
 import MapDisplay from '../../Common/Render/MapDisplay/MapDisplay';
+import Tools from '../../Common/Support/Tools';
 
 interface IMovement {
     up: boolean;
@@ -34,6 +35,7 @@ class MapControl {
 
     private fScrollSpeed: number = 15.000;
     private fZoomSpeed: number = 2.000;
+    private fWheelZoomDelta: number = 0.000;
 
     public initialize(): void {
 
@@ -45,6 +47,19 @@ class MapControl {
         KeyboardJS.bind( 'w' , () => this.fMovement.zoomOut = true , () => this.fMovement.zoomOut = false );
 
         this.gLooper.subscribe( dt => this.timeSlice(dt) );
+
+    }
+
+    public onMouseWheel( event: WheelEvent ): void {
+
+        let direction: number = 0.000;
+        if ( event.deltaY > 0.001 ) {
+            direction = 1;
+        } else if ( event.deltaY < -0.001 ) {
+            direction = -1;
+        }
+        
+        this.fWheelZoomDelta += direction * 0.100;
 
     }
 
@@ -84,6 +99,18 @@ class MapControl {
 
         if ( Math.abs( zoom ) > 0.001 ) {
             this.gMapDisplay.changeZoom( zoom );
+        }
+
+        if ( Math.abs( this.fWheelZoomDelta ) > 0.001 ) {
+            if ( this.fWheelZoomDelta > 0.000 ) {
+                const delta: number = this.fWheelZoomDelta * 10 * dt;
+                this.fWheelZoomDelta = Math.max( 0.000 , this.fWheelZoomDelta - delta );
+                this.gMapDisplay.changeZoom( delta );
+            } else {
+                const delta: number = this.fWheelZoomDelta * 10 * dt;
+                this.fWheelZoomDelta = Math.min( 0.000 , this.fWheelZoomDelta - delta );
+                this.gMapDisplay.changeZoom( delta );
+            }
         }
 
     }
