@@ -1,8 +1,21 @@
 
+> MapDisplay: add getCenterPos() , centerAt() methods
+> MapDisplay: normalize zoom to work at origins
+> MapDisplay: enable changing zoom using mouse wheel
+
+> Engine: Move initializers from manual calls to Events
+> Engine: Decouple classes as much as possible
+
+> Editor: Create Terrain tab view
+> Editor: Add map mouse over grid for Terrain tab based on brush size
+> Editor: Support for selecting terrain types for left and right mouse buttons
+> Editor: Add support for placing raw (no-bordered) tiles on map
+> Editor: Auto-border support
+> Editor: Fix material ui tooltip
+
 > Add license to all files
+
 > Implement view for terrain tab
 > Implement view for rivers/roads
 > Implement view for obstacles
 > Implement views for objects
-
-> Add VSCode check-all-source script.
