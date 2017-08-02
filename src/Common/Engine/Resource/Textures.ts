@@ -138,12 +138,25 @@ class Textures {
 
     }
 
+    /**
+     * Resizes TextureEntry.textures array, filling it with empty Pixi.Textures
+     * to make sure that we can return real texture for entries that are during
+     * loading.
+     * @param entry texture entry to resize
+     * @param size new minimal size of texture pack
+     */
     private ensureEntrySize( entry:ITextureEntry , size: number ): void {
         while ( entry.textures.length < size ) {
             entry.textures.push( new Pixi.Texture( Pixi.Texture.EMPTY as any ) );
         }
     }
 
+    /**
+     * Loads textures into entry asynchronously, using loaderFunc that returns data-urls 
+     * strings.
+     * @param entry 
+     * @param loaderFunc 
+     */
     private async internalLoadTextures( entry: ITextureEntry , loaderFunc: TextureLoaderFunc ): Promise<void> {
 
         // first of all, fill textures array with textures pointing to empty texture;
