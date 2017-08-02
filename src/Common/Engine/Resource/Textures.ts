@@ -33,8 +33,11 @@ import Tools from '../../Support/Tools';
 import PerfCounter from '../../Support/PerfCounter';
 
 interface ITextureEntry {
+    isLoaded: boolean;
     textures: Pixi.Texture[];
 }
+
+type TextureLoaderFunc = () => Promise<string[]>;
 
 @Injectable()
 class Textures {
@@ -62,7 +65,12 @@ class Textures {
     
         const icnEntry: Nullable<ITextureEntry> = this.fIcn.get( icnFileName );
         if ( icnEntry ) {
-            return icnEntry.textures[ frame ];
+            if ( icnEntry.isLoaded ) {
+                return icnEntry.textures[ frame ];
+            } else {
+                this.ensureEntrySize( icnEntry , frame + 1 );
+                return icnEntry.textures[ frame ];
+            }
         } else {
             const newEntry: ITextureEntry = this.createIcnTextures( icnFileName , frame );
             this.fIcn.set( icnFileName , newEntry );
@@ -82,7 +90,12 @@ class Textures {
 
         const tilEntry: Nullable<ITextureEntry> = this.fTil.get( tilFileName );
         if ( tilEntry ) {
-            return tilEntry.textures[ frame ];
+            if ( tilEntry.isLoaded ) {
+                return tilEntry.textures[ frame ];
+            } else {
+                this.ensureEntrySize( tilEntry , frame + 1 );
+                return tilEntry.textures[ frame ];
+            }
         } else {
             const newEntry: ITextureEntry = this.createTilTextures( tilFileName , frame );
             this.fTil.set( tilFileName , newEntry );
@@ -98,12 +111,13 @@ class Textures {
      */
     public createIcnTextures( icnFileName: string , minimumFrames: number ): ITextureEntry {
 
-        const textures: Pixi.Texture[] = new Array<Pixi.Texture>( minimumFrames + 1 );
-        this.internalLoadIcn( icnFileName , textures );
-        
-        return {
-            textures
+        const textureEntry: ITextureEntry = {
+            isLoaded: false ,
+            textures: new Array<Pixi.Texture>( minimumFrames + 1 ) ,
         };
+
+        this.internalLoadTextures( textureEntry , () => this.gGraphicsLoader.getIcnAsDataUrl( icnFileName ) );
+        return textureEntry;
 
     }
 
@@ -114,30 +128,35 @@ class Textures {
      */
     public createTilTextures( tilFileName: string , minimumFrames: number ): ITextureEntry {
 
-        const textures: Pixi.Texture[] = new Array<Pixi.Texture>( minimumFrames + 1 );
-        this.internalLoadTil( tilFileName , textures );
-        
-        return {
-            textures
+        const textureEntry: ITextureEntry = {
+            isLoaded: false ,
+            textures: new Array<Pixi.Texture>( minimumFrames + 1 ) ,
         };
+
+        this.internalLoadTextures( textureEntry , () => this.gGraphicsLoader.getTilAsDataUrl( tilFileName ) );
+        return textureEntry;
 
     }
 
-    /**
-     * Loads icn textures.
-     * @param icnFileName name of icn file
-     * @param textures array of textures of particular frames
-     */
-    private async internalLoadIcn( icnFileName: string , textures: Pixi.Texture[] ): Promise<void> {
+    private ensureEntrySize( entry:ITextureEntry , size: number ): void {
+        while ( entry.textures.length < size ) {
+            entry.textures.push( new Pixi.Texture( Pixi.Texture.EMPTY as any ) );
+        }
+    }
+
+    private async internalLoadTextures( entry: ITextureEntry , loaderFunc: TextureLoaderFunc ): Promise<void> {
 
         // first of all, fill textures array with textures pointing to empty texture;
         // we will rebind them to correct ones when they will load
-        for( let i = 0 ; i < textures.length ; ++i ) {
-            textures[i] = new Pixi.Texture( Pixi.Texture.EMPTY as any );
+        for( let i = 0 ; i < entry.textures.length ; ++i ) {
+            entry.textures[i] = new Pixi.Texture( Pixi.Texture.EMPTY as any );
         }
 
+        // create array of promises that will resolve when texture is loaded
+        const loadPromises: Promise<void>[] = [];
+
         // now load all sprites from icn as dataurls
-        const dataUrls: string[] = await this.gGraphicsLoader.getIcnAsDataUrl( icnFileName );
+        const dataUrls: string[] = await loaderFunc();
 
         // finally rebind textures to real ones
         for( let i = 0 ; i < dataUrls.length ; ++i ) {
@@ -146,49 +165,29 @@ class Textures {
             // create new Pixi.BaseTexture from dataUrl
             const baseTexture: Pixi.BaseTexture = Pixi.BaseTexture.from( dataUrl );
             // if we already have empty texture in array at that index
-            if ( i < textures.length ) {
-                // just rebind existing one
-                baseTexture.once( 'loaded' , () => {
-                    textures[i].baseTexture = baseTexture;
-                    textures[i].frame = new Pixi.Rectangle( 0 , 0 , baseTexture.width , baseTexture.height );
-                    textures[i].update();
+            if ( i < entry.textures.length ) {
+                // create promise 
+                const promise: Promise<void> = new Promise( resolve => {
+                    // just rebind existing one
+                    baseTexture.once( 'loaded' , () => {
+                        entry.textures[i].baseTexture = baseTexture;
+                        entry.textures[i].frame = new Pixi.Rectangle( 0 , 0 , baseTexture.width , baseTexture.height );
+                        entry.textures[i].update();
+                        resolve();
+                    } );
                 } );
+                loadPromises.push( promise );
             } else {
                 // otherwise, just add new one at the end of array
-                textures.push( new Pixi.Texture( baseTexture ) );
+                entry.textures.push( new Pixi.Texture( baseTexture ) );
             }   
         }
 
-    }
+        // run all promises and await it
+        await Promise.all( loadPromises );
 
-    private async internalLoadTil( tilFileName: string , textures: Pixi.Texture[] ): Promise<void> {
-
-        // @TODO: dedupe this function?
-
-        const counter: PerfCounter = new PerfCounter();
-
-        // first of all, fill textures array with textures pointing to empty texture
-        for( let i = 0 ; i < textures.length ; ++i ) {
-            textures[i] = new Pixi.Texture( Pixi.Texture.EMPTY as any );
-        }
-
-        // now load all sprites from icn as dataurls
-        const dataUrls: string[] = await this.gGraphicsLoader.getTilAsDataUrl( tilFileName );
-
-        // finally rebind textures
-        for( let i = 0 ; i < dataUrls.length ; ++i ) {
-            const dataUrl: string = dataUrls[i];
-            const baseTexture: Pixi.BaseTexture = Pixi.BaseTexture.from( dataUrl );
-            if ( i < textures.length ) {
-                baseTexture.once( 'loaded' , () => {
-                    textures[i].baseTexture = baseTexture;
-                    textures[i].frame = new Pixi.Rectangle( 0 , 0 , baseTexture.width , baseTexture.height );
-                    textures[i].update();
-                } );
-            } else {
-                textures.push( new Pixi.Texture( baseTexture ) );
-            }   
-        }
+        // finally mark entry as loaded
+        entry.isLoaded = true;
 
     }
 
