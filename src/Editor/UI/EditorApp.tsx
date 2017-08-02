@@ -4,10 +4,10 @@ import EditorTop from './Layout/EditorTop';
 import EditorMain from './Layout/EditorMain';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
-import Events from '../../Common/Events/Events';
 import EInject from '../Core/EInject';
-import { EventId } from '../../Common/Events/Events';
-import EEditorLoaded from '../Events/EEditorLoaded';
+import { EventId } from '../../Common/Engine/Events/Events';
+import Events from '../../Common/Engine/Events/Events';
+import EEditorReady from '../Events/EEditorReady';
 
 interface EditorAppState {
     isLoading: boolean;
@@ -25,7 +25,7 @@ export default class EditorApp extends React.Component<{},EditorAppState> {
     private fLoadedEvent: EventId;
 
     public componentDidMount(): void {
-        this.fLoadedEvent = this.gEvents.on( EEditorLoaded , () => {
+        this.fLoadedEvent = this.gEvents.on( EEditorReady , () => {
             this.setState( { isLoading: false } );
         } );
     }

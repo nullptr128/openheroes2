@@ -14,5 +14,6 @@ const EditorContainer: Container = new Container();
 EditorContainer.use( EngineProvider );
 EditorContainer.use( EditorProvider );
 EditorContainer.use( RenderProvider );
+EditorContainer.callInitializers();
 
 export default EditorContainer;

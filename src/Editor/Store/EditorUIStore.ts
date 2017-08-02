@@ -6,9 +6,9 @@
  */
 
 import IEditorState from '../Model/IEditorState';
-import Events from '../../Common/Events/Events';
 import EditorActiveTab from '../Types/EditorActiveTab';
 import ETabChanged from '../Events/ETabChanged';
+import Events from '../../Common/Engine/Events/Events';
 
 class EditorUIStore {
 

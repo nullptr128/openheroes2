@@ -9,14 +9,13 @@
 import Injectable from '../../Common/IOC/Injectable';
 import IEditorState from '../Model/IEditorState';
 import EditorActiveTab from '../Types/EditorActiveTab';
-import Events from '../../Common/Events/Events';
 import Inject from '../../Common/IOC/Inject';
 import ETabChanged from '../Events/ETabChanged';
 import EditorUIStore from '../Store/EditorUIStore';
 import EditorMapFactory from './EditorMapFactory';
 import EditorMapStore from '../Store/EditorMapStore';
-import * as SerializeJS from 'serialijse';
 import PerfCounter from '../../Common/Support/PerfCounter';
+import Events from '../../Common/Engine/Events/Events';
 
 @Injectable()
 class EditorStore {

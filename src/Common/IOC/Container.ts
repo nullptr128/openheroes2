@@ -14,9 +14,11 @@ import IProvider from './IProvider';
 class Container {
 
     private fInternalContainer: Inversify.Container;
+    private fServiceKeys: any[];
 
     constructor() {
         this.fInternalContainer = new Inversify.Container();
+        this.fServiceKeys = [];
     }
 
     /**
@@ -37,6 +39,8 @@ class Container {
             // else we are binding key into custom implementation
             this.fInternalContainer.bind( key ).to( implementation as any ).inSingletonScope();
         }
+
+        this.fServiceKeys.push( key );
 
     }
 
@@ -75,6 +79,18 @@ class Container {
      */
     public createInjectDecorator(): any {
         return InversifyInjectDecorators( this.fInternalContainer ).lazyInject;
+    }
+
+    /**
+     * Calls .$init() function for every possible service, if possible.
+     */
+    public callInitializers(): void {
+        this.fServiceKeys.forEach( k => {
+            const instance: any = this.get(k);
+            if ( instance.$init ) {
+                instance.$init();
+            }   
+        } );
     }
 
 }

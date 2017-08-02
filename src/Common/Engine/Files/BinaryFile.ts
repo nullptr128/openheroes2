@@ -10,6 +10,7 @@
  */
 
 import * as FS from 'fs';
+import Injectable from '../../IOC/Injectable';
 
 class BinaryFile {
 

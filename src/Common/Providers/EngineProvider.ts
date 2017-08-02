@@ -18,11 +18,11 @@ import Snd from '../Engine/Data/Snd';
 import AudioLoader from '../Engine/Audio/AudioLoader';
 import Paths from '../Engine/Misc/Paths';
 import Locale from '../Engine/Misc/Locale';
-import Events from '../Events/Events';
 import Render from '../Engine/Render/Render';
 import Resources from '../Engine/Resource/Resources';
 import Textures from '../Engine/Resource/Textures';
 import Looper from '../Engine/Misc/Looper';
+import Events from '../Engine/Events/Events';
 
 export default function EngineProvider( container: Container ): void {
     container.bind( Agg );
@@ -31,7 +31,6 @@ export default function EngineProvider( container: Container ): void {
     container.bind( Til );
     container.bind( Snd );
     container.bind( Engine );
-    container.bind( BinaryFile );
     container.bind( Files );
     container.bind( GraphicsLoader );
     container.bind( AudioLoader );

@@ -1,6 +1,4 @@
 
-> Engine: Move initializers from manual calls to Events
-> Engine: Decouple classes as much as possible
 > Engine: Fix textures not injecting if requested during loading
 
 > Editor: Create Terrain tab view

@@ -17,6 +17,8 @@ import Nullable from '../../Common/Support/Nullable';
 import ITile from '../../Common/Model/ITile';
 import Looper from '../../Common/Engine/Misc/Looper';
 import MapControl from '../Actions/MapControl';
+import Events from '../../Common/Engine/Events/Events';
+import EEditorReady from '../Events/EEditorReady';
 
 @Injectable()
 class EditorCore {
@@ -45,25 +47,42 @@ class EditorCore {
     @Inject( Looper )
     private gLooper: Looper;
 
+    @Inject( Events )
+    private gEvents: Events;
+
     /**
      * Prepares editor to run on launch.
      */
     public async run(): Promise<void> {
-        
-        this.gEditorStore.initialize();
-        this.gMinimapDisplay.setMapSize( this.gEditorStore.map.getMapSize() );                
-        await this.gEngine.initialize();
 
+        // First of all initialize OpenHeroes2 engine
+        await this.gEngine.initialize();
+        
+        // Initialize Editor Store
+        this.gEditorStore.initialize();
+
+        // Initialize minimapDisplay map size (this should be moved into separate event later)
+        this.gMinimapDisplay.setMapSize( this.gEditorStore.map.getMapSize() );                
+
+        // Initialize and configure minimap display
         this.initMinimapDisplay();        
+
+        // Initialize and configure main map scree
         this.initMapDisplay();
 
+        // Initialize map control module
         this.gMapControl.initialize();
 
+        // Start Looper
         this.gLooper.startLooper();
 
+        // Subscribe to looper
         this.gLooper.subscribe( dt => {
             this.gRender.render( stage => this.gMapDisplay.render( stage ) );
         } );
+
+        // Trigger Event that editor is ready to run
+        await this.gEvents.trigger( EEditorReady );
 
     }
 

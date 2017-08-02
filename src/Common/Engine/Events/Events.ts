@@ -28,8 +28,8 @@
  */
 
 import _ from 'lodash';
-import Injectable from '../IOC/Injectable';
-import Nullable from '../Support/Nullable';
+import Injectable from '../../IOC/Injectable';
+import Nullable from '../../Support/Nullable';
 
 export type EventType<T> = {
     new(): T;

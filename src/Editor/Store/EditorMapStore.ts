@@ -7,10 +7,10 @@
 
 import Injectable from '../../Common/IOC/Injectable';
 import IEditorState from '../Model/IEditorState';
-import Events from '../../Common/Events/Events';
 import IMap from '../../Common/Model/IMap';
 import ITile from '../../Common/Model/ITile';
 import Tools from '../../Common/Support/Tools';
+import Events from '../../Common/Engine/Events/Events';
 
 @Injectable()
 class EditorMapStore {
