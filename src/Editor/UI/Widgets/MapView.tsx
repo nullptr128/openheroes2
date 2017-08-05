@@ -24,7 +24,7 @@ export default class MapView extends React.Component {
         const containerElement: HTMLElement = this.refs.mapViewElement as HTMLElement;
         const width: number = containerElement.clientWidth;
         const height: number = containerElement.clientHeight;
-        
+
         const canvas: HTMLCanvasElement = this.gMapDisplay.createAndGetCanvas( width , height );
         canvas.addEventListener( 'mousewheel' , event => this.gMapControl.onMouseWheel( event ) );
         containerElement.appendChild( canvas );

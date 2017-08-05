@@ -30,13 +30,15 @@ import * as Pixi from 'pixi.js';
 import Injectable from '../../IOC/Injectable';
 import Render from '../../Engine/Render/Render';
 import Inject from '../../IOC/Inject';
-import Position from '../../Types/Position';
 import Container from '../../IOC/Container';
 import IMap from '../../Model/IMap';
 import Nullable from '../../Support/Nullable';
 import IMapDisplayPipelineElement from './IMapDisplayPipelineElement';
 import PerfCounter from '../../Support/PerfCounter';
 import Tools from '../../Support/Tools';
+import Point from '../../Types/Point';
+import IMapDisplayMouse from './IMapDisplayMouse';
+import MapDisplayMouseMoveFunction from './MapDisplayMouseMoveFunction';
 
 @Injectable()
 class MapDisplay {
@@ -45,12 +47,23 @@ class MapDisplay {
     private gRender: Render;
 
     private fCanvas: HTMLCanvasElement;
-    private fCameraPosition: Position = new Position( 0 , 0 );
-    private fCameraDelta: Position = new Position( 0.000 , 0.000 );
+    private fCameraPosition: Point = new Point( 0 , 0 );
+    private fCameraDelta: Point = new Point( 0.000 , 0.000 );
     private fZoom: number = 1.000;
     private fPipeline: IMapDisplayPipelineElement[] = [];
     private fMapContainer: Nullable<Pixi.Container>;
-    private fNeedRedraw: boolean = false;
+    private fNeedRedraw: boolean = false;    
+    private fMouse: IMapDisplayMouse = {
+        realPosition: Point.zero() ,
+        mapTilePosition: Point.zero() ,
+        screenTilePosition: Point.zero() ,
+        buttons: {
+            left: false ,
+            middle: false ,
+            right: false ,
+        }
+    };
+    private fOnMouseMove: MapDisplayMouseMoveFunction[] = [];
 
     /**
      * Creates and gets canvas for MapDisplay.
@@ -59,6 +72,7 @@ class MapDisplay {
      */
     public createAndGetCanvas( baseWidth: number , baseHeight: number ): HTMLCanvasElement {
         this.fCanvas = this.gRender.getCanvas( baseWidth , baseHeight );
+        this.fCanvas.addEventListener( 'mousemove' , (evt) => this.handleMouseMove(evt) );
         return this.fCanvas;
     }
 
@@ -109,8 +123,9 @@ class MapDisplay {
             console.log( 'redraw time: ' , perfCounter.delta() );
         }
 
-        // update container position
+        // update container
         this.updateContainer();
+        this.runUpdatePipeline();
 
     }
 
@@ -157,6 +172,13 @@ class MapDisplay {
         this.fMapContainer = new Pixi.Container();
         stage.addChild( this.fMapContainer );
 
+        // notify pipelines that we are redrawing scene
+        this.fPipeline.forEach( el => {
+            if ( el.startRedraw ) {
+                el.startRedraw();
+            }
+        } );
+
         // push container through rendering pipeline
         // iterating from bottom-right to top-left
         // on line basis
@@ -191,6 +213,16 @@ class MapDisplay {
 
     }
 
+    private runUpdatePipeline(): void {
+        const tileSize: number = this.getTileSize();
+        const scale: number = tileSize / 32.000;
+        this.fPipeline.forEach( el => {
+            if ( el.update ) {
+                el.update( this.fMapContainer! , this.fCameraPosition.x , this.fCameraPosition.y , tileSize , scale );
+            }
+        } );
+    }
+
     /**
      * Updates container without redrawing it fully; when camera is moved for a less than 1 tile,
      * we are moving container on screen for performance reasons.
@@ -215,12 +247,12 @@ class MapDisplay {
     }
 
     public changeZoom( zoomDelta: number ): void {
-        const centerPos: Position = this.getCenterPos();
+        const centerPos: Point = this.getCenterPos();
         this.fZoom = Tools.clamp( this.fZoom + zoomDelta , { min: 0.100 , max: 4.000 } );
         this.centerAt( centerPos.x , centerPos.y );
     }
 
-    public getCenterPos(): Position {
+    public getCenterPos(): Point {
 
         // calculate width of screen in tiles (1 unit = 1 tile)
         const tileSize: number = this.getTileSize();
@@ -232,7 +264,7 @@ class MapDisplay {
         const cameraPosY: number = this.fCameraPosition.y + this.fCameraDelta.y;
 
         // get point in middle of this range
-        return new Position( 
+        return new Point( 
             cameraPosX + ( amountOfTilesX / 2.000 ) ,
             cameraPosY + ( amountOfTilesY / 2.000 )
         );
@@ -257,6 +289,51 @@ class MapDisplay {
 
         this.forceRedraw();
 
+    }
+
+    public getMouse(): Readonly<IMapDisplayMouse> {
+        return this.fMouse;
+    }
+
+    private handleMouseMove( evt: MouseEvent ): void {
+
+        // calculate real mouse pos on screen
+        const boundingRect: ClientRect = this.fCanvas.getBoundingClientRect();
+        const posX: number = evt.clientX - boundingRect.left;
+        const posY: number = evt.clientY - boundingRect.top;
+
+        // calculate width of screen in tiles (1 unit = 1 tile)
+        // @TODO: cache this value? its abused a lot on all functions there...
+        const tileSize: number = this.getTileSize();
+        
+        // store real mouse position on canvas
+        this.fMouse.realPosition.x = posX;
+        this.fMouse.realPosition.y = posY;
+
+        // calculate screen tile position on canvas
+        this.fMouse.screenTilePosition.x = Math.floor( (posX + this.fCameraDelta.x*tileSize) / tileSize );
+        this.fMouse.screenTilePosition.y = Math.floor( (posY + this.fCameraDelta.y*tileSize) / tileSize );
+
+        // calculate map tile position on canvas
+        this.fMouse.mapTilePosition.x = this.fMouse.screenTilePosition.x + this.fCameraPosition.x;
+        this.fMouse.mapTilePosition.y = this.fMouse.screenTilePosition.y + this.fCameraPosition.y;
+
+        // get buttons that we are pressing, grabbing them from evt.buttons;
+        // they are stored as bit flags
+        const BTN_LEFT      = 1;
+        const BTN_RIGHT     = 2;
+        const BTN_MIDDLE    = 4;
+
+        this.fMouse.buttons.left = ( ( evt.buttons & BTN_LEFT ) == BTN_LEFT );
+        this.fMouse.buttons.middle = ( ( evt.buttons & BTN_MIDDLE ) == BTN_MIDDLE );
+        this.fMouse.buttons.right = ( ( evt.buttons & BTN_RIGHT ) == BTN_RIGHT );
+
+        this.fOnMouseMove.forEach( fn => fn(this.fMouse) );
+
+    }
+
+    public onMouseMove( handler: MapDisplayMouseMoveFunction ): void {
+        this.fOnMouseMove.push( handler );
     }
 
 }

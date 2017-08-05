@@ -4,7 +4,7 @@
  * This class holds arbitary position.
  */
 
-class Position {
+class Point {
     
     public x: number;
     public y: number;
@@ -14,6 +14,14 @@ class Position {
         this.y = y;
     }
 
+    public toString(): string {
+        return `[${this.x},${this.y}]`;
+    }
+
+    public static zero(): Point {
+        return new Point( 0.000 , 0.000 );
+    }
+
 }
 
-export default Position;
+export default Point;

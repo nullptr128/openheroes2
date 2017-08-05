@@ -19,6 +19,8 @@ import Looper from '../../Common/Engine/Misc/Looper';
 import MapControl from '../Actions/MapControl';
 import Events from '../../Common/Engine/Events/Events';
 import EEditorReady from '../Events/EEditorReady';
+import EditorBrushTilePipeline from '../Render/MapDisplay/EditorBrushTilePipeline';
+import EditorGridPipeline from '../Render/MapDisplay/EditorGridPipeline';
 
 @Injectable()
 class EditorCore {
@@ -49,6 +51,12 @@ class EditorCore {
 
     @Inject( Events )
     private gEvents: Events;
+
+    @Inject( EditorBrushTilePipeline )
+    private gEditorBrushTilePipeline: EditorBrushTilePipeline;
+
+    @Inject( EditorGridPipeline )
+    private gEditorGridPipeline: EditorGridPipeline;
 
     /**
      * Prepares editor to run on launch.
@@ -98,10 +106,33 @@ class EditorCore {
      * Initializes map display
      */
     private initMapDisplay(): void {
+        
+        // setup terrain pipeline
         this.gTerrainPipeline.setTileFunc( (x,y) => this.getTileFunc(x,y) );
+
+        // setup editor brush tile pipeline
+        this.gEditorBrushTilePipeline.initialize();
+
+        // setup editor grid pipeline
+        this.gEditorGridPipeline.initialize();
+        
+        // finally add pipelines to mapdisplay
         this.gMapDisplay.setPipeline( [
-            this.gTerrainPipeline.getPipeline()
+            this.gTerrainPipeline.getPipeline() ,
+            this.gEditorBrushTilePipeline.getPipeline() ,
+            this.gEditorGridPipeline.getPipeline() ,
         ] );
+
+        // setup mousemove event for editorbrushtilepipeline
+        this.gMapDisplay.onMouseMove( mouse => {
+            this.gEditorBrushTilePipeline.set(
+                mouse.mapTilePosition.x ,
+                mouse.mapTilePosition.y ,
+                1
+            );
+            this.gMapDisplay.forceRedraw();
+        } );
+
     }
 
     private getTileFunc( x: number , y: number ): Nullable<ITile> {
