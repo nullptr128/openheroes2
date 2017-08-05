@@ -5,6 +5,8 @@
  */
 
 import 'font-awesome/css/font-awesome.css';
+import 'fontello/css/fontello.css';
+import 'fontello/font/fontello.ttf';
 import * as InjectTapEventPlugin from 'react-tap-event-plugin';
 import 'style/editor/editor.scss';
 import * as React from 'react';

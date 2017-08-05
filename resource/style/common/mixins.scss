@@ -1,0 +1,10 @@
+
+@mixin btnZIndexFix($n) {
+
+    @for $i from 1 through $n {
+        button:nth-child(#{$i}) {
+            z-index: $n - $i !important;
+        }
+    }
+
+}

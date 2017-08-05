@@ -7,11 +7,13 @@
 
 import EditorActiveTab from '../Types/EditorActiveTab';
 import IMap from '../../Common/Model/IMap';
+import ITerrainOptions from './ITerrainOptions';
 
 interface IEditorState {
     activeTab: EditorActiveTab;
     map: IMap;
     isModified: boolean;
+    terrainOptions: ITerrainOptions;
 }
 
 export default IEditorState;

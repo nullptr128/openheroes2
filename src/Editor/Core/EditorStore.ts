@@ -16,6 +16,8 @@ import EditorMapFactory from './EditorMapFactory';
 import EditorMapStore from '../Store/EditorMapStore';
 import PerfCounter from '../../Common/Support/PerfCounter';
 import Events from '../../Common/Engine/Events/Events';
+import Terrain from '../../Common/Types/Terrain';
+import EditorTerrainBrushSize from '../Types/EditorTerrainBrushSize';
 
 @Injectable()
 class EditorStore {
@@ -40,6 +42,10 @@ class EditorStore {
             activeTab: EditorActiveTab.TERRAIN ,
             map: this.gEditorMapFactory.createBlankMap( 'Unnamed map' , '' , 72 ) ,
             isModified: false ,
+            terrainOptions: {
+                terrain: Terrain.WATER ,
+                brushSize: EditorTerrainBrushSize.SINGLE ,
+            } ,
         };
         // create helper modules
         this.ui = new EditorUIStore( this.fState , this.gEvents );

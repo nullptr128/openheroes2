@@ -35,7 +35,7 @@ export default class EditorAppBar extends React.Component {
 
     private createButton( icon: string , hint: string ): JSX.Element {
         return (
-            <IconButton className="toolbar-button" tooltip={ hint }>
+            <IconButton className="toolbar-button" tooltip={ hint } style={ { zIndex: 2 } }>
                 <FontIcon className={ icon }/>
             </IconButton>
         );

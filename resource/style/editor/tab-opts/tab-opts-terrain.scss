@@ -1,0 +1,19 @@
+
+.tab-opts-terrain {
+
+    .brush-buttons {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .terrain-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        padding-top: 20px;
+        margin: auto;
+        justify-content: space-around;
+        width: ( 48px * 3 );
+        @include btnZIndexFix(9);
+    }
+
+}

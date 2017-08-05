@@ -35,5 +35,11 @@
     } ,
     "Misc": {
         "BlankMapName": "Unnamed map"
+    } ,
+    "BrushSize": {
+        "Single": "1-tile brush" ,
+        "Double": "2-tile brush" ,
+        "Triple": "3-tile brush" ,
+        "Custom": "Variable size brush"
     } 
 }

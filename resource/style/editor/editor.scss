@@ -1,10 +1,12 @@
 
 @import "../common/basic.scss";
+@import "../common/mixins.scss";
 @import "./layout/editor-main.scss";
 @import "./main/editor-scene.scss";
 @import "./main/editor-panel.scss";
 @import "./widgets/map-view.scss";
 @import "./widgets/minimap.scss";
+@import "./tab-opts/tab-opts-terrain.scss";
 
 body {
     padding: 0;
@@ -50,3 +52,7 @@ body {
 .toolbar-button.is-active {
     background-color: #AAA !important;
 }   
+
+.icon:before {
+    margin: 0;
+}
