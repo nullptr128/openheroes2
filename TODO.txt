@@ -1,9 +1,8 @@
 
-> Editor: Add map mouse over grid for Terrain tab based on brush size
 > Editor: Support for selecting terrain types for left and right mouse buttons
 > Editor: Add support for placing raw (no-bordered) tiles on map
 > Editor: Auto-border support
-> Editor: Fix material ui tooltip
+> Editor: Brush variable size support
 
 > Add license to all files
 
