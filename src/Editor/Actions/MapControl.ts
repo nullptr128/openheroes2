@@ -34,7 +34,7 @@ class MapControl {
     };
 
     private fScrollSpeed: number = 15.000;
-    private fZoomSpeed: number = 0.100;
+    private fZoomSpeed: number = 0.750;
     private fWheelZoomDelta: number = 0.000;
 
     public initialize(): void {

@@ -63,7 +63,6 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
 
         const perf: PerfCounter = new PerfCounter();
 
-        //this.fContainer.removeChildren();
         this.fSprites = Arrays.optiResize2dArray( this.fSprites , data.tilesWidth , data.tilesHeight , {
             onNew: (x,y) => {
                 const sprite: Pixi.Sprite = new Pixi.Sprite();
@@ -77,7 +76,7 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
             } ,
         } );
 
-        console.log( 'reinitializeSprites() -> ' + perf.delta() );
+        console.log( 'TerrainPipeline::reinitializeSprites() -> ' + perf.delta() );
 
     }
 
@@ -111,7 +110,7 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
             }
         }
 
-        console.log( 'onRedraw() -> ' + perf.delta() );
+        console.log( 'TerrainPipeline::onRedraw() -> ' + perf.delta() );
 
     }
 

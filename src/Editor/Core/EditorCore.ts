@@ -113,14 +113,11 @@ class EditorCore {
         // setup editor brush tile pipeline
         this.gEditorBrushTilePipeline.initialize();
 
-        // setup editor grid pipeline
-        this.gEditorGridPipeline.initialize();
-        
         // finally add pipelines to mapdisplay
         this.gMapDisplay.setPipeline( [
             this.gTerrainPipeline ,
             //this.gEditorBrushTilePipeline.getPipeline() ,
-            //this.gEditorGridPipeline.getPipeline() ,
+            this.gEditorGridPipeline
         ] );
 
         this.gRender.addContainer( this.gMapDisplay.getContainer() );
