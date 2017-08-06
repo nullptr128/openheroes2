@@ -1,4 +1,7 @@
+
+import * as _ from 'lodash';
 import Tools from './Tools';
+
 /**
  * OpenHeroes2
  * 
@@ -6,6 +9,12 @@ import Tools from './Tools';
  */
 
 type ArrayInitializer<T> = ( x: number , y: number ) => T;
+type ArrayDeinitializer<T> = ( element: T , x: number , y: number ) => void;
+
+interface ArrayOptiResizeStruct<T> {
+    onNew: ArrayInitializer<T> ,
+    onRemove: ArrayDeinitializer<T> ,
+};
 
 class Arrays {
 
@@ -32,6 +41,43 @@ class Arrays {
             result.push( row );
         }
 
+        return result;
+
+    }
+
+    public static optiResize2dArray<T>( array: T[][] , newWidth: number , newHeight: number , struct: ArrayOptiResizeStruct<T> ): T[][] {
+
+        const originalWidth: number = array.length;
+        const originalHeight: number = ( array.length > 0 ) ? array[0].length : 0;
+
+        const result: T[][] = [];
+
+        for( let x = 0 ; x < newWidth ; ++x ) {
+
+            const row: T[] = [];
+            for( let y = 0 ; y < newHeight ; ++y ) {
+
+                if ( x < originalWidth && y < originalHeight ) {
+                    row.push( array[x][y] );
+                } else {
+                    row.push( struct.onNew(x,y) );
+                }
+
+            }
+
+            result.push( row );
+
+        }
+
+        // call removes if possible
+        for( let x = 0 ; x < originalWidth ; ++x ) {
+            for ( let y = 0 ; y < originalHeight ; ++y ) {
+                if ( x >= newWidth || y >= newHeight ) {
+                    struct.onRemove( array[x][y] , x , y );
+                }
+            }
+        }
+        
         return result;
 
     }

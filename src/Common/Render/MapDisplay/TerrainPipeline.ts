@@ -17,16 +17,23 @@ import TerrainData from '../../Game/Terrain/TerrainData';
 import ITerrainData from '../../Types/ITerrainData';
 import ITile from '../../Model/ITile';
 import Nullable from '../../Support/Nullable';
+import IMapDisplayData from './IMapDisplayData';
+import Tools from '../../Support/Tools';
+import Arrays from '../../Support/Arrays';
+import PerfCounter from '../../Support/PerfCounter';
 
 type GetTileFunc = ( x: number , y: number ) => Nullable<ITile>;
 
 @Injectable()
-class TerrainPipeline {
+class TerrainPipeline implements IMapDisplayPipelineElement {
 
     @Inject( Resources )
     private gResources: Resources;
 
     private fGetTileFunc: Nullable<GetTileFunc>;
+    private fTileTextures: Pixi.Texture[] = new Array(431);
+    private fContainer: Pixi.Container = new Pixi.Container();
+    private fSprites: Pixi.Sprite[][] = [];
 
     /**
      * Sets the tile func used to retrieve tiles.
@@ -36,44 +43,79 @@ class TerrainPipeline {
         this.fGetTileFunc = tileFunc;
     }
 
-    /**
-     * Creates terrain pipeline that renders terrain 
-     */
-    public getPipeline(): IMapDisplayPipelineElement {
-        return {
-            redraw: ( container , tileX , tileY , destX , destY , scale ) => {
-                this.drawTile( container , tileX , tileY , destX , destY , scale );
-            }
-        };
-    }
-
-    /**
-     * Renders tile on target position
-     * @param container pixi container
-     * @param tileX x-position of tile
-     * @param tileY y-position of tile
-     * @param destX draw at x position (in pixels)
-     * @param destY draw at y position (in pixels)
-     * @param scale draw at scale
-     */
-    private drawTile( container: Pixi.Container , tileX: number , tileY: number , destX: number , destY: number , scale: number ): void {
-
-        if ( this.fGetTileFunc ) {
-            
-            const tile: Nullable<ITile> = this.fGetTileFunc( tileX , tileY );
-
-            if ( tile ) {
-                const texture: Pixi.Texture = this.gResources.getTilTexture( 'GROUND32.TIL' , tile.spriteId );
-                const sprite: Pixi.Sprite = new Pixi.Sprite( texture );
-                sprite.position.set( destX , destY );
-                sprite.scale.set( scale );
-                container.addChild( sprite );
-            }
-
-        } else {
-            console.warn( 'No tile function provided for Terrain pipeline.' );
+    public onInitialize(): Pixi.Container {
+        
+        for( let i = 0 ; i < 431 ; ++i ) {
+            this.fTileTextures[i] = this.gResources.getTilTexture( 'GROUND32.TIL' , i );
         }
 
+        return this.fContainer;
+
+    }
+
+    private checkSprites( data: IMapDisplayData ): boolean {
+        const spritesX: number = this.fSprites.length;
+        const spritesY: number = ( this.fSprites.length > 0 ? this.fSprites[0].length : 0 );
+        return ( spritesX === data.tilesWidth && spritesY === data.tilesHeight );
+    }
+
+    private reinitializeSprites( data: IMapDisplayData ): void {
+
+        const perf: PerfCounter = new PerfCounter();
+
+        //this.fContainer.removeChildren();
+        this.fSprites = Arrays.optiResize2dArray( this.fSprites , data.tilesWidth , data.tilesHeight , {
+            onNew: (x,y) => {
+                const sprite: Pixi.Sprite = new Pixi.Sprite();
+                sprite.position.set( x * data.tileSize - data.absOffsetX , y * data.tileSize - data.absOffsetY );
+                sprite.scale.set( data.scale );
+                this.fContainer.addChild( sprite );
+                return sprite;
+            } ,
+            onRemove: ( sprite , x , y ) => {
+                this.fContainer.removeChild( sprite );
+            } ,
+        } );
+
+        console.log( 'reinitializeSprites() -> ' + perf.delta() );
+
+    }
+
+    public onRedraw( data: IMapDisplayData ): void {
+
+        const perf: PerfCounter = new PerfCounter();
+        
+        if ( !this.checkSprites( data ) ) {
+            this.reinitializeSprites( data );
+        }
+
+        for( let x = 0 ; x < data.tilesWidth ; ++x ) {
+            for( let y = 0 ; y < data.tilesHeight ; ++y ) {
+
+                const tileX: number = data.tileStart.x + x;
+                const tileY: number = data.tileStart.y + y;
+
+                const sprite: Pixi.Sprite = this.fSprites[x][y];
+                const tile: Nullable<ITile> = this.fGetTileFunc!( tileX , tileY );
+
+                sprite.position.set( x * data.tileSize - data.absOffsetX , y * data.tileSize - data.absOffsetY );
+                sprite.scale.set( data.scale );
+
+                if ( tile ) {
+                    sprite.visible = true;
+                    sprite.texture = this.fTileTextures[ tile.spriteId ];
+                } else {
+                    sprite.visible = false;
+                }
+                
+            }
+        }
+
+        console.log( 'onRedraw() -> ' + perf.delta() );
+
+    }
+
+    public onUpdate( data: IMapDisplayData ): void {
     }
 
 }

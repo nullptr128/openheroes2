@@ -7,5 +7,5 @@
 
 import * as Pixi from 'pixi.js';
 
-type RenderFunction = (stage: Pixi.Container) => void;
+type RenderFunction = () => void;
 export default RenderFunction;

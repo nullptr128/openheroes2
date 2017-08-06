@@ -86,7 +86,7 @@ class EditorCore {
 
         // Subscribe to looper
         this.gLooper.subscribe( dt => {
-            this.gRender.render( stage => this.gMapDisplay.render( stage ) );
+            this.gRender.render( () => this.gMapDisplay.render() );
         } );
 
         // Trigger Event that editor is ready to run
@@ -118,12 +118,16 @@ class EditorCore {
         
         // finally add pipelines to mapdisplay
         this.gMapDisplay.setPipeline( [
-            this.gTerrainPipeline.getPipeline() ,
-            this.gEditorBrushTilePipeline.getPipeline() ,
-            this.gEditorGridPipeline.getPipeline() ,
+            this.gTerrainPipeline ,
+            //this.gEditorBrushTilePipeline.getPipeline() ,
+            //this.gEditorGridPipeline.getPipeline() ,
         ] );
 
+        this.gRender.addContainer( this.gMapDisplay.getContainer() );
+        this.gMapDisplay.forceRedraw();
+
         // setup mousemove event for editorbrushtilepipeline
+        /*
         this.gMapDisplay.onMouseMove( mouse => {
             this.gEditorBrushTilePipeline.set(
                 mouse.mapTilePosition.x ,
@@ -132,6 +136,7 @@ class EditorCore {
             );
             this.gMapDisplay.forceRedraw();
         } );
+        */
 
     }
 

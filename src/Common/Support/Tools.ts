@@ -79,6 +79,10 @@ class Tools {
         }
     }
 
+    public static nextFrame(): Promise<void> {
+        return new Promise( resolve => setTimeout( resolve , 0 ) );
+    }
+
 }
 
 export default Tools;

@@ -18,24 +18,6 @@ class EditorGridPipeline {
         this.fGridTexture = Pixi.Texture.from( this.gPaths.getImageDir() + '/editor/grid.png' );
     }
 
-    public getPipeline(): IMapDisplayPipelineElement {
-        return {
-            redraw: ( container , tileX , tileY , destX , destY , scale ) => {
-                this.drawTile( container , destX , destY , scale );
-            }
-        }
-    };
-
-    private drawTile( container: Pixi.Container , destX: number , destY: number , scale: number ): void {
-        
-        const sprite: Pixi.Sprite = new Pixi.Sprite( this.fGridTexture );
-        sprite.position.set( destX , destY );
-        sprite.scale.set( scale );
-        sprite.alpha = 0.3;
-        container.addChild( sprite );
-
-    }
-
 }
 
 export default EditorGridPipeline;

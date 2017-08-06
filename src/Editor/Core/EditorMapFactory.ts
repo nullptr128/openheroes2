@@ -37,11 +37,12 @@ class EditorMapFactory {
      */
     private createBlankTiles( mapSize: number ): ITile[][] {
         return Arrays.create2dArray( mapSize , mapSize , (x,y) => {
+            const terrain: Terrain = x % 2 == 0 ? Terrain.WATER : Terrain.GRASS;
             return {
                 x ,
                 y ,
-                terrain: Terrain.WATER ,
-                spriteId: Arrays.randomElement( TerrainData[ Terrain.WATER ].basicTiles ) ,
+                terrain: terrain ,
+                spriteId: Arrays.randomElement( TerrainData[ terrain ].basicTiles ) ,
             };
         } );
     }

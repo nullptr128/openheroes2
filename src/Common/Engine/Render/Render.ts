@@ -51,8 +51,12 @@ class Render {
      * @param renderFunction function to use in rendering
      */
     public render( renderFunction: RenderFunction ): void {
-        renderFunction( this.fStage );
+        renderFunction();
         this.fRenderer.render( this.fStage );
+    }
+
+    public addContainer( container: Pixi.Container ): void {
+        this.fStage.addChild( container );
     }
 
 }

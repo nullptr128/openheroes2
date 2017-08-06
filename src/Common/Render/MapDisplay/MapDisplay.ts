@@ -39,6 +39,9 @@ import Tools from '../../Support/Tools';
 import Point from '../../Types/Point';
 import IMapDisplayMouse from './IMapDisplayMouse';
 import MapDisplayMouseMoveFunction from './MapDisplayMouseMoveFunction';
+import IMapDisplayData from './IMapDisplayData';
+
+const OVERDRAW_TILES        = 5;
 
 @Injectable()
 class MapDisplay {
@@ -51,7 +54,7 @@ class MapDisplay {
     private fCameraDelta: Point = new Point( 0.000 , 0.000 );
     private fZoom: number = 1.000;
     private fPipeline: IMapDisplayPipelineElement[] = [];
-    private fMapContainer: Nullable<Pixi.Container>;
+    private fMapContainer: Pixi.Container = new Pixi.Container();
     private fNeedRedraw: boolean = false;    
     private fMouse: IMapDisplayMouse = {
         realPosition: Point.zero() ,
@@ -82,6 +85,10 @@ class MapDisplay {
      */
     public setPipeline( pipeline: IMapDisplayPipelineElement[] ): void {
         this.fPipeline = pipeline;
+        this.fPipeline.forEach( p => {
+            const container: Pixi.Container = p.onInitialize();
+            this.fMapContainer.addChild( container );
+        } );
     }
 
     /**
@@ -95,7 +102,7 @@ class MapDisplay {
      * Renders adventure map view into pixi container.
      * @param stage 
      */
-    public render( stage: Pixi.Container ): void {
+    public render(): void {
 
         // mapdisplay is active before canvas is initialized
         if ( !this.fCanvas ) {
@@ -106,26 +113,49 @@ class MapDisplay {
         // or it hasnt been drawn yet or
         // we forced redraw using forceRedraw() function.
         const needsRedraw: boolean = ( 
-            this.fCameraDelta.x < -1.000 ||
-            this.fCameraDelta.y < -1.000 ||
-            this.fCameraDelta.x > 1.000 || 
-            this.fCameraDelta.y > 1.000 || 
-            !this.fMapContainer || 
-            this.fNeedRedraw 
+            this.fCameraDelta.x < -OVERDRAW_TILES ||
+            this.fCameraDelta.y < -OVERDRAW_TILES ||
+            this.fCameraDelta.x > OVERDRAW_TILES || 
+            this.fCameraDelta.y > OVERDRAW_TILES || 
+            this.fNeedRedraw
         );
+
+        this.normalizeCamera();
+
+        // get tile size for current zoom
+        const tileSize: number = this.getTileSize();
+
+        // calculate bounds
+        const startX: number = Math.floor( this.fCameraPosition.x - OVERDRAW_TILES );
+        const startY: number = Math.floor( this.fCameraPosition.y - OVERDRAW_TILES );
+        const endX: number = Math.floor( this.fCameraPosition.x ) + Math.ceil( this.fCanvas.width / tileSize ) + OVERDRAW_TILES;
+        const endY: number = Math.floor( this.fCameraPosition.y ) + Math.ceil( this.fCanvas.height / tileSize ) + OVERDRAW_TILES;
+
+        // notify pipelines that we are redrawing scene
+        const data: IMapDisplayData = {
+            tileStart: new Point( startX , startY ) ,
+            tileEnd: new Point( endX , endY ) ,
+            tilesWidth: endX - startX ,
+            tilesHeight: endY - startY ,
+            tileSize: tileSize ,
+            scale: tileSize / 32.000 ,
+            absOffsetX: tileSize * OVERDRAW_TILES ,
+            absOffsetY: tileSize * OVERDRAW_TILES ,
+        };
 
         if ( needsRedraw ) {
             // fully reinitialize pixi scene, destroying and
             // recreating all sprites
             const perfCounter: PerfCounter = new PerfCounter();
             this.normalizeCamera();
-            this.redraw( stage );
+            this.runRedrawPipeline( data );
+            this.fNeedRedraw = false;
             console.log( 'redraw time: ' , perfCounter.delta() );
         }
 
         // update container
         this.updateContainer();
-        this.runUpdatePipeline();
+        this.runUpdatePipeline( data );
 
     }
 
@@ -138,12 +168,16 @@ class MapDisplay {
 
     private normalizeCamera(): void {
 
-        this.fCameraPosition.x += Math.trunc( this.fCameraDelta.x );
-        this.fCameraPosition.y += Math.trunc( this.fCameraDelta.y );
+        this.fCameraPosition.x += Math.trunc( this.fCameraDelta.x / OVERDRAW_TILES ) * OVERDRAW_TILES;
+        this.fCameraPosition.y += Math.trunc( this.fCameraDelta.y / OVERDRAW_TILES ) * OVERDRAW_TILES;
         
-        this.fCameraDelta.x = this.fCameraDelta.x % 1.000;
-        this.fCameraDelta.y = this.fCameraDelta.y % 1.000;
+        this.fCameraDelta.x = this.fCameraDelta.x % OVERDRAW_TILES;
+        this.fCameraDelta.y = this.fCameraDelta.y % OVERDRAW_TILES;
 
+    }
+
+    public getContainer(): Pixi.Container {
+        return this.fMapContainer;
     }
 
     /**
@@ -151,76 +185,24 @@ class MapDisplay {
      * and then reinitializing them over.
      * @param stage
      */
-    private redraw( stage: Pixi.Container ): void {
+    private runRedrawPipeline( data: IMapDisplayData ): void {
 
-        // get tile size for current zoom
-        const tileSize: number = this.getTileSize();
-
-        // calculate bounds
-        const startX: number = Math.floor( this.fCameraPosition.x - 2 );
-        const startY: number = Math.floor( this.fCameraPosition.y - 2 );
-        const endX: number = Math.floor( this.fCameraPosition.x ) + Math.ceil( this.fCanvas.width / tileSize ) + 2;
-        const endY: number = Math.floor( this.fCameraPosition.y ) + Math.ceil( this.fCanvas.height / tileSize ) + 2;
-
-        // erase old container
-        if ( this.fMapContainer ) {
-            stage.removeChild( this.fMapContainer );
-            this.fMapContainer.destroy();
-        }
-
-        // create new container and add it to scene
-        this.fMapContainer = new Pixi.Container();
-        stage.addChild( this.fMapContainer );
-
-        // notify pipelines that we are redrawing scene
-        this.fPipeline.forEach( el => {
-            if ( el.startRedraw ) {
-                el.startRedraw();
+        this.fPipeline.forEach( pipeline => {
+            if ( pipeline.onRedraw ) {
+                pipeline.onRedraw( data );
             }
         } );
 
-        // push container through rendering pipeline
-        // iterating from bottom-right to top-left
-        // on line basis
-        for( let y = endY ; y >= startY ; --y ) {
-            for ( let x = endX ; x >= startX ; --x ) {
-                this.redrawTile( x , y , startX , startY );
-            }
-        }
-
-        // make sure we wont force redraw next frame
-        this.fNeedRedraw = false;
-
     }
 
-    /**
-     * Pushes target tile through rendering pipeline.
-     * @param tileX x position of tile on map
-     * @param tileY y position of tile on map
-     * @param startX x position of tile on screen
-     * @param startY y position of tile on screen
-     */
-    private redrawTile( tileX: number , tileY: number , startX: number , startY: number ): void {
+    private runUpdatePipeline( data: IMapDisplayData ): void {
 
-        // prepare data
-        const tileSize: number = this.getTileSize();
-        const drawX: number = ( tileX - startX - 2 ) * tileSize;
-        const drawY: number = ( tileY - startY - 2 ) * tileSize;
-        const scale: number = tileSize / 32.000;
-
-        // call pipeline functions
-        this.fPipeline.forEach( el => el.redraw( this.fMapContainer! , tileX , tileY , drawX , drawY , scale ) );
-
-    }
-
-    private runUpdatePipeline(): void {
-        const tileSize: number = this.getTileSize();
-        const scale: number = tileSize / 32.000;
-        this.fPipeline.forEach( el => {
-            if ( el.update ) {
-                el.update( this.fMapContainer! , this.fCameraPosition.x , this.fCameraPosition.y , tileSize , scale );
+        this.fPipeline.forEach( pipeline => {
+            if ( pipeline.onUpdate ) {
+                pipeline.onUpdate( data );
             }
         } );
+        
     }
 
     /**
@@ -230,7 +212,7 @@ class MapDisplay {
     private updateContainer(): void {
 
         const tileSize: number = this.getTileSize();
-        const container: Pixi.Container = this.fMapContainer!;
+        const container: Pixi.Container = this.fMapContainer;
 
         container.x = Math.floor( -this.fCameraDelta.x * tileSize );
         container.y = Math.floor( -this.fCameraDelta.y * tileSize );
@@ -281,12 +263,13 @@ class MapDisplay {
         const targetCameraX: number = x - ( amountOfTilesX / 2.000 );
         const targetCameraY: number = y - ( amountOfTilesY / 2.000 );
 
-        this.fCameraPosition.x = Math.trunc( targetCameraX );
-        this.fCameraPosition.y = Math.trunc( targetCameraY );
+        this.fCameraPosition.x = Math.trunc( targetCameraX / OVERDRAW_TILES ) * OVERDRAW_TILES;
+        this.fCameraPosition.y = Math.trunc( targetCameraY / OVERDRAW_TILES ) * OVERDRAW_TILES;
 
-        this.fCameraDelta.x = targetCameraX % 1.000;
-        this.fCameraDelta.y = targetCameraY % 1.000;
+        this.fCameraDelta.x = targetCameraX % OVERDRAW_TILES;
+        this.fCameraDelta.y = targetCameraY % OVERDRAW_TILES;
 
+        this.normalizeCamera();
         this.forceRedraw();
 
     }
