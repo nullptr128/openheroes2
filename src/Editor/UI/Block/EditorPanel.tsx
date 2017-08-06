@@ -5,9 +5,9 @@ import EditorActiveTab from '../../Types/EditorActiveTab';
 import EInject from '../../Core/EInject';
 import EditorStore from '../../Core/EditorStore';
 import Events from '../../../Common/Engine/Events/Events';
-import ETabChanged from '../../Events/ETabChanged';
 import Nullable from '../../../Common/Support/Nullable';
 import TabOptsTerrain from '../TabOpts/TabOptsTerrain';
+import EEditorTabChanged from '../../Events/EEditorTabChanged';
 
 interface IEditorPanelState {
     activeTab: EditorActiveTab;
@@ -57,7 +57,7 @@ export default class EditorPanel extends React.Component<{},IEditorPanelState> {
         this.setState( {
             activeTab: this.gStore.ui.getActiveTab()
         } );
-        this.gEvents.on( ETabChanged , params => this.setState( { activeTab: params.activeTab } ) );
+        this.gEvents.on( EEditorTabChanged , params => this.setState( { activeTab: params.activeTab } ) );
     }   
 
 }

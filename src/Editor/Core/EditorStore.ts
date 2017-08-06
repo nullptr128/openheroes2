@@ -10,7 +10,6 @@ import Injectable from '../../Common/IOC/Injectable';
 import IEditorState from '../Model/IEditorState';
 import EditorActiveTab from '../Types/EditorActiveTab';
 import Inject from '../../Common/IOC/Inject';
-import ETabChanged from '../Events/ETabChanged';
 import EditorUIStore from '../Store/EditorUIStore';
 import EditorMapFactory from './EditorMapFactory';
 import EditorMapStore from '../Store/EditorMapStore';

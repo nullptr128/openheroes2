@@ -9,7 +9,6 @@ import Locale from '../../../Common/Engine/Misc/Locale';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import EditorStore from '../../Core/EditorStore';
 import EditorActiveTab from '../../Types/EditorActiveTab';
-import ETabChanged from '../../Events/ETabChanged';
 
 interface EditorToolbarState {
     activeTab: EditorActiveTab;

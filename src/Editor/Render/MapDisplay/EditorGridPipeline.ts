@@ -44,6 +44,7 @@ class EditorGridPipeline implements IMapDisplayPipelineElement {
                 const sprite: Pixi.Sprite = new Pixi.Sprite( this.fGridTexture );
                 sprite.position.set( x * data.tileSize - data.absOffsetX , y * data.tileSize - data.absOffsetY );
                 sprite.scale.set( data.scale );
+                sprite.alpha = 0.3;
                 this.fContainer.addChild( sprite );
                 return sprite;
             } ,

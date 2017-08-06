@@ -7,10 +7,10 @@
 
 import IEditorState from '../Model/IEditorState';
 import EditorActiveTab from '../Types/EditorActiveTab';
-import ETabChanged from '../Events/ETabChanged';
 import Events from '../../Common/Engine/Events/Events';
 import EditorTerrainBrushSize from '../Types/EditorTerrainBrushSize';
 import Terrain from '../../Common/Types/Terrain';
+import EEditorTabChanged from '../Events/EEditorTabChanged';
 
 class EditorUIStore {
 
@@ -35,7 +35,7 @@ class EditorUIStore {
      */
     public setActiveTab( tab: EditorActiveTab ): void {
         this.fState.activeTab = tab;
-        this.gEvents.trigger( ETabChanged , { activeTab: tab } );
+        this.gEvents.trigger( EEditorTabChanged , { activeTab: tab } );
     }
 
     public getTerrainBrushSize(): EditorTerrainBrushSize {

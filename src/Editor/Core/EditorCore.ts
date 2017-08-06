@@ -9,7 +9,6 @@ import Injectable from '../../Common/IOC/Injectable';
 import Engine from '../../Common/Engine/Engine';
 import EditorStore from './EditorStore';
 import MinimapDisplay from '../../Common/Render/Minimap/MinimapDisplay';
-import ETabChanged from '../Events/ETabChanged';
 import MapDisplay from '../../Common/Render/MapDisplay/MapDisplay';
 import Render from '../../Common/Engine/Render/Render';
 import TerrainPipeline from '../../Common/Render/MapDisplay/TerrainPipeline';
@@ -21,6 +20,9 @@ import Events from '../../Common/Engine/Events/Events';
 import EEditorReady from '../Events/EEditorReady';
 import EditorBrushTilePipeline from '../Render/MapDisplay/EditorBrushTilePipeline';
 import EditorGridPipeline from '../Render/MapDisplay/EditorGridPipeline';
+import MapTerrainControl from '../Actions/MapTerrainControl';
+import EEditorTabChanged from '../Events/EEditorTabChanged';
+import EditorActiveTab from '../Types/EditorActiveTab';
 
 @Injectable()
 class EditorCore {
@@ -42,6 +44,9 @@ class EditorCore {
 
     @Inject( MapControl )
     private gMapControl: MapControl;
+
+    @Inject( MapTerrainControl )
+    private gMapTerrainControl: MapTerrainControl;
 
     @Inject( Render )
     private gRender: Render;
@@ -81,6 +86,9 @@ class EditorCore {
         // Initialize map control module
         this.gMapControl.initialize();
 
+        // Initialize map terrain control module
+        this.gMapTerrainControl.initialize();
+
         // Start Looper
         this.gLooper.startLooper();
 
@@ -91,6 +99,9 @@ class EditorCore {
 
         // Trigger Event that editor is ready to run
         await this.gEvents.trigger( EEditorReady );
+
+        // Trigger opening terrain tab
+        this.gEvents.trigger( EEditorTabChanged , { activeTab: EditorActiveTab.TERRAIN } );
 
     }
 
@@ -110,30 +121,15 @@ class EditorCore {
         // setup terrain pipeline
         this.gTerrainPipeline.setTileFunc( (x,y) => this.getTileFunc(x,y) );
 
-        // setup editor brush tile pipeline
-        this.gEditorBrushTilePipeline.initialize();
-
         // finally add pipelines to mapdisplay
         this.gMapDisplay.setPipeline( [
             this.gTerrainPipeline ,
-            //this.gEditorBrushTilePipeline.getPipeline() ,
-            this.gEditorGridPipeline
+            this.gEditorGridPipeline ,
+            this.gEditorBrushTilePipeline ,
         ] );
 
         this.gRender.addContainer( this.gMapDisplay.getContainer() );
         this.gMapDisplay.forceRedraw();
-
-        // setup mousemove event for editorbrushtilepipeline
-        /*
-        this.gMapDisplay.onMouseMove( mouse => {
-            this.gEditorBrushTilePipeline.set(
-                mouse.mapTilePosition.x ,
-                mouse.mapTilePosition.y ,
-                1
-            );
-            this.gMapDisplay.forceRedraw();
-        } );
-        */
 
     }
 

@@ -1,9 +1,8 @@
 import Terrain from '../../Common/Types/Terrain';
-import EditorTerrainBrushSize from '../Types/EditorTerrainBrushSize';
 
 interface ITerrainOptions {
     terrain: Terrain;
-    brushSize: EditorTerrainBrushSize;
+    brushSize: number;
 }
 
 export default ITerrainOptions;
