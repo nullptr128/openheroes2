@@ -37,7 +37,7 @@ class EditorMapFactory {
      */
     private createBlankTiles( mapSize: number ): ITile[][] {
         return Arrays.create2dArray( mapSize , mapSize , (x,y) => {
-            const terrain: Terrain = x % 2 == 0 ? Terrain.WATER : Terrain.GRASS;
+            const terrain: Terrain = Terrain.WATER;
             return {
                 x ,
                 y ,

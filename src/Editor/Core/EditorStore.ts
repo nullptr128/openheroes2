@@ -43,6 +43,7 @@ class EditorStore {
             isModified: false ,
             terrainOptions: {
                 terrain: Terrain.WATER ,
+                altTerrain: Terrain.WATER ,
                 brushSize: EditorTerrainBrushSize.SINGLE ,
             } ,
         };

@@ -52,7 +52,44 @@ body {
 
 .toolbar-button.is-active {
     background-color: #AAA !important;
-}   
+}
+
+.toolbar-button {
+    position: relative;
+}
+
+.toolbar-button.is-active-primary {
+    &:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        border: 2px solid green;
+    }
+}
+
+.toolbar-button.is-active-secondary {
+    &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        border: 2px solid red;
+    }
+}
+
+.toolbar-button.toolbar-button.is-active-primary.toolbar-button.is-active-secondary {
+    &:after {
+        left: 2px;
+        top: 2px;
+        right: 2px;
+        bottom: 2px;
+    }
+}
 
 .icon:before {
     margin: 0;

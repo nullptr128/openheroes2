@@ -13,6 +13,7 @@ import Paths from '../../../Common/Engine/Misc/Paths';
 interface TabOptsTerrainState {
     brushSize: EditorTerrainBrushSize;
     terrainType: Terrain;
+    altTerrainType: Terrain;
 }
 
 export default class TabOptsTerrain extends React.Component<{},TabOptsTerrainState> {
@@ -29,6 +30,7 @@ export default class TabOptsTerrain extends React.Component<{},TabOptsTerrainSta
     state = {
         brushSize: EditorTerrainBrushSize.SINGLE,
         terrainType: Terrain.WATER,
+        altTerrainType: Terrain.WATER,
     };
 
     private buildBrushButton( icon: string , brushSize: EditorTerrainBrushSize , tooltip: string ): JSX.Element {
@@ -55,10 +57,18 @@ export default class TabOptsTerrain extends React.Component<{},TabOptsTerrainSta
 
     private buildTerrainButton( iconImageSrc: string , terrainType: Terrain , tooltip: string ): JSX.Element {
         
-        let className: Nullable<string> = ( terrainType == this.state.terrainType ? 'toolbar-button is-active' : 'toolbar-button' );
+        let className: Nullable<string> = 'toolbar-button';
+
+        if ( this.state.terrainType == terrainType ){
+            className += ' is-active-primary';
+        }
+
+        if ( this.state.altTerrainType == terrainType ) {
+            className += ' is-active-secondary';
+        }
 
         return (
-            <IconButton className={ className } onClick={ () => this.actionSelectTerrainType(terrainType) } tooltip={ tooltip }>
+            <IconButton className={ className } onMouseDown={ (evt) => this.actionSelectTerrainType(evt,terrainType) } tooltip={ tooltip }>
                 <img src={ this.gPaths.getResourceDir() + '/img/editor/' + iconImageSrc }
                     style={ { width: 24 , height: 24 } }/>
             </IconButton>
@@ -102,9 +112,14 @@ export default class TabOptsTerrain extends React.Component<{},TabOptsTerrainSta
         this.setState( { brushSize } );
     }
 
-    public actionSelectTerrainType( terrainType: Terrain ): void {
-        this.gStore.ui.setTerrainBrushType( terrainType );
-        this.setState( { terrainType } );
+    public actionSelectTerrainType( evt: React.MouseEvent<{}> , terrainType: Terrain ): void {
+        if ( ( evt.buttons & 1 ) == 1 ) {
+            this.gStore.ui.setTerrainBrushType( terrainType );
+            this.setState( { terrainType } );
+        } else if ( ( evt.buttons & 2 ) == 2 ) {
+            this.gStore.ui.setTerrainAltBrushType( terrainType );
+            this.setState( { altTerrainType: terrainType } );
+        }
     }
 
 }

@@ -54,6 +54,14 @@ class EditorUIStore {
         this.fState.terrainOptions.terrain = terrainType;
     }
 
+    public getTerrainAltBrushType(): Terrain {
+        return this.fState.terrainOptions.altTerrain;
+    }
+
+    public setTerrainAltBrushType( terrainType: Terrain ): void {
+        this.fState.terrainOptions.altTerrain = terrainType;
+    }
+
 }
 
 export default EditorUIStore;

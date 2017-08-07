@@ -1,8 +1,8 @@
 
-> Editor: Support for selecting terrain types for left and right mouse buttons
-> Editor: Add support for placing raw (no-bordered) tiles on map
 > Editor: Auto-border support
 > Editor: Brush variable size support
+> Editor: Add option to disable grid
+> Editor: Global refactor/cleanup and code documentation
 
 > Add license to all files
 

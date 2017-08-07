@@ -11,6 +11,7 @@ import IMap from '../../Common/Model/IMap';
 import ITile from '../../Common/Model/ITile';
 import Tools from '../../Common/Support/Tools';
 import Events from '../../Common/Engine/Events/Events';
+import Terrain from '../../Common/Types/Terrain';
 
 @Injectable()
 class EditorMapStore {
@@ -41,6 +42,14 @@ class EditorMapStore {
             return this.fState.map.tiles[x][y];
         } else {
             throw new Error( 'EditorMapStore.getMapTile() - position [' + x + '/' + y + '] is out of map range!' );
+        }
+    }
+
+    public setTileTerrain( x: number , y: number , terrain: Terrain , spriteId: number ): void {
+        const mapSize: number = this.getMapSize();
+        if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
+            this.fState.map.tiles[x][y].terrain = terrain;
+            this.fState.map.tiles[x][y].spriteId = spriteId;
         }
     }
 
