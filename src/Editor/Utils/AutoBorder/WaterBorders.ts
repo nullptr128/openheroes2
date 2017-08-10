@@ -1,180 +1,173 @@
-import IAutoBorderMatrix from './IAutoBorderMatrix';
 import Terrain from '../../../Common/Types/Terrain';
 import TerrainData from '../../../Common/Game/Terrain/TerrainData';
 import ITerrainBorders from '../../../Common/Types/ITerrainBorders';
+import IAutoBorderProcessor from './IAutoBorderProcessor';
 
 const water = TerrainData[ Terrain.WATER ];
 
-const WaterBorders: IAutoBorderMatrix[] = [
+const WaterBorders: IAutoBorderProcessor = {
 
-    // top corner
-    {
-        source: [
-           null , Terrain.WATER , null ,
-           null , { not: Terrain.WATER } , null ,
-           null , null , null ,
-        ] ,
-        out: [
-            null , { sprites: water.basicBorders.vertical , flip: true } , null ,
-            null , null , null ,
-            null , null , null , 
-        ] ,
+    sources: {
+        'W': t => t == Terrain.WATER ,
+        'L': t => t != Terrain.WATER ,
+        '?': t => true ,
     } ,
 
-    // bottom corner
-    {
-        source: [
-            null , { not: Terrain.WATER } , null ,
-            null , Terrain.WATER , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , null , null ,
-            null , { sprites: water.basicBorders.vertical } , null ,
-            null , null , null ,
-        ] ,
+    outputs: {
+        'uuu': { sprites: water.basicBorders.vertical , flip: true } ,
+        'ddd': { sprites: water.basicBorders.vertical } ,
+        'lll': { sprites: water.basicBorders.horizontal } ,
+        'rrr': { sprites: water.basicBorders.horizontal , mirror: true } ,
+        'otl': { sprites: water.basicBorders.innerCorner , flip: true } ,
+        'otr': { sprites: water.basicBorders.innerCorner , mirror: true , flip: true } ,
+        'obl': { sprites: water.basicBorders.innerCorner } ,
+        'obr': { sprites: water.basicBorders.innerCorner , mirror: true } ,
+        'itl': { sprites: water.basicBorders.outerCorner , flip: true } ,
+        'itr': { sprites: water.basicBorders.outerCorner , mirror: true , flip: true } ,
+        'ibl': { sprites: water.basicBorders.outerCorner } ,
+        'ibr': { sprites: water.basicBorders.outerCorner , mirror: true } ,
+        '???': null ,
     } ,
 
-    // left corner
-    {
-        source: [
-            null , null , null ,
-            Terrain.WATER , { not: Terrain.WATER } , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , null , null ,
-            { sprites: water.basicBorders.horizontal } , null , null ,
-            null , null , null,
-        ] ,
-    } ,
+    matchers: [
 
-    // right corner
-    {
-        source: [
-            null , null , null ,
-            { not: Terrain.WATER } , Terrain.WATER , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , null , null ,
-            null , { sprites: water.basicBorders.horizontal , mirror: true } , null ,
-            null , null , null ,
-        ] ,
-    } ,
+        // top border
+        {
+            in: [ '?','W','?',
+                  '?','L','?',
+                  '?','?','?' ] ,
 
-    // top-left corner
-    {
-        source: [
-            Terrain.WATER , Terrain.WATER , null ,
-            Terrain.WATER , { not: Terrain.WATER } , null ,
-            null , null , null ,
-        ] , 
-        out: [
-            { sprites: water.basicBorders.innerCorner , flip: true } , null , null ,
-            null , null , null ,
-            null , null , null ,
-        ] ,
-    } ,
+            out: [ '???' , 'uuu' , '???' ,
+                   '???' , '???' , '???' ,
+                   '???' , '???' , '???' ] ,
 
-    // top-right corner
-    {
-        source: [
-            Terrain.WATER , Terrain.WATER , null ,
-            { not: Terrain.WATER } , Terrain.WATER , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , { sprites: water.basicBorders.innerCorner , mirror: true , flip: true } , null ,
-            null , null , null ,
-            null , null , null ,
-        ] ,
-    } ,
+        } ,
 
-    // bottom-left corner
-    {
-        source: [
-            Terrain.WATER , { not: Terrain.WATER } , null ,
-            Terrain.WATER , Terrain.WATER , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , null , null ,
-            { sprites: water.basicBorders.innerCorner } , null , null ,
-            null , null , null
-        ] ,
-    } ,
+        // bottom border
+        {
+            in: [ '?','L','?',
+                  '?','W','?',
+                  '?','?','?'] ,
+            
+            out: [ '???' , '???' , '???' ,
+                   '???' , 'ddd' , '???' ,
+                   '???' , '???' , '???' ] ,
 
-    // bottom-right crner
-    {
-        source: [
-            { not: Terrain.WATER } , Terrain.WATER , null ,
-            Terrain.WATER , Terrain.WATER , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , null , null ,
-            null , { sprites: water.basicBorders.innerCorner , mirror: true } , null ,
-            null , null , null ,
-        ] ,
-    } ,    
+        } ,
 
-    // top-left inner corner
-    {
-        source: [
-            Terrain.WATER , { not: Terrain.WATER } , null ,
-            { not: Terrain.WATER } , { not: Terrain.WATER } , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            { sprites: water.basicBorders.outerCorner , flip: true } , null , null ,
-            null , null , null ,
-            null , null , null ,
-        ] ,
-    } ,
+        // left border
+        {
+            in: [ '?','?','?',
+                  'W','L','?',
+                  '?','?','?' ],
+            
+            out: [ '???' , '???' , '???' ,
+                   'lll' , '???' , '???' ,
+                   '???' , '???' , '???' ],
+        } ,
 
-    // top-right inner corner
-    {
-        source: [
-            { not: Terrain.WATER } , Terrain.WATER , null ,
-            { not: Terrain.WATER } , { not: Terrain.WATER } , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , { sprites: water.basicBorders.outerCorner , mirror: true , flip: true } , null ,
-            null , null , null ,
-            null , null , null ,
-        ] ,
-    } ,
+        // right corner
+        {
+            in: [ '?','?','?',
+                  'L','W','?',
+                  '?','?','?' ],
 
-    // bottom-left inner corner
-    {
-        source: [
-            { not: Terrain.WATER } , { not: Terrain.WATER } , null ,
-            Terrain.WATER , { not: Terrain.WATER } , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , null , null ,
-            { sprites: water.basicBorders.outerCorner } , null , null ,
-            null , null , null ,
-        ] ,
-    } ,
+            out: [ '???' , '???' , '???' ,
+                   '???' , 'rrr' , '???',
+                   '???' , '???' , '???' ],
+        } ,
 
-    // bottom-right inner corner
-    {
-        source: [
-            { not: Terrain.WATER } , { not: Terrain.WATER } , null ,
-            { not: Terrain.WATER } , Terrain.WATER , null ,
-            null , null , null ,
-        ] ,
-        out: [
-            null , null , null ,
-            null , { sprites: water.basicBorders.outerCorner , mirror: true } , null ,
-            null , null , null ,
-        ] ,
-    } ,
+        // top-left corner
+        {
+            in: [ 'W' , 'W' , '?' ,
+                  'W' , 'L' , '?' ,
+                  '?' , '?' , '?' ] ,
 
-];
+            out: [ 'otl' , '???' , '???' ,
+                   '???' , '???' , '???' ,
+                   '???' , '???' , '???' ] ,                
+        } ,
+
+        // top-right corner
+        {
+            in: [ 'W' , 'W' , '?' ,
+                  'L' , 'W' , '?' ,
+                  '?' , '?' , '?' ] ,
+        
+            out: [ '???' , 'otr' , '???' ,
+                   '???' , '???' , '???' ,
+                   '???' , '???' , '???' ] ,
+        } ,
+
+        // bottom-left corner
+        {
+            in: [ 'W' , 'L' , '?' ,
+                  'W' , 'W' , '?' ,
+                  '?' , '?' , '?' ] ,
+
+            out: [ '???' , '???' , '???' ,
+                   'obl' , '???' , '???' ,
+                   '???' , '???' , '???' ] ,
+        } ,
+
+        // bottom-right corner
+        {
+            in: [ 'L' , 'W' , '?' ,
+                  'W' , 'W' , '?' ,
+                  '?' , '?' , '?' ] ,
+            
+            out: [ '???' , '???' , '???' ,
+                   '???' , 'obr' , '???' ,
+                   '???' , '???' , '???' ] ,
+        } ,
+
+        // top-left inner corner
+        {
+            in: [ 'W' , 'L' , '?' ,
+                  'L' , 'L' , '?' ,
+                  '?' , '?' , '?' ] ,
+
+            out: [ 'itl' , '???' , '???' ,
+                   '???' , '???' , '???' ,
+                   '???' , '???' , '???' ] ,
+        } ,
+
+        // top-right inner corner
+        {
+            in: [ 'L' , 'W' , '?' ,
+                  'L' , 'L' , '?' ,
+                  '?' , '?' , '?' ] ,
+
+            out: [ '???' , 'itr' , '???' ,
+                   '???' , '???' , '???' ,
+                   '???' , '???' , '???' ] ,
+
+        } ,
+
+        // bottom-left inner corner
+        {
+            in: [ 'L' , 'L' , '?' ,
+                  'W' , 'L' , '?' ,
+                  '?' , '?' , '?' ] ,
+
+            out: [ '???' , '???' , '???' ,
+                   'ibl' , '???' , '???' ,
+                   '???' , '???' , '???' ] ,
+        } ,
+
+        // bottom-right inner corner
+        {
+            in: [ 'L' , 'L' , '?' ,
+                  'L' , 'W' , '?' ,
+                  '?' , '?' , '?' ] ,
+
+            out: [ '???' , '???' , '???' ,
+                   '???' , 'ibr' , '???' ,
+                   '???' , '???' , '???' ] ,
+        } ,
+
+    ] ,
+
+};
 
 export default WaterBorders;
