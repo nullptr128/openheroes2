@@ -11,6 +11,8 @@ interface ITile {
     y: number;
     terrain: Terrain;
     spriteId: number;
+    mirror: boolean;
+    flip: boolean;
 }
 
 export default ITile;

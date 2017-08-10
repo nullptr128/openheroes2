@@ -80,6 +80,21 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
 
     }
 
+    private reposSprite( sprite: Pixi.Sprite , x: number , y: number , mirror: boolean , flip: boolean , data: IMapDisplayData ): void {
+
+        const scaleXOffset: number = mirror ? data.tileSize : 0;
+        const scaleYOffset: number = flip? data.tileSize : 0;
+        sprite.position.set( 
+            x * data.tileSize - data.absOffsetX + scaleXOffset , 
+            y * data.tileSize - data.absOffsetY + scaleYOffset 
+        );
+        sprite.scale.set( 
+            mirror ? data.scale * -1 : data.scale ,  
+            flip ? data.scale * -1 : data.scale ,
+        );
+
+    }
+
     public onRedraw( data: IMapDisplayData ): void {
 
         const perf: PerfCounter = new PerfCounter();
@@ -97,12 +112,10 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
                 const sprite: Pixi.Sprite = this.fSprites[x][y];
                 const tile: Nullable<ITile> = this.fGetTileFunc!( tileX , tileY );
 
-                sprite.position.set( x * data.tileSize - data.absOffsetX , y * data.tileSize - data.absOffsetY );
-                sprite.scale.set( data.scale );
-
                 if ( tile ) {
                     sprite.visible = true;
                     sprite.texture = this.fTileTextures[ tile.spriteId ];
+                    this.reposSprite( sprite , x , y , tile.mirror , tile.flip , data );
                 } else {
                     sprite.visible = false;
                 }

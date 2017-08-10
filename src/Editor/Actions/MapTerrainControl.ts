@@ -14,6 +14,7 @@ import Terrain from '../../Common/Types/Terrain';
 import TerrainData from '../../Common/Game/Terrain/TerrainData';
 import Arrays from '../../Common/Support/Arrays';
 import Tools from '../../Common/Support/Tools';
+import AutoBorder from '../Utils/AutoBorder/AutoBorder';
 
 @Injectable()
 class MapTerrainControl {
@@ -30,6 +31,9 @@ class MapTerrainControl {
     @Inject( MapDisplay )
     private gMapDisplay: MapDisplay;
 
+    @Inject( AutoBorder )
+    private gAutoBorder: AutoBorder;
+
     private fIsActive: boolean;
     
     public initialize(): void {
@@ -44,6 +48,7 @@ class MapTerrainControl {
 
         this.gMapDisplay.onMouseMove( mouse => this.update(mouse) );
         this.gMapDisplay.onMouseDown( mouse => this.update(mouse) );
+        this.gMapDisplay.onMouseUp( mouse => this.finishDrawing(mouse) );
 
     }
 
@@ -94,6 +99,12 @@ class MapTerrainControl {
 
     }
 
+    public finishDrawing( mouse: IMapDisplayMouse ): void {
+
+        // ????
+
+    }
+
     private placePrimaryTile( mapPos: Point ): void {
         this.internalPlaceTile( mapPos , this.gEditorStore.ui.getTerrainBrushType() );
     }
@@ -127,6 +138,7 @@ class MapTerrainControl {
             }
         }
 
+        this.gAutoBorder.borderizeMapSection( new Point(startX-1,startY-1) , new Point(endX+2,endY+2) );
         this.gMapDisplay.forceRedraw();
 
     }

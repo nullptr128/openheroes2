@@ -45,11 +45,13 @@ class EditorMapStore {
         }
     }
 
-    public setTileTerrain( x: number , y: number , terrain: Terrain , spriteId: number ): void {
+    public setTileTerrain( x: number , y: number , terrain: Terrain , spriteId: number , mirror?: boolean , flip?: boolean ): void {
         const mapSize: number = this.getMapSize();
         if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
             this.fState.map.tiles[x][y].terrain = terrain;
             this.fState.map.tiles[x][y].spriteId = spriteId;
+            this.fState.map.tiles[x][y].mirror = !!mirror;
+            this.fState.map.tiles[x][y].flip = !!flip;
         }
     }
 

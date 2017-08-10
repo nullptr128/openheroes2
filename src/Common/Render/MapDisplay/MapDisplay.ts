@@ -68,6 +68,7 @@ class MapDisplay {
     };
     private fOnMouseMove: MapDisplayMouseFunction[] = [];
     private fOnMouseDown: MapDisplayMouseFunction[] = [];
+    private fOnMouseUp: MapDisplayMouseFunction[] = [];
 
     /**
      * Creates and gets canvas for MapDisplay.
@@ -282,6 +283,8 @@ class MapDisplay {
 
     private handleMouseMove( evt: MouseEvent ): void {
 
+        // @TODO: dedupe MouseEvent parsing
+
         // calculate real mouse pos on screen
         const boundingRect: ClientRect = this.fCanvas.getBoundingClientRect();
         const posX: number = evt.clientX - boundingRect.left;
@@ -354,12 +357,53 @@ class MapDisplay {
 
     }
 
+    private handleMouseUp( evt: MouseEvent ): void {
+
+        // calculate real mouse pos on screen
+        const boundingRect: ClientRect = this.fCanvas.getBoundingClientRect();
+        const posX: number = evt.clientX - boundingRect.left;
+        const posY: number = evt.clientY - boundingRect.top;
+
+        // calculate width of screen in tiles (1 unit = 1 tile)
+        // @TODO: cache this value? its abused a lot on all functions there...
+        const tileSize: number = this.getTileSize();
+        
+        // store real mouse position on canvas
+        this.fMouse.realPosition.x = posX;
+        this.fMouse.realPosition.y = posY;
+
+        // calculate screen tile position on canvas
+        this.fMouse.screenTilePosition.x = Math.floor( (posX + this.fCameraDelta.x*tileSize) / tileSize );
+        this.fMouse.screenTilePosition.y = Math.floor( (posY + this.fCameraDelta.y*tileSize) / tileSize );
+
+        // calculate map tile position on canvas
+        this.fMouse.mapTilePosition.x = this.fMouse.screenTilePosition.x + this.fCameraPosition.x;
+        this.fMouse.mapTilePosition.y = this.fMouse.screenTilePosition.y + this.fCameraPosition.y;
+
+        // get buttons that we are pressing, grabbing them from evt.buttons;
+        // they are stored as bit flags
+        const BTN_LEFT      = 1;
+        const BTN_RIGHT     = 2;
+        const BTN_MIDDLE    = 4;
+
+        this.fMouse.buttons.left = ( ( evt.buttons & BTN_LEFT ) == BTN_LEFT );
+        this.fMouse.buttons.middle = ( ( evt.buttons & BTN_MIDDLE ) == BTN_MIDDLE );
+        this.fMouse.buttons.right = ( ( evt.buttons & BTN_RIGHT ) == BTN_RIGHT );
+
+        this.fOnMouseUp.forEach( fn => fn( this.fMouse ) );
+
+    }
+
     public onMouseMove( handler: MapDisplayMouseFunction ): void {
         this.fOnMouseMove.push( handler );
     }
 
     public onMouseDown( handler: MapDisplayMouseFunction ): void {
         this.fOnMouseDown.push( handler );
+    }
+
+    public onMouseUp( handler: MapDisplayMouseFunction ): void {
+        this.fOnMouseUp.push( handler );
     }
 
 }
