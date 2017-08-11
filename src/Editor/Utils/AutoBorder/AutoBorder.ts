@@ -8,6 +8,8 @@ import Nullable from '../../../Common/Support/Nullable';
 import ITile from '../../../Common/Model/ITile';
 import Arrays from '../../../Common/Support/Arrays';
 import IAutoBorderProcessor from './IAutoBorderProcessor';
+import TerrainOuterBorders from './TerrainOuterBorders';
+import TerrainJunctionBorders from './TerrainJunctionBorders';
 
 @Injectable()
 class AutoBorder {
@@ -29,7 +31,13 @@ class AutoBorder {
 
     public borderizeTile( x: number , y: number ): void {
 
-        this.borderizeWith( x , y , WaterBorders );
+        const processors: IAutoBorderProcessor[] = [
+            WaterBorders ,
+            ...TerrainOuterBorders ,
+            ...TerrainJunctionBorders ,
+        ];
+
+        processors.forEach( processor => this.borderizeWith( x , y , processor ) );
 
     }
 
@@ -44,15 +52,22 @@ class AutoBorder {
             for( let i = 0 ; i < 9 ; ++i ) {
                 
                 const point: Point = this.getMatrixPoint( i );
-                const tile: Nullable<ITile> = this.gStore.map.getMapTile( point.x + x , point.y + y );
-                if ( !tile ) {
-                    return;
-                }
 
-                const source = processor.sources[ matcher.in[i] ];
+                if ( this.gStore.map.isValidTile( point.x + x , point.y + y ) ) {                
+                    const tile: ITile = this.gStore.map.getMapTile( point.x + x , point.y + y );
+                    const source = processor.sources[ matcher.in[i] ];
                 
-                if ( !source( tile.terrain ) ) {
-                    return;
+                    if ( !source( tile.terrain ) ) {
+                        return;
+                    }
+
+                } else {
+
+                    const source = processor.sources[ matcher.in[i] ];
+                    if ( !source( null ) ) {
+                        return;
+                    }
+
                 }
 
             }
@@ -60,18 +75,21 @@ class AutoBorder {
             for( let i = 0 ; i < 9 ; ++i ) {
 
                 const point: Point = this.getMatrixPoint( i );
-                const tile: ITile = this.gStore.map.getMapTile( point.x + x , point.y + y )!;
 
-                const output = processor.outputs[ matcher.out[i] ];
-                if ( output ) {
-                    this.gStore.map.setTileTerrain(
-                        tile.x , 
-                        tile.y ,
-                        tile.terrain ,
-                        Arrays.randomElement( output.sprites ) ,
-                        output.mirror ,
-                        output.flip ,
-                    );
+                if ( this.gStore.map.isValidTile( point.x + x , point.y + y ) ) {
+                    const tile: ITile = this.gStore.map.getMapTile( point.x + x , point.y + y )!;
+
+                    const output = processor.outputs[ matcher.out[i] ];
+                    if ( output ) {
+                        this.gStore.map.setTileTerrain(
+                            tile.x , 
+                            tile.y ,
+                            tile.terrain ,
+                            Arrays.randomElement( output.sprites ) ,
+                            output.mirror ,
+                            output.flip ,
+                        );
+                    }
                 }
 
             }

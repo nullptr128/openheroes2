@@ -124,7 +124,7 @@ TerrainData[ Terrain.LAVA ] = {
     basicBorders: {
         vertical: Arrays.createRange( 224 , 227 ) ,
         outerCorner: Arrays.createRange( 228 , 231 ) ,
-        horizontal: Arrays.createRange( 132 , 235 ) ,
+        horizontal: Arrays.createRange( 232 , 235 ) ,
         innerCorner: Arrays.createRange( 236 , 239 ) ,
     } ,
     junctionBorders: {

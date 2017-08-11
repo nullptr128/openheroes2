@@ -1,3 +1,4 @@
+
 import Terrain from '../../../Common/Types/Terrain';
 import TerrainData from '../../../Common/Game/Terrain/TerrainData';
 import ITerrainBorders from '../../../Common/Types/ITerrainBorders';
@@ -8,8 +9,8 @@ const water = TerrainData[ Terrain.WATER ];
 const WaterBorders: IAutoBorderProcessor = {
 
     sources: {
-        'W': t => t == Terrain.WATER ,
-        'L': t => t != Terrain.WATER ,
+        'W': t => t == Terrain.WATER || t == null ,
+        'L': t => t != Terrain.WATER && t != null ,
         '?': t => true ,
     } ,
 

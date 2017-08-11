@@ -1,7 +1,7 @@
 import Terrain from '../../../Common/Types/Terrain';
 import Nullable from '../../../Common/Support/Nullable';
 
-type SourceFunction = (terrain: Terrain) => boolean;
+type SourceFunction = (terrain: Terrain | null) => boolean;
 
 interface IKeyValue<T> {
     [key: string]: T;

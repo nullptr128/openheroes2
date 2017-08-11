@@ -31,6 +31,15 @@ class EditorMapStore {
         return this.fState.map.size;
     }
 
+    public isValidTile( x: number , y: number ): boolean {
+        return ( 
+            x >= 0 &&
+            y >= 0 &&
+            x < this.fState.map.size &&
+            y < this.fState.map.size
+        );
+    }
+
     /**
      * Retrieves read-only tile of current map.
      * @param x x-position of tile
