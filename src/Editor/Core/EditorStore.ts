@@ -39,7 +39,7 @@ class EditorStore {
         // create initial store
         this.fState = {
             activeTab: EditorActiveTab.TERRAIN ,
-            map: this.gEditorMapFactory.createBlankMap( 'Unnamed map' , '' , 72 ) ,
+            map: this.gEditorMapFactory.createBlankMap( 'Unnamed map' , '' , 144 ) ,
             isModified: false ,
             terrainOptions: {
                 terrain: Terrain.WATER ,

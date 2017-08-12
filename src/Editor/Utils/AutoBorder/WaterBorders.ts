@@ -9,8 +9,8 @@ const water = TerrainData[ Terrain.WATER ];
 const WaterBorders: IAutoBorderProcessor = {
 
     sources: {
-        'W': t => t == Terrain.WATER || t == null ,
-        'L': t => t != Terrain.WATER && t != null ,
+        'W': t => t === Terrain.WATER || t === null ,
+        'L': t => t !== Terrain.WATER && t !== null ,
         '?': t => true ,
     } ,
 

@@ -15,6 +15,7 @@ import TerrainData from '../../Common/Game/Terrain/TerrainData';
 import Arrays from '../../Common/Support/Arrays';
 import Tools from '../../Common/Support/Tools';
 import AutoBorder from '../Utils/AutoBorder/AutoBorder';
+import AutoFixer from '../Utils/AutoBorder/AutoFixer';
 
 @Injectable()
 class MapTerrainControl {
@@ -34,7 +35,13 @@ class MapTerrainControl {
     @Inject( AutoBorder )
     private gAutoBorder: AutoBorder;
 
+    @Inject( AutoFixer )
+    private gAutoFixer: AutoFixer;
+
     private fIsActive: boolean;
+
+    private fBorderFrom: Point;
+    private fBorderTo: Point;
     
     public initialize(): void {
 
@@ -46,8 +53,8 @@ class MapTerrainControl {
             }
         } );
 
-        this.gMapDisplay.onMouseMove( mouse => this.update(mouse) );
-        this.gMapDisplay.onMouseDown( mouse => this.update(mouse) );
+        this.gMapDisplay.onMouseDown( mouse => this.startDrawing(mouse) );
+        this.gMapDisplay.onMouseMove( mouse => this.continueDrawing(mouse) );
         this.gMapDisplay.onMouseUp( mouse => this.finishDrawing(mouse) );
 
     }
@@ -99,9 +106,46 @@ class MapTerrainControl {
 
     }
 
+    public startDrawing( mouse: IMapDisplayMouse ): void {
+
+        if ( this.fIsActive ) {
+            this.fBorderFrom = new Point( mouse.mapTilePosition.x , mouse.mapTilePosition.y );
+            this.fBorderTo = new Point( mouse.mapTilePosition.x , mouse.mapTilePosition.y );
+        }
+        
+        this.update( mouse );
+    }
+
+    public continueDrawing( mouse: IMapDisplayMouse ): void {
+
+        if ( this.fIsActive && ( mouse.buttons.left || mouse.buttons.right ) ) {
+
+            this.fBorderFrom.x = Math.min( this.fBorderFrom.x , mouse.mapTilePosition.x );
+            this.fBorderFrom.y = Math.min( this.fBorderFrom.y , mouse.mapTilePosition.y );
+            this.fBorderTo.x = Math.max( this.fBorderTo.x , mouse.mapTilePosition.x );
+            this.fBorderTo.y = Math.max( this.fBorderTo.y , mouse.mapTilePosition.y );
+
+        }
+
+        this.update( mouse );
+
+    }
+
     public finishDrawing( mouse: IMapDisplayMouse ): void {
 
-        // ????
+        if ( this.fIsActive ) {
+
+            const fromPos: Point = this.fBorderFrom.subtract( 5 );
+            const toPos: Point = this.fBorderTo.add( 5 );
+
+            //const fromPos: Point = new Point( 0 , 0 );
+            //const toPos: Point = new Point( this.gEditorStore.map.getMapSize() , this.gEditorStore.map.getMapSize() );
+
+            this.gAutoFixer.fixMapSection( fromPos , toPos );
+            this.gAutoBorder.borderizeMapSection( fromPos , toPos );
+            this.gMapDisplay.forceRedraw();
+
+        }
 
     }
 
@@ -138,7 +182,6 @@ class MapTerrainControl {
             }
         }
 
-        this.gAutoBorder.borderizeMapSection( new Point(startX-1,startY-1) , new Point(endX+2,endY+2) );
         this.gMapDisplay.forceRedraw();
 
     }

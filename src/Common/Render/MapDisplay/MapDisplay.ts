@@ -79,6 +79,7 @@ class MapDisplay {
         this.fCanvas = this.gRender.getCanvas( baseWidth , baseHeight );
         this.fCanvas.addEventListener( 'mousemove' , (evt) => this.handleMouseMove(evt) );
         this.fCanvas.addEventListener( 'mousedown' , (evt) => this.handleMouseDown(evt) );
+        this.fCanvas.addEventListener( 'mouseup' , (evt) => this.handleMouseUp(evt) );
         return this.fCanvas;
     }
 

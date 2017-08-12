@@ -14,6 +14,7 @@ import EditorBrushTilePipeline from '../Render/MapDisplay/EditorBrushTilePipelin
 import EditorGridPipeline from '../Render/MapDisplay/EditorGridPipeline';
 import MapTerrainControl from '../Actions/MapTerrainControl';
 import AutoBorder from '../Utils/AutoBorder/AutoBorder';
+import AutoFixer from '../Utils/AutoBorder/AutoFixer';
 
 export default function EditorProvider( container: Container ): void {
     container.bind( EditorCore );
@@ -24,4 +25,5 @@ export default function EditorProvider( container: Container ): void {
     container.bind( MapControl );
     container.bind( MapTerrainControl );
     container.bind( AutoBorder );
+    container.bind( AutoFixer );
 }

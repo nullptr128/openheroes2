@@ -12,6 +12,7 @@ import ITile from '../../Common/Model/ITile';
 import Tools from '../../Common/Support/Tools';
 import Events from '../../Common/Engine/Events/Events';
 import Terrain from '../../Common/Types/Terrain';
+import Nullable from '../../Common/Support/Nullable';
 
 @Injectable()
 class EditorMapStore {
@@ -51,6 +52,14 @@ class EditorMapStore {
             return this.fState.map.tiles[x][y];
         } else {
             throw new Error( 'EditorMapStore.getMapTile() - position [' + x + '/' + y + '] is out of map range!' );
+        }
+    }
+
+    public getMapTileOrNull( x: number , y: number ): Readonly<Nullable<ITile>> {
+        if ( this.isValidTile( x , y ) ) {
+            return this.getMapTile( x , y );
+        } else {
+            return null;
         }
     }
 

@@ -12,8 +12,8 @@ const TerrainOuterBorders: IAutoBorderProcessor[] = [
     const processor: IAutoBorderProcessor = {
 
         sources: {
-            'W': t => t == Terrain.WATER || t == Terrain.SAND || t == null ,
-            'L': t => t == terrain && t != null ,
+            'W': t => t === Terrain.WATER || t === Terrain.SAND || t === null ,
+            'L': t => t === terrain && t !== null ,
             '?': t => true ,
         } ,
 

@@ -11,8 +11,8 @@ const TerrainJunctionBorders: IAutoBorderProcessor[] = [
     const processor: IAutoBorderProcessor = {
 
         sources: {
-            'W': t => t != terrain && t != Terrain.WATER && t != Terrain.SAND ,
-            'L': t => t == terrain ,
+            'W': t => t !== terrain && t !== Terrain.WATER && t !== Terrain.SAND && t !== null ,
+            'L': t => t === terrain ,
             '?': t => true ,
         } ,
 

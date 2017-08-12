@@ -91,7 +91,7 @@ class Arrays {
     public static createRange( from: number , to: number ): number[] {
         const count: number = to - from;
         const result: number[] = [];
-        for( let i = 0 ; i < count ; ++i ){
+        for( let i = 0 ; i <= count ; ++i ){
             result.push( from + i );
         }
         return result;

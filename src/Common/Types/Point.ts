@@ -22,6 +22,22 @@ class Point {
         return new Point( 0.000 , 0.000 );
     }
 
+    public isLessThan( point: Point ): boolean {
+        return ( this.x < point.x || this.y < point.y );
+    }
+
+    public isGreaterThan( point: Point ): boolean {
+        return ( this.x > point.x || this.y > point.y );
+    }
+
+    public subtract( value: number ): Point {
+        return new Point( this.x - value , this.y - value );
+    }
+
+    public add( value: number ): Point {
+        return new Point( this.x + value , this.y + value );
+    }
+
 }
 
 export default Point;
