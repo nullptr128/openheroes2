@@ -31,7 +31,7 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
     private gResources: Resources;
 
     private fGetTileFunc: Nullable<GetTileFunc>;
-    private fTileTextures: Pixi.Texture[] = new Array(431);
+    private fTileTextures: Pixi.Texture[] = new Array(432);
     private fContainer: Pixi.Container = new Pixi.Container();
     private fSprites: Pixi.Sprite[][] = [];
 
@@ -45,7 +45,7 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
 
     public onInitialize(): Pixi.Container {
         
-        for( let i = 0 ; i < 431 ; ++i ) {
+        for( let i = 0 ; i < 432 ; ++i ) {
             this.fTileTextures[i] = this.gResources.getTilTexture( 'GROUND32.TIL' , i );
         }
 
@@ -115,6 +115,7 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
                 if ( tile ) {
                     sprite.visible = true;
                     sprite.texture = this.fTileTextures[ tile.spriteId ];
+                    sprite.alpha = tile.debug ? 0.50 : 1.00;
                     this.reposSprite( sprite , x , y , tile.mirror , tile.flip , data );
                 } else {
                     sprite.visible = false;

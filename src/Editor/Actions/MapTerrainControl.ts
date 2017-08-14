@@ -141,7 +141,7 @@ class MapTerrainControl {
             //const fromPos: Point = new Point( 0 , 0 );
             //const toPos: Point = new Point( this.gEditorStore.map.getMapSize() , this.gEditorStore.map.getMapSize() );
 
-            this.gAutoFixer.fixMapSection( fromPos , toPos );
+            this.gAutoFixer.fixMapSection( fromPos.subtract(1) , toPos.add(1) );
             this.gAutoBorder.borderizeMapSection( fromPos , toPos );
             this.gMapDisplay.forceRedraw();
 

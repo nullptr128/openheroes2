@@ -180,6 +180,7 @@ TerrainData[ Terrain.DESERT ] = {
     multiBorders: Arrays.createRange( 294 , 299 ) ,
 };
 
+// sand
 TerrainData[ Terrain.SAND ] = {
     color: { r: 244 , g: 231 , b: 183 , a: 255 } ,
     terrain: Terrain.SAND ,

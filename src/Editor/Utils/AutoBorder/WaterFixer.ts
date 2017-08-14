@@ -11,7 +11,9 @@ const WaterFixer: IAutoFixerProcessor = {
 
     outputs: {
         'cl': { copyFrom: { x: -1 , y: 0 } } ,
+        'cr': { copyFrom: { x: 1 , y: 0 } } ,
         'cu': { copyFrom: { x: 0 , y: -1 } } ,
+        'cd': { copyFrom: { x: 0 , y: 1 } } ,
         '??': null ,
     } ,
 
@@ -60,6 +62,52 @@ const WaterFixer: IAutoFixerProcessor = {
             out: [ '??' , '??' , '??' ,
                    'cu' , '??' , '??' ,
                    '??' , '??' , '??' ] ,
+        } ,
+
+        // horizontal tetris fix
+        {
+            in: [ 'W' , 'L' , 'L' ,
+                  'L' , 'L' , 'W' ,
+                  '?' , '?' , '?' ] ,
+
+            out: [ 'cr' , '??' , '??' ,
+                   '??' , '??' , 'cl' ,
+                   '??' , '??' , '??' ] ,
+
+        } ,
+
+        // horizontal inverted tetris fix
+        {
+            in: [ 'L' , 'L' , 'W' ,
+                  'W' , 'L' , 'L' ,
+                  '?' , '?' , '?' ] ,
+
+            out: [ '??' , '??' , 'cl' ,
+                   'cr' , '??' , '??' ,
+                   '??' , '??' , '??' ] ,
+
+        } ,
+
+        // vertical teris fix
+        {
+            in: [ 'W' , 'L' , '?' ,
+                  'L' , 'L' , '?' ,
+                  'L' , 'W' , '?' ] ,
+
+            out: [ 'cd' , '??' , '??' ,
+                   '??' , '??' , '??' ,
+                   '??' , 'cu' , '??' ] ,
+        } ,
+
+        // vertical inverted teris fix
+        {
+            in: [ 'L' , 'W' , '?' ,
+                  'L' , 'L' , '?' ,
+                  'W' , 'L' , '?' ] ,
+                  
+            out: [ '??' , 'cd' , '??' ,
+                   '??' , '??' , '??' ,
+                   'cu' , '??' , '??' ] ,
         } ,
 
     ]

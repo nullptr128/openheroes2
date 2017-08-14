@@ -15,156 +15,58 @@ const WaterBorders: IAutoBorderProcessor = {
     } ,
 
     outputs: {
-        'uuu': { sprites: water.basicBorders.vertical , flip: true } ,
-        'ddd': { sprites: water.basicBorders.vertical } ,
-        'lll': { sprites: water.basicBorders.horizontal } ,
-        'rrr': { sprites: water.basicBorders.horizontal , mirror: true } ,
-        'otl': { sprites: water.basicBorders.innerCorner , flip: true } ,
-        'otr': { sprites: water.basicBorders.innerCorner , mirror: true , flip: true } ,
-        'obl': { sprites: water.basicBorders.innerCorner } ,
-        'obr': { sprites: water.basicBorders.innerCorner , mirror: true } ,
-        'itl': { sprites: water.basicBorders.outerCorner , flip: true } ,
-        'itr': { sprites: water.basicBorders.outerCorner , mirror: true , flip: true } ,
-        'ibl': { sprites: water.basicBorders.outerCorner } ,
-        'ibr': { sprites: water.basicBorders.outerCorner , mirror: true } ,
-        '???': null ,
+        'vb': water.basicBorders.vertical ,
+        'hb': water.basicBorders.horizontal ,
+        'ib': water.basicBorders.innerCorner ,
+        'ob': water.basicBorders.outerCorner ,
+        '??': null ,
     } ,
 
     matchers: [
 
-        // top border
+        // vertical border
         {
-            in: [ '?','W','?',
-                  '?','L','?',
-                  '?','?','?' ] ,
-
-            out: [ '???' , 'uuu' , '???' ,
-                   '???' , '???' , '???' ,
-                   '???' , '???' , '???' ] ,
-
-        } ,
-
-        // bottom border
-        {
-            in: [ '?','L','?',
-                  '?','W','?',
-                  '?','?','?'] ,
+            in: [ '?','L',
+                  '?','W' ] ,
             
-            out: [ '???' , '???' , '???' ,
-                   '???' , 'ddd' , '???' ,
-                   '???' , '???' , '???' ] ,
+            out: [ '??' , '??',
+                   '??' , 'vb' ] ,
+
+            priority: 1 ,
 
         } ,
 
-        // left border
+        // horizontal border
         {
-            in: [ '?','?','?',
-                  'W','L','?',
-                  '?','?','?' ],
+            in: [ '?' , '?' ,
+                  'W' , 'L' ] ,
+      
+            out: [ '??' , '??' ,
+                   'hb' , '??' ] ,
+
+            priority: 1 ,
+        } ,
+
+        // inner border
+        {
+            in: [ 'W' , 'L' ,
+                  'W' , 'W' ] ,
+
+            out: [ '??' , '??' ,
+                   'ib' , '??' ] ,
+                   
+            priority: 2 ,
+        } ,
+
+        // outer border
+        {
+            in: [ 'L' , 'L' ,
+                  'W' , 'L' ] ,
             
-            out: [ '???' , '???' , '???' ,
-                   'lll' , '???' , '???' ,
-                   '???' , '???' , '???' ],
-        } ,
+            out: [ '??' , '??' ,
+                   'ob' , '??' ] ,
 
-        // right corner
-        {
-            in: [ '?','?','?',
-                  'L','W','?',
-                  '?','?','?' ],
-
-            out: [ '???' , '???' , '???' ,
-                   '???' , 'rrr' , '???',
-                   '???' , '???' , '???' ],
-        } ,
-
-        // top-left corner
-        {
-            in: [ 'W' , 'W' , '?' ,
-                  'W' , 'L' , '?' ,
-                  '?' , '?' , '?' ] ,
-
-            out: [ 'otl' , '???' , '???' ,
-                   '???' , '???' , '???' ,
-                   '???' , '???' , '???' ] ,                
-        } ,
-
-        // top-right corner
-        {
-            in: [ 'W' , 'W' , '?' ,
-                  'L' , 'W' , '?' ,
-                  '?' , '?' , '?' ] ,
-        
-            out: [ '???' , 'otr' , '???' ,
-                   '???' , '???' , '???' ,
-                   '???' , '???' , '???' ] ,
-        } ,
-
-        // bottom-left corner
-        {
-            in: [ 'W' , 'L' , '?' ,
-                  'W' , 'W' , '?' ,
-                  '?' , '?' , '?' ] ,
-
-            out: [ '???' , '???' , '???' ,
-                   'obl' , '???' , '???' ,
-                   '???' , '???' , '???' ] ,
-        } ,
-
-        // bottom-right corner
-        {
-            in: [ 'L' , 'W' , '?' ,
-                  'W' , 'W' , '?' ,
-                  '?' , '?' , '?' ] ,
-            
-            out: [ '???' , '???' , '???' ,
-                   '???' , 'obr' , '???' ,
-                   '???' , '???' , '???' ] ,
-        } ,
-
-        // top-left inner corner
-        {
-            in: [ 'W' , 'L' , '?' ,
-                  'L' , 'L' , '?' ,
-                  '?' , '?' , '?' ] ,
-
-            out: [ 'itl' , '???' , '???' ,
-                   '???' , '???' , '???' ,
-                   '???' , '???' , '???' ] ,
-        } ,
-
-        // top-right inner corner
-        {
-            in: [ 'L' , 'W' , '?' ,
-                  'L' , 'L' , '?' ,
-                  '?' , '?' , '?' ] ,
-
-            out: [ '???' , 'itr' , '???' ,
-                   '???' , '???' , '???' ,
-                   '???' , '???' , '???' ] ,
-
-        } ,
-
-        // bottom-left inner corner
-        {
-            in: [ 'L' , 'L' , '?' ,
-                  'W' , 'L' , '?' ,
-                  '?' , '?' , '?' ] ,
-
-            out: [ '???' , '???' , '???' ,
-                   'ibl' , '???' , '???' ,
-                   '???' , '???' , '???' ] ,
-        } ,
-
-        // bottom-right inner corner
-        {
-            in: [ 'L' , 'L' , '?' ,
-                  'L' , 'W' , '?' ,
-                  '?' , '?' , '?' ] ,
-
-            out: [ '???' , '???' , '???' ,
-                   '???' , 'ibr' , '???' ,
-                   '???' , '???' , '???' ] ,
+            priority: 2 ,
         } ,
 
     ] ,

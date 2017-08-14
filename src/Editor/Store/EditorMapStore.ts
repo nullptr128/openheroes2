@@ -73,6 +73,20 @@ class EditorMapStore {
         }
     }
 
+    public setTileBorderPriority( x: number , y: number , borderPriority: number ): void {
+        const mapSize: number = this.getMapSize();
+        if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
+            this.fState.map.tiles[x][y].borderPriority = borderPriority;
+        }
+    }
+
+    public setTileDebug( x: number , y: number , debug: boolean ): void {
+        const mapSize: number = this.getMapSize();
+        if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
+            this.fState.map.tiles[x][y].debug = debug;
+        }
+    }
+
 }
 
 export default EditorMapStore;

@@ -45,6 +45,8 @@ class EditorMapFactory {
                 spriteId: Arrays.randomElement( TerrainData[ terrain ].basicTiles ) ,
                 mirror: false ,
                 flip: false ,
+                borderPriority: -1 ,
+                debug: false ,
             };
         } );
     }

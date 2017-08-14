@@ -13,6 +13,8 @@ interface ITile {
     spriteId: number;
     mirror: boolean;
     flip: boolean;
+    borderPriority: number;
+    debug: boolean;
 }
 
 export default ITile;
