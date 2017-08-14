@@ -11,7 +11,7 @@ type IShortMatrix<T> = [ T , T , T , T ];
 type ILongMatrix<T> = [ T , T , T , T , T , T , T , T , T ];
 
 export type IMatrix<T> = IShortMatrix<T> | ILongMatrix<T>;
-type IOutput = number[];
+type IOutput = { sprites: number[] , terrainOverride?: Terrain };
 
 export interface IAutoBorderMatcher {
     in: IMatrix<string>;

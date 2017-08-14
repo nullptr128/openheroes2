@@ -16,10 +16,10 @@ const TerrainJunctionBorders: IAutoBorderProcessor[] = [
         } ,
 
         outputs: {
-            'v': TerrainData[ terrain ].junctionBorders.vertical ,
-            'h': TerrainData[ terrain ].junctionBorders.horizontal ,
-            'i': TerrainData[ terrain ].junctionBorders.innerCorner ,
-            'o': TerrainData[ terrain ].junctionBorders.outerCorner ,
+            'v': { sprites: TerrainData[ terrain ].junctionBorders.vertical } ,
+            'h': { sprites: TerrainData[ terrain ].junctionBorders.horizontal } ,
+            'i': { sprites: TerrainData[ terrain ].junctionBorders.innerCorner } ,
+            'o': { sprites: TerrainData[ terrain ].junctionBorders.outerCorner } ,
             '?': null ,
         } ,
 

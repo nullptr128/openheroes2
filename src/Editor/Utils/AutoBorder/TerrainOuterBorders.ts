@@ -18,10 +18,10 @@ const TerrainOuterBorders: IAutoBorderProcessor[] = [
         } ,
         
         outputs: {
-            'v': TerrainData[ terrain ].basicBorders.vertical ,
-            'h': TerrainData[ terrain ].basicBorders.horizontal ,
-            'i': TerrainData[ terrain ].basicBorders.innerCorner ,
-            'o': TerrainData[ terrain ].basicBorders.outerCorner ,
+            'v': { sprites: TerrainData[ terrain ].basicBorders.vertical } ,
+            'h': { sprites: TerrainData[ terrain ].basicBorders.horizontal } ,
+            'i': { sprites: TerrainData[ terrain ].basicBorders.innerCorner } ,
+            'o': { sprites: TerrainData[ terrain ].basicBorders.outerCorner } ,
             '?': null ,
         } ,
 

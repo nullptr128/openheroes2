@@ -17,12 +17,12 @@ const TerrainMultiBorders: IAutoBorderProcessor[] = [
         } ,
 
         outputs: {
-            '0': [ TerrainData[ terrain ].multiBorders[0] ] ,
-            '1': [ TerrainData[ terrain ].multiBorders[1] ] ,
-            '2': [ TerrainData[ terrain ].multiBorders[2] ] ,
-            '3': [ TerrainData[ terrain ].multiBorders[3] ] ,
-            '4': [ TerrainData[ terrain ].multiBorders[4] ] ,
-            '5': [ TerrainData[ terrain ].multiBorders[5] ] ,
+            '0': { sprites: [ TerrainData[ terrain ].multiBorders[0] ] } ,
+            '1': { sprites: [ TerrainData[ terrain ].multiBorders[1] ] } ,
+            '2': { sprites: [ TerrainData[ terrain ].multiBorders[2] ] } ,
+            '3': { sprites: [ TerrainData[ terrain ].multiBorders[3] ] } ,
+            '4': { sprites: [ TerrainData[ terrain ].multiBorders[4] ] } ,
+            '5': { sprites: [ TerrainData[ terrain ].multiBorders[5] ] } ,
         } ,
 
         matchers: [

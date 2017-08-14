@@ -13,6 +13,7 @@ import TerrainJunctionBorders from './TerrainJunctionBorders';
 import TerrainData from '../../../Common/Game/Terrain/TerrainData';
 import TerrainMultiBorders from './TerrainMultiBorders';
 import { IAutoBorderMatcher, IMatrix } from './IAutoBorderProcessor';
+import BadTileBorders from './BadTileBorder';
 
 type MatcherFunc = (matcher: IAutoBorderMatcher) => IAutoBorderMatcher;
 interface IPipe {
@@ -67,6 +68,7 @@ class AutoBorder {
     public borderizeTile( x: number , y: number ): void {
 
         const processors: IAutoBorderProcessor[] = [
+            ...BadTileBorders ,
             WaterBorders ,
             ...TerrainOuterBorders ,
             ...TerrainJunctionBorders ,
@@ -256,8 +258,8 @@ class AutoBorder {
                     this.gStore.map.setTileTerrain(
                         tile.x , 
                         tile.y ,
-                        tile.terrain ,
-                        Arrays.randomElement( output ) ,
+                        output.terrainOverride !== undefined ? output.terrainOverride : tile.terrain ,
+                        Arrays.randomElement( output.sprites ) ,
                         mirror ,
                         flip ,
                     );

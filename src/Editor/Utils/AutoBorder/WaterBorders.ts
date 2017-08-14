@@ -15,10 +15,10 @@ const WaterBorders: IAutoBorderProcessor = {
     } ,
 
     outputs: {
-        'vb': water.basicBorders.vertical ,
-        'hb': water.basicBorders.horizontal ,
-        'ib': water.basicBorders.innerCorner ,
-        'ob': water.basicBorders.outerCorner ,
+        'vb': { sprites: water.basicBorders.vertical } ,
+        'hb': { sprites: water.basicBorders.horizontal } ,
+        'ib': { sprites: water.basicBorders.innerCorner } ,
+        'ob': { sprites: water.basicBorders.outerCorner } ,
         '??': null ,
     } ,
 
