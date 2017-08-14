@@ -45,6 +45,7 @@ class AutoFixer {
         if ( tile && !this.isValid( tile ) ) {
             this.gStore.map.setTileDebug( x , y , true );
             this.internalFix( tile.x , tile.y , tile.terrain );
+            count++;
         }
 
         return count;
@@ -80,57 +81,6 @@ class AutoFixer {
 
     }
 
-    /*
-    public fixMapTile( x: number , y: number ): number {
-
-        let result: number = 0;
-
-        const tile = this.gStore.map.getMapTileOrNull( x , y );
-        if ( tile ) {
-
-            const neightbours: number = this.getNeightbourCount( x , y , tile.terrain );
-            const crossNeightbours: number = this.getCrossNeightbourCount( x , y , tile.terrain );
-
-            if ( neightbours < 3 || crossNeightbours < 2 ) {
-                this.internalFix( x , y , tile.terrain );
-                result++;
-            }
-
-        }
-
-        return result;
-
-    }
-
-    public getNeightbourCount( tileX: number , tileY: number , terrain: Terrain ): number {
-        let result: number = 0;
-        for( let x = tileX - 1 ; x <= tileX + 1 ; ++x ) {
-            for( let y = tileY - 1 ; y <= tileY +1 ; ++y ) {
-                const tile = this.gStore.map.getMapTileOrNull( x , y );
-                if ( tile && tile.terrain == terrain ) {
-                    result++;
-                }
-            }
-        }   
-        return result - 1;
-    }
-
-    public getCrossNeightbourCount( tileX: number , tileY: number , terrain: Terrain ): number {
-        let result: number = 0;
-        for( let x = tileX - 1 ; x <= tileX + 1 ; ++x ) {
-            for( let y = tileY - 1 ; y <= tileY +1 ; ++y ) {
-                if ( x == tileX || y == tileY ) {
-                    const tile = this.gStore.map.getMapTileOrNull( x , y );
-                    if ( tile && tile.terrain == terrain ) {
-                        result++;
-                    }
-                }
-            }
-        }   
-        return result - 1;
-    }
-    */
-
     public internalFix( tileX: number , tileY: number , terrain: Terrain ): void {
 
         const terrainCounts: number[] = new Array( 9 );
@@ -147,7 +97,7 @@ class AutoFixer {
             }
         }
 
-        let bestTerrain: Terrain = Terrain.WATER;
+        let bestTerrain: Nullable<Terrain> = null;
         let bestTerrainCount: number = -1;
         terrainCounts.forEach( (count,newTerrain) => {
             if ( count > bestTerrainCount && terrain !== newTerrain ) {
@@ -156,12 +106,14 @@ class AutoFixer {
             }
         } );
 
-        this.gStore.map.setTileTerrain(
-            tileX , 
-            tileY ,
-            bestTerrain ,
-            Arrays.randomElement( TerrainData[ bestTerrain ].basicTiles )
-        );
+        if ( bestTerrain !== null ) {
+            this.gStore.map.setTileTerrain(
+                tileX , 
+                tileY ,
+                bestTerrain ,
+                Arrays.randomElement( TerrainData[ bestTerrain! ].basicTiles )
+            );
+        }
 
         this.gStore.map.setTileDebug( tileX , tileY , false );
 
