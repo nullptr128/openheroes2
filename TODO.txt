@@ -3,6 +3,7 @@
 > Editor: Minimap support full
 > Editor: Brush variable size support
 > Editor: Add option to disable grid
+> Editor: Add option to zoom in / zoom out using UI buttons
 > Editor: Global refactor/cleanup and code documentation
 
 > Add license to all files
