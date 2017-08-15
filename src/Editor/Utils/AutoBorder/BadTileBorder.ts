@@ -71,7 +71,18 @@ const BadTileBorders: IAutoBorderProcessor[] = [
                        '?' , '?' , '?' ] ,
 
                 priority: 0 ,
-            }
+            } ,
+
+            // "gap" rotated fixer
+            {
+                in: [ '?' , 'O' , '?' ,
+                      '?' , 'L' , '?' ,
+                      '?' , 'O' , '?' ] ,
+                out: [ '?' , 'c' , '?' ,
+                       '?' , '?' , '?' ,
+                       '?' , 'c' , '?' ] ,
+                priority: 0 ,
+            } ,
 
         ]
 

@@ -1,5 +1,4 @@
 
-> Editor: Auto-border support
 > Code Refactoring & Documenting
 > Editor: Minimap support full
 > Editor: Brush variable size support
