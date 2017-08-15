@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * This MapDisplay pipeline handler is responsible for drawing
+ * green tile marker under cursor when user is painting terrain.
+ */
 
 import Injectable from '../../../Common/IOC/Injectable';
 import Point from '../../../Common/Types/Point';
@@ -23,12 +29,21 @@ class EditorBrushTilePipeline implements IMapDisplayPipelineElement {
     private fNeedsRefresh: boolean = false;
     private fContainer: Pixi.Container;
 
+    /**
+     * Initializes graphics required for this pipeline
+     */
     public onInitialize(): Pixi.Container {
         this.fGreenTexture = Pixi.Texture.from( this.gPaths.getImageDir() + '/editor/green-tile.png' );
         this.fContainer = new Pixi.Container();
         return this.fContainer;
     }
 
+    /**
+     * Moves highlight to new position and changes its size
+     * @param originX x-position on map
+     * @param originY y-position on map
+     * @param size size in tiles
+     */
     public set( originX: number , originY: number , size: number ): void {
         this.fOrigin.x = originX;
         this.fOrigin.y = originY;
@@ -36,6 +51,10 @@ class EditorBrushTilePipeline implements IMapDisplayPipelineElement {
         this.fNeedsRefresh = true;
     }
 
+    /**
+     * Refreshes sprite cache when zoom is changed
+     * @param data 
+     */
     private refresh( data: IMapDisplayData ): void {
 
         const perf: PerfCounter = new PerfCounter();
@@ -55,6 +74,10 @@ class EditorBrushTilePipeline implements IMapDisplayPipelineElement {
 
     }
 
+    /**
+     * Updates sprite cache to reflect new position of green tile marker
+     * @param data 
+     */
     public onUpdate( data: IMapDisplayData ): void {
 
         if ( this.fNeedsRefresh ) {

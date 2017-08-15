@@ -21,6 +21,11 @@ class PerfCounter {
 
     private fStoredTime: number = new Date().getTime();
 
+    /**
+     * Calculates and returns delta time that have passed
+     * from constructing perfcounter or last time when
+     * .delta() was called.
+     */
     public delta(): string {
         const now: number = new Date().getTime();
         const result: number = now - this.fStoredTime;

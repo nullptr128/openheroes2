@@ -170,6 +170,9 @@ class MapDisplay {
         return 32 / this.fZoom;
     }
 
+    /**
+     * Normalizes camera, maintaining its delta in range of [-OVERDRAW_TILES..OVERDRAW_TILES]
+     */
     private normalizeCamera(): void {
 
         this.fCameraPosition.x += Math.trunc( this.fCameraDelta.x / OVERDRAW_TILES ) * OVERDRAW_TILES;
@@ -180,6 +183,9 @@ class MapDisplay {
 
     }
 
+    /**
+     * Returns Pixi.js container with all map graphics
+     */
     public getContainer(): Pixi.Container {
         return this.fMapContainer;
     }
@@ -199,6 +205,10 @@ class MapDisplay {
 
     }
 
+    /**
+     * Runs .onUpdate() functions for whole mapdisplay pipeline
+     * @param data 
+     */
     private runUpdatePipeline( data: IMapDisplayData ): void {
 
         this.fPipeline.forEach( pipeline => {
@@ -223,21 +233,36 @@ class MapDisplay {
 
     }
 
+    /**
+     * Moves camera for specific offset
+     * @param offsetX x offset in tiles (1=single tile, accepts float)
+     * @param offsetY y offset in tiles (1=single tile, accepts float)
+     */
     public moveMap( offsetX: number , offsetY: number ): void {
         this.fCameraDelta.x += offsetX;
         this.fCameraDelta.y += offsetY;
     }
 
+    /**
+     * Returns current zoom factor
+     */
     public getZoom(): number {
         return this.fZoom;
     }
 
+    /**
+     * Changes current zoom
+     * @param zoomDelta amount of zoom to change
+     */
     public changeZoom( zoomDelta: number ): void {
         const centerPos: Point = this.getCenterPos();
         this.fZoom = Tools.clamp( this.fZoom + zoomDelta , { min: 0.100 , max: 4.000 } );
         this.centerAt( centerPos.x , centerPos.y );
     }
 
+    /**
+     * Returns position in map that is currently in the middle of screen
+     */
     public getCenterPos(): Point {
 
         // calculate width of screen in tiles (1 unit = 1 tile)
@@ -257,6 +282,11 @@ class MapDisplay {
 
     }
 
+    /**
+     * Centers camera at map position x/y
+     * @param x x position on map
+     * @param y y position on map
+     */
     public centerAt( x: number , y: number ): void {
 
         // calculate width of screen in tiles (1 unit = 1 tile)
@@ -278,10 +308,17 @@ class MapDisplay {
 
     }
 
+    /**
+     * Returns mouse information structure
+     */
     public getMouse(): Readonly<IMapDisplayMouse> {
         return this.fMouse;
     }
 
+    /**
+     * Handles 'mousemove' event on canvas
+     * @param evt 
+     */
     private handleMouseMove( evt: MouseEvent ): void {
 
         // @TODO: dedupe MouseEvent parsing
@@ -321,6 +358,10 @@ class MapDisplay {
 
     }
 
+    /**
+     * Handles 'mousedown' event on canvas
+     * @param evt 
+     */
     private handleMouseDown( evt: MouseEvent ): void {
 
         // calculate real mouse pos on screen
@@ -358,6 +399,10 @@ class MapDisplay {
 
     }
 
+    /**
+     * Handles 'mouseup' event on canvas
+     * @param evt 
+     */
     private handleMouseUp( evt: MouseEvent ): void {
 
         // calculate real mouse pos on screen
@@ -395,14 +440,26 @@ class MapDisplay {
 
     }
 
+    /**
+     * Adds listener for onMouseMove event
+     * @param handler 
+     */
     public onMouseMove( handler: MapDisplayMouseFunction ): void {
         this.fOnMouseMove.push( handler );
     }
 
+    /**
+     * Adds listener for onMouseDown event
+     * @param handler 
+     */
     public onMouseDown( handler: MapDisplayMouseFunction ): void {
         this.fOnMouseDown.push( handler );
     }
 
+    /**
+     * Adds listener for onMouseUp event
+     * @param handler 
+     */
     public onMouseUp( handler: MapDisplayMouseFunction ): void {
         this.fOnMouseUp.push( handler );
     }

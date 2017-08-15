@@ -45,6 +45,15 @@ class Arrays {
 
     }
 
+    /**
+     * Copies and resizes target 2d array to new width and new height. All elements from original array will be reused.
+     * If array is larger than original, struct.onNew() callback will be called for every new element; if array is smaller
+     * than original, struct.onRemoved() callback will be called before removal of every element.
+     * @param array target array
+     * @param newWidth new width of array
+     * @param newHeight new height of array
+     * @param struct callbacks for adding/removing elements
+     */
     public static optiResize2dArray<T>( array: T[][] , newWidth: number , newHeight: number , struct: ArrayOptiResizeStruct<T> ): T[][] {
 
         const originalWidth: number = array.length;

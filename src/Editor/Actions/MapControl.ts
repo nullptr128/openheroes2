@@ -1,3 +1,10 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class handles user actions on generic editor map screen. This one is not
+ * tied to any editor mode (like placing terrain or monsters), so it handles 
+ * generic actions like map scrolling, zooming etc.
+ */
 
 import * as KeyboardJS from 'keyboardjs';
 import Injectable from '../../Common/IOC/Injectable';
@@ -37,6 +44,9 @@ class MapControl {
     private fZoomSpeed: number = 0.750;
     private fWheelZoomDelta: number = 0.000;
 
+    /**
+     * Initializes MapControl module
+     */
     public initialize(): void {
 
         KeyboardJS.bind( 'up' , () => this.fMovement.up = true , () => this.fMovement.up = false );
@@ -50,6 +60,10 @@ class MapControl {
 
     }
 
+    /**
+     * Handles 'mousewheel' event
+     * @param event 
+     */
     public onMouseWheel( event: WheelEvent ): void {
 
         let direction: number = 0.000;
@@ -63,6 +77,10 @@ class MapControl {
 
     }
 
+    /**
+     * Handles map scrolling and zooming in single frame of time
+     * @param dt delta time from last frame
+     */
     private timeSlice( dt: number ): void {
 
         let moveX: number = 0.000;

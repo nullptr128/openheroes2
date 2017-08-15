@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class handles user actions when user is in terrain placing mode.
+ * It handles things like selecting terrain, painting tiles, etc.
+ */
 
 import Injectable from '../../Common/IOC/Injectable';
 import Events from '../../Common/Engine/Events/Events';
@@ -43,6 +49,9 @@ class MapTerrainControl {
     private fBorderFrom: Point;
     private fBorderTo: Point;
     
+    /**
+     * Initializes MapTerrainControl module
+     */
     public initialize(): void {
 
         this.gEvents.on( EEditorTabChanged , data => {
@@ -59,6 +68,9 @@ class MapTerrainControl {
 
     }
 
+    /**
+     * Returns brush size in tiles based on selected option in UI
+     */
     public getBrushSize(): number {
 
         const brushSize: EditorTerrainBrushSize = this.gEditorStore.ui.getTerrainBrushSize();
@@ -76,16 +88,27 @@ class MapTerrainControl {
 
     }
 
+    /**
+     * Called when MapTerrainControl is activated
+     */
     public onActivate(): void {
         this.gEditorBrushTilePipeline.set( 0 , 0 , this.getBrushSize() );
         this.fIsActive = true;
     }
 
+    /**
+     * Called when MapTerrainControl is deactivated
+     */
     public onDeactivate(): void {
         this.gEditorBrushTilePipeline.set( 0 , 0 , 0 );        
         this.fIsActive = false;
     }
 
+    /**
+     * Updates highlight of current brush on map and handles
+     * user clicks.
+     * @param mouse 
+     */
     public update( mouse: IMapDisplayMouse ): void {
 
         if ( this.fIsActive ) {
@@ -106,6 +129,10 @@ class MapTerrainControl {
 
     }
 
+    /**
+     * Called when user started to draw tiles
+     * @param mouse 
+     */
     public startDrawing( mouse: IMapDisplayMouse ): void {
 
         if ( this.fIsActive ) {
@@ -116,6 +143,10 @@ class MapTerrainControl {
         this.update( mouse );
     }
 
+    /**
+     * Called when user moves mouse when holding mouse button
+     * @param mouse 
+     */
     public continueDrawing( mouse: IMapDisplayMouse ): void {
 
         if ( this.fIsActive && ( mouse.buttons.left || mouse.buttons.right ) ) {
@@ -131,6 +162,10 @@ class MapTerrainControl {
 
     }
 
+    /**
+     * Called when user released mouse button and finished drawing.
+     * @param mouse 
+     */
     public finishDrawing( mouse: IMapDisplayMouse ): void {
 
         if ( this.fIsActive ) {
@@ -149,14 +184,26 @@ class MapTerrainControl {
 
     }
 
+    /**
+     * Places tile stored on left mouse button
+     * @param mapPos 
+     */
     private placePrimaryTile( mapPos: Point ): void {
         this.internalPlaceTile( mapPos , this.gEditorStore.ui.getTerrainBrushType() );
     }
 
+    /**
+     * Places tile stored on right mouse button
+     * @param mapPos 
+     */
     private placeSecondaryTile( mapPos: Point ): void {
         this.internalPlaceTile( mapPos , this.gEditorStore.ui.getTerrainAltBrushType() );
     }
 
+    /**
+     * Returns sprite id for particular terrain type
+     * @param terrainType 
+     */
     private getSpriteId( terrainType: Terrain ): number {
 
         if ( Tools.random( 1 , 100 ) < 10 ) {
@@ -167,6 +214,11 @@ class MapTerrainControl {
 
     }
 
+    /**
+     * Places tile on map
+     * @param mapPos 
+     * @param terrainType 
+     */
     private internalPlaceTile( mapPos: Point , terrainType: Terrain ): void {
 
         const brushSize: number = this.getBrushSize();

@@ -1,3 +1,10 @@
+/**
+ * OpenHeroes2
+ * 
+ * This file holds various useful informations about terrain
+ * types in game.
+ */
+
 import ITerrainData from '../../Types/ITerrainData';
 import Terrain from '../../Types/Terrain';
 import Arrays from '../../Support/Arrays';

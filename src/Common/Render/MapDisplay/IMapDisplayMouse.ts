@@ -1,14 +1,19 @@
+/**
+ * OpenHeroes2
+ * 
+ * This interface holds information of mouse actions on mapdisplay canvas.
+ */
 
 import Point from '../../Types/Point';
 
 interface IMapDisplayMouse {
-    realPosition: Point;
-    mapTilePosition: Point;
-    screenTilePosition: Point;
+    realPosition: Point; // x/y position on canvas
+    mapTilePosition: Point; // x/y of tile position on whole map
+    screenTilePosition: Point; // x/y of tile position on screen
     buttons: {
-        left: boolean;
-        middle: boolean;
-        right: boolean;
+        left: boolean; // is left mouse button held
+        middle: boolean; // is middle mouse button held
+        right: boolean; // is right mouse button held
     }
 }
 

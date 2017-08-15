@@ -3,7 +3,7 @@
  * 
  * This class setups basic map display render pipeline that
  * is used both in editor and game. It is responsible for
- * rendering tiles, objects, etc on game screen.
+ * rendering terrain tiles on game screen.
  */
 
 import Injectable from '../../IOC/Injectable';
@@ -43,6 +43,9 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
         this.fGetTileFunc = tileFunc;
     }
 
+    /**
+     * Loads graphics used by this pipeline.
+     */
     public onInitialize(): Pixi.Container {
         
         for( let i = 0 ; i < 432 ; ++i ) {
@@ -53,18 +56,28 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
 
     }
 
+    /**
+     * Checks if fSprites array is correct size (it wont if zoom is changed)
+     * @param data current map display data
+     */
     private checkSprites( data: IMapDisplayData ): boolean {
         const spritesX: number = this.fSprites.length;
         const spritesY: number = ( this.fSprites.length > 0 ? this.fSprites[0].length : 0 );
         return ( spritesX === data.tilesWidth && spritesY === data.tilesHeight );
     }
 
+    /**
+     * Reinitializes fSprites array, enlarging or shrinking it to new size
+     * @param data current map display data
+     */
     private reinitializeSprites( data: IMapDisplayData ): void {
 
         const perf: PerfCounter = new PerfCounter();
 
+        // resize array to new size using optimized alghoritm
         this.fSprites = Arrays.optiResize2dArray( this.fSprites , data.tilesWidth , data.tilesHeight , {
             onNew: (x,y) => {
+                // for every new element, create and configure sprite
                 const sprite: Pixi.Sprite = new Pixi.Sprite();
                 sprite.position.set( x * data.tileSize - data.absOffsetX , y * data.tileSize - data.absOffsetY );
                 sprite.scale.set( data.scale );
@@ -72,6 +85,7 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
                 return sprite;
             } ,
             onRemove: ( sprite , x , y ) => {
+                // for every removed element, remove it from display container
                 this.fContainer.removeChild( sprite );
             } ,
         } );
@@ -80,6 +94,15 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
 
     }
 
+    /**
+     * Updates sprite position on screen
+     * @param sprite target sprite
+     * @param x x-tile position on screen
+     * @param y y-tile position on screen
+     * @param mirror should sprite be mirrored?
+     * @param flip should sprite be flipped?
+     * @param data map display data
+     */
     private reposSprite( sprite: Pixi.Sprite , x: number , y: number , mirror: boolean , flip: boolean , data: IMapDisplayData ): void {
 
         const scaleXOffset: number = mirror ? data.tileSize : 0;
@@ -95,6 +118,11 @@ class TerrainPipeline implements IMapDisplayPipelineElement {
 
     }
 
+    /**
+     * Refreshes all sprites, changing their graphics. Used when map is moved for more 
+     * than few tiles, forcing redrawing and reinitializng container.
+     * @param data 
+     */
     public onRedraw( data: IMapDisplayData ): void {
 
         const perf: PerfCounter = new PerfCounter();

@@ -38,26 +38,47 @@ class EditorUIStore {
         this.gEvents.trigger( EEditorTabChanged , { activeTab: tab } );
     }
 
+    /**
+     * Gets terrain painter brush size selected
+     */
     public getTerrainBrushSize(): EditorTerrainBrushSize {
         return this.fState.terrainOptions.brushSize;
     }
 
+    /**
+     * Sets terrain painter brush size
+     * @param brushSize new brush size
+     */
     public setTerrainBrushSize( brushSize: EditorTerrainBrushSize ): void {
         this.fState.terrainOptions.brushSize = brushSize;
     }
 
+    /**
+     * Gets terrain painter brush type
+     */
     public getTerrainBrushType(): Terrain {
         return this.fState.terrainOptions.terrain;
     }
 
+    /**
+     * Sets terrain painter brush type
+     * @param terrainType new terrain type
+     */
     public setTerrainBrushType( terrainType: Terrain ): void {
         this.fState.terrainOptions.terrain = terrainType;
     }
 
+    /**
+     * Gets terrain painter alternative (right mouse button) brush type
+     */
     public getTerrainAltBrushType(): Terrain {
         return this.fState.terrainOptions.altTerrain;
     }
 
+    /**
+     * Sets terrain painter alternative (right mouse button) brush type
+     * @param terrainType 
+     */
     public setTerrainAltBrushType( terrainType: Terrain ): void {
         this.fState.terrainOptions.altTerrain = terrainType;
     }

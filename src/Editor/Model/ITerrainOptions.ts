@@ -1,3 +1,10 @@
+/**
+ * OpenHeroes2
+ * 
+ * This struct holds currently selected options in
+ * terrain placing mode.
+ */
+
 import Terrain from '../../Common/Types/Terrain';
 
 interface ITerrainOptions {

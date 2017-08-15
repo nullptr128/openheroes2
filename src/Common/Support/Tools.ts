@@ -79,6 +79,9 @@ class Tools {
         }
     }
 
+    /**
+     * Returns promise that will be resolved on next browser animation frame.
+     */
     public static nextFrame(): Promise<void> {
         return new Promise( resolve => setTimeout( resolve , 0 ) );
     }

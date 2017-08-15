@@ -32,6 +32,11 @@ class EditorMapStore {
         return this.fState.map.size;
     }
 
+    /**
+     * Checks if x/y position is in bounds of map
+     * @param x tile-x position
+     * @param y tile-y position
+     */
     public isValidTile( x: number , y: number ): boolean {
         return ( 
             x >= 0 &&
@@ -55,6 +60,11 @@ class EditorMapStore {
         }
     }
 
+    /**
+     * Returns map tile or NULL if its not inside map bounds
+     * @param x tile-x
+     * @param y tile-y
+     */
     public getMapTileOrNull( x: number , y: number ): Readonly<Nullable<ITile>> {
         if ( this.isValidTile( x , y ) ) {
             return this.getMapTile( x , y );
@@ -63,6 +73,15 @@ class EditorMapStore {
         }
     }
 
+    /**
+     * Updates tile terrain on map.
+     * @param x x-position of tile
+     * @param y y-position of tile
+     * @param terrain new terrain type
+     * @param spriteId new sprite id
+     * @param mirror (optional) should sprite be mirrored?
+     * @param flip (optional) should sprite be flipped?
+     */
     public setTileTerrain( x: number , y: number , terrain: Terrain , spriteId: number , mirror?: boolean , flip?: boolean ): void {
         const mapSize: number = this.getMapSize();
         if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
@@ -73,6 +92,12 @@ class EditorMapStore {
         }
     }
 
+    /**
+     * Updates 'borderPriority' value of tile, used in AutoBorder cllass
+     * @param x 
+     * @param y 
+     * @param borderPriority 
+     */
     public setTileBorderPriority( x: number , y: number , borderPriority: number ): void {
         const mapSize: number = this.getMapSize();
         if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
@@ -80,6 +105,13 @@ class EditorMapStore {
         }
     }
 
+    /**
+     * Sets tile 'debug' flag which causes tile to be rendered with 50% opacity for debugging
+     * purposes.
+     * @param x 
+     * @param y 
+     * @param debug 
+     */
     public setTileDebug( x: number , y: number , debug: boolean ): void {
         const mapSize: number = this.getMapSize();
         if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
