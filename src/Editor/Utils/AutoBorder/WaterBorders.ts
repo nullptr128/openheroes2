@@ -1,3 +1,8 @@
+/**
+ * OpenHeroes2
+ * 
+ * This autoborder processor creates outer borders from water to any land.
+ */
 
 import Terrain from '../../../Common/Types/Terrain';
 import TerrainData from '../../../Common/Game/Terrain/TerrainData';
@@ -9,16 +14,16 @@ const water = TerrainData[ Terrain.WATER ];
 const WaterBorders: IAutoBorderProcessor = {
 
     sources: {
-        'W': t => t === Terrain.WATER || t === null ,
-        'L': t => t !== Terrain.WATER && t !== null ,
-        '?': t => true ,
+        'W': t => t === Terrain.WATER || t === null , // 'W' -> water tile
+        'L': t => t !== Terrain.WATER && t !== null , // 'L' -> land tile
+        '?': t => true , // '?' -> any tile
     } ,
 
     outputs: {
-        'vb': { sprites: water.basicBorders.vertical } ,
-        'hb': { sprites: water.basicBorders.horizontal } ,
-        'ib': { sprites: water.basicBorders.innerCorner } ,
-        'ob': { sprites: water.basicBorders.outerCorner } ,
+        'vb': { sprites: water.basicBorders.vertical } , // vertical border
+        'hb': { sprites: water.basicBorders.horizontal } , // horizontal border
+        'ib': { sprites: water.basicBorders.innerCorner } , // inner border
+        'ob': { sprites: water.basicBorders.outerCorner } , // outer border
         '??': null ,
     } ,
 

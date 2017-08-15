@@ -1,3 +1,14 @@
+/**
+ * OpenHeroes2
+ * 
+ * This class is responsible for generating terrain borders on non-bordered map.
+ * Method for generating borders is to pattern-match 2x2 or 3x3 map segments and
+ * replace sprites.
+ * 
+ * IAutoBorderMatcher is a structure that is used to process tiles. Also particular
+ * matchers are automatically rotated and scaled (as well as corresponding sprites),
+ * in 4 variants.
+ */
 
 import Injectable from '../../../Common/IOC/Injectable';
 import Inject from '../../../Common/IOC/Inject';
@@ -31,6 +42,11 @@ class AutoBorder {
     private fBorderFrom: Point;
     private fBorderTo: Point;
 
+    /**
+     * Borderizes rectangle section of map.
+     * @param fromPos top/left point of rectangle
+     * @param toPos bottom/right point of rectangle
+     */
     public borderizeMapSection( fromPos: Point , toPos: Point ): void {
 
         const cacheWidth: number = toPos.x - fromPos.x + 2;
@@ -52,6 +68,11 @@ class AutoBorder {
 
     }
 
+    /**
+     * Unborderizes tile from position x/y
+     * @param x tile-x position
+     * @param y tile-y position
+     */
     public reinitTile( x: number , y: number ): void {
         const tile: Nullable<ITile> = this.gStore.map.getMapTileOrNull( x , y );
         if ( tile ) {
@@ -65,6 +86,12 @@ class AutoBorder {
         }
     }
 
+    /**
+     * Borderizes tile on position x/y, piping them through autoborder
+     * processors.
+     * @param x tile-x position
+     * @param y tile-y position
+     */
     public borderizeTile( x: number , y: number ): void {
 
         const processors: IAutoBorderProcessor[] = [
@@ -79,6 +106,12 @@ class AutoBorder {
 
     }
 
+    /**
+     * Returns an x/y point from matrix array that has either 4 (2x2)
+     * or 9 (3x3) elements.
+     * @param matrix array of elements
+     * @param i index of element to convert
+     */
     private getMatrixPoint( matrix: IMatrix<any> , i: number ): Point {
         if ( matrix.length == 4 ) {
             return new Point( i % 2 , Math.floor( i / 2.00 ) );
@@ -89,6 +122,10 @@ class AutoBorder {
         }
     }
 
+    /**
+     * Flips matcher arrays vertically.
+     * @param matcher matcher
+     */
     private flipMatcher( matcher: IAutoBorderMatcher ): IAutoBorderMatcher {
 
         if ( matcher.in.length == 4 ) {
@@ -128,6 +165,10 @@ class AutoBorder {
 
     }
 
+    /**
+     * Mirrors matcher arrays horizontally
+     * @param matcher 
+     */
     private mirrorMatcher( matcher: IAutoBorderMatcher ): IAutoBorderMatcher {
 
         if ( matcher.in.length == 4 ) {
@@ -165,12 +206,28 @@ class AutoBorder {
 
     }
 
+    /**
+     * Flips and mirrors matcher arrays in both axes
+     * @param matcher 
+     */
     private flipMirrorMatcher( matcher: IAutoBorderMatcher ): IAutoBorderMatcher {
         return this.flipMatcher( this.mirrorMatcher( matcher ) );
     }
 
+    /**
+     * Borderizes target tile in x/y position using auto border processor
+     * @param x tile-x
+     * @param y tile-y
+     * @param processor 
+     */
     private borderizeWith( x: number , y: number , processor: IAutoBorderProcessor ): void {
 
+        // we will generate 4 variants for every matcher:
+        //  standard
+        //  mirrored
+        //  flipped
+        //  mirrored+flipped
+        //
         const pipes: IPipe[] = [
             { getMatcher: matcher => matcher , mirror: false , flip: false } ,
             { getMatcher: matcher => this.mirrorMatcher( matcher ) , mirror: true , flip: false } ,
@@ -180,11 +237,14 @@ class AutoBorder {
 
         processor.matchers.forEach( matcher => {
 
+            // if it should not be transformed (NOT USED ANYMORE)
             if ( matcher.noTransform ) {
+                // then just use standard variant
                 this.internalProcessMatcher(
                     x , y , processor , matcher , !!matcher.outMirror , !!matcher.outFlip
                 );
             } else {
+                // else, process 4 variants of matcher
                 pipes.forEach( pipe => {
                     this.internalProcessMatcher( 
                         x , y , processor , pipe.getMatcher(matcher) , pipe.mirror , pipe.flip
@@ -195,6 +255,11 @@ class AutoBorder {
 
     }
 
+    /**
+     * Returns tile border priority previously stored using setBorderedPriority
+     * @param tileX tile-x position
+     * @param tileY tile-y position
+     */
     private getBorderedPriority( tileX: number , tileY: number ): number {
         const cacheX: number = tileX - this.fBorderFrom.x;
         const cacheY: number = tileY - this.fBorderFrom.y;
@@ -206,14 +271,34 @@ class AutoBorder {
         }
     }
 
+    /**
+     * Sets tile border priority for later. This is used to make sure that
+     * less-priority borders wont overwrite higher-priority ones (mostly corner ones).
+     * @param tileX tile-x position
+     * @param tileY tile-y position
+     * @param priority new priority
+     */
     private setBorderedPriority( tileX: number , tileY: number , priority: number ): void {
         const cacheX: number = tileX - this.fBorderFrom.x;
         const cacheY: number = tileY - this.fBorderFrom.y;
         this.gStore.map.setTileBorderPriority( tileX , tileY , priority );
     }
 
+    /**
+     * Processes matcher over specific tile.
+     * @param x x position of tile
+     * @param y y position of tile
+     * @param processor auto border processor to use
+     * @param matcher matcher of auto border processor to use
+     * @param mirror shold output sprites be mirrored?
+     * @param flip should output sprites be flipped?
+     */
     private internalProcessMatcher( x: number , y: number , processor: IAutoBorderProcessor , matcher: IAutoBorderMatcher , mirror: boolean , flip: boolean ) {
 
+        /**
+         * First of all, we are going to process "in" input array to check if this tile combination
+         * satifies this matcher.
+         */
         for( let i = 0 ; i < matcher.in.length ; ++i ) {
             
             const point: Point = this.getMatrixPoint( matcher.in , i );
@@ -237,6 +322,10 @@ class AutoBorder {
 
         }
 
+        /**
+         * If we made it up to this point, it means that currently processing tile matcher
+         * matcher's pattern.
+         */
         for( let i = 0 ; i < matcher.in.length ; ++i ) {
 
             const point: Point = this.getMatrixPoint( matcher.in , i );
@@ -249,6 +338,8 @@ class AutoBorder {
                 point.y + y === this.fBorderTo.y
             );
 
+            // proceed only if tile exists, has lower priority and also we exclude edges
+            // of target border rectangle from processing
             if ( isValid && matcher.priority > priority && !isOnEdge ) {
                 const tile: ITile = this.gStore.map.getMapTile( point.x + x , point.y + y )!;
 

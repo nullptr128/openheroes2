@@ -1,3 +1,10 @@
+/**
+ * OpenHeroes2
+ * 
+ * AutoBorder processor that processes borders junctioning different types of 
+ * terrain using brown (dirt) borders. For example when grass meets snow on
+ * land.
+ */
 
 import IAutoBorderProcessor from './IAutoBorderProcessor';
 import Terrain from '../../../Common/Types/Terrain';
@@ -10,7 +17,9 @@ const TerrainJunctionBorders: IAutoBorderProcessor[] = [
     return {
 
         sources: {
+            // 'O' -> different terrain but no water nor sand (as they not use brown borders)
             'O': t => t !== terrain && t !== Terrain.WATER && t !== Terrain.SAND && t !== null ,
+            // 'L' -> current terrain
             'L': t => t === terrain ,
             '?': t => true ,
         } ,

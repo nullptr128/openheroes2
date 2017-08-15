@@ -1,5 +1,4 @@
 
-> Code Refactoring & Documenting
 > Editor: Minimap support full
 > Editor: Brush variable size support
 > Editor: Add option to disable grid

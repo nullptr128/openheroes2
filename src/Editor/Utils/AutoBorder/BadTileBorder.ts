@@ -1,3 +1,9 @@
+/**
+ * OpenHeroes2
+ * 
+ * This autoborder pipeline tries to fix some bad tile
+ * combinations that AutoFixer cannot find.
+ */
 
 import Terrain from '../../../Common/Types/Terrain';
 import IAutoBorderProcessor from './IAutoBorderProcessor';
