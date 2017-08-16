@@ -1,5 +1,4 @@
 
-> Editor: Add option to zoom in / zoom out using UI buttons
 > Editor: Brush variable size support
 > Editor: Normalize Heroes2 files path to /data/heroes2/* and provide info how to run app
 > Editor: Disallow to "drag" or "select" ui elements to fix "canvas drag bug"

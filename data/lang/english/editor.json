@@ -11,7 +11,9 @@
         "Cut": "Cut" ,
         "Paste": "Paste" ,
         "Delete": "Delete" ,
-        "Grid": "Grid"
+        "Grid": "Grid" ,
+        "ZoomIn": "Zoom in" ,
+        "ZoomOut": "Zoom out" 
     } ,
     "Toolbar": {
         "Terrain": "Terrain" ,

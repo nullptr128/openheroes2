@@ -8,6 +8,7 @@ import Locale from '../../../Common/Engine/Misc/Locale';
 import EditorStore from '../../Core/EditorStore';
 import Events from '../../../Common/Engine/Events/Events';
 import EEditorGridEnabledChanged from '../../Events/EEditorGridEnabledChanged';
+import MapControl from '../../Actions/MapControl';
 
 interface EditorAppBarState {
     isGridEnabled: boolean;
@@ -23,6 +24,9 @@ export default class EditorAppBar extends React.Component {
 
     @EInject( Events )
     private gEvents: Events;
+
+    @EInject( MapControl )
+    private gMapControl: MapControl;
 
     public state = {
         isGridEnabled: this.gStore.ui.isGridEnabled(), 
@@ -50,10 +54,13 @@ export default class EditorAppBar extends React.Component {
                     { this.createButton( 'fa fa-paste' , this.gLocale.get( 'Editor.AppBar.Paste' ) ) }
                     { this.createButton( 'fa fa-remove' , this.gLocale.get( 'Editor.AppBar.Delete' ) ) }
                     <ToolbarSeparator style={ { marginLeft: '10px' , marginRight: '10px' } }/>
-                    { this.createButton( 'fa fa-th' , this.gLocale.get( 'Editor.AppBar.Grid' ) , this.state.isGridEnabled  , () => this.toggleGrid() ) }
                     { this.createButton( 'fa fa-flag' , this.gLocale.get( 'Editor.AppBar.Players' ) ) }
                     { this.createButton( 'fa fa-gears' , this.gLocale.get( 'Editor.AppBar.Settings' ) ) }
                     { this.createButton( 'fa fa-clock-o' , this.gLocale.get( 'Editor.AppBar.TimedEvents' ) ) }
+                    <ToolbarSeparator style={ { marginLeft: '10px' , marginRight: '10px' } }/>
+                    { this.createButton( 'fa fa-th' , this.gLocale.get( 'Editor.AppBar.Grid' ) , this.state.isGridEnabled  , () => this.toggleGrid() ) }
+                    { this.createZoomInButton() }
+                    { this.createZoomOutButton() }
                 </ToolbarGroup>
             </Toolbar>
         );
@@ -64,6 +71,24 @@ export default class EditorAppBar extends React.Component {
         return (
             <IconButton className={ className } tooltip={ hint } style={ { zIndex: 2 } } onClick={ onClick }>
                 <FontIcon className={ icon }/>
+            </IconButton>
+        );
+    }
+
+    private createZoomInButton(): JSX.Element {
+        return (
+            <IconButton className="toolbar-button" tooltip={ this.gLocale.get( 'Editor.AppBar.ZoomIn' ) } style={ { zIndex: 2 } } 
+                onMouseDown={ () => this.gMapControl.setZoomingIn(true) } onMouseUp={ () => this.gMapControl.setZoomingIn(false) }>
+                <FontIcon className="fa fa-search-plus"/>
+            </IconButton>
+        );
+    }
+
+    private createZoomOutButton(): JSX.Element {
+        return (
+            <IconButton className="toolbar-button" tooltip={ this.gLocale.get( 'Editor.AppBar.ZoomOut' ) } style={ { zIndex: 2 } } 
+                onMouseDown={ () => this.gMapControl.setZoomingOut(true) } onMouseUp={ () => this.gMapControl.setZoomingOut(false) }>
+                <FontIcon className="fa fa-search-minus"/>
             </IconButton>
         );
     }

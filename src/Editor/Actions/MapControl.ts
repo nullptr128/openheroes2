@@ -86,6 +86,14 @@ class MapControl {
 
     }
 
+    public setZoomingIn( value: boolean ): void {
+        this.fMovement.zoomIn = value;
+    }
+
+    public setZoomingOut( value: boolean ): void {
+        this.fMovement.zoomOut = value;
+    }
+
     /**
      * Handles map scrolling and zooming in single frame of time
      * @param dt delta time from last frame
@@ -113,11 +121,11 @@ class MapControl {
         }
 
         if ( this.fMovement.zoomIn ) {
-            zoom += this.fZoomSpeed * dt;
+            zoom -= this.fZoomSpeed * dt;
         }
 
         if ( this.fMovement.zoomOut ) {
-            zoom -= this.fZoomSpeed * dt;
+            zoom += this.fZoomSpeed * dt;
         }
 
         if ( Math.abs( moveX ) > 0.001 || Math.abs( moveY ) > 0.001 ) {
