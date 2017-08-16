@@ -11,6 +11,7 @@ import ITerrainOptions from './ITerrainOptions';
 
 interface IEditorState {
     activeTab: EditorActiveTab;
+    isGridEnabled: boolean;
     map: IMap;
     isModified: boolean;
     terrainOptions: ITerrainOptions;

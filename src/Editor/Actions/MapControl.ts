@@ -154,7 +154,7 @@ class MapControl {
 
     }
 
-    private updateMinimapBox(): void {
+    public updateMinimapBox(): void {
         
         const cameraSize: Point = this.gMapDisplay.getCameraSize();
 

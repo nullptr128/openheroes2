@@ -11,6 +11,7 @@ import Events from '../../Common/Engine/Events/Events';
 import EditorTerrainBrushSize from '../Types/EditorTerrainBrushSize';
 import Terrain from '../../Common/Types/Terrain';
 import EEditorTabChanged from '../Events/EEditorTabChanged';
+import EEditorGridEnabledChanged from '../Events/EEditorGridEnabledChanged';
 
 class EditorUIStore {
 
@@ -36,6 +37,15 @@ class EditorUIStore {
     public setActiveTab( tab: EditorActiveTab ): void {
         this.fState.activeTab = tab;
         this.gEvents.trigger( EEditorTabChanged , { activeTab: tab } );
+    }
+
+    public isGridEnabled(): boolean {
+        return this.fState.isGridEnabled;
+    }
+
+    public setGridEnabled( value: boolean ): void {
+        this.fState.isGridEnabled = value;
+        this.gEvents.trigger( EEditorGridEnabledChanged , { value: value } );
     }
 
     /**

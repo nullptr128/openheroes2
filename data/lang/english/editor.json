@@ -10,7 +10,8 @@
         "Copy": "Copy" ,
         "Cut": "Cut" ,
         "Paste": "Paste" ,
-        "Delete": "Delete"
+        "Delete": "Delete" ,
+        "Grid": "Grid"
     } ,
     "Toolbar": {
         "Terrain": "Terrain" ,

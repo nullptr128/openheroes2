@@ -14,6 +14,8 @@ import PerfCounter from '../../../Common/Support/PerfCounter';
 import Arrays from '../../../Common/Support/Arrays';
 import Nullable from '../../../Common/Support/Nullable';
 import ITile from '../../../Common/Model/ITile';
+import Events from '../../../Common/Engine/Events/Events';
+import EEditorGridEnabledChanged from '../../Events/EEditorGridEnabledChanged';
 
 @Injectable()
 class EditorGridPipeline implements IMapDisplayPipelineElement {
@@ -21,7 +23,9 @@ class EditorGridPipeline implements IMapDisplayPipelineElement {
     @Inject( Paths )
     private gPaths: Paths;
 
-    private fActive: boolean = true;
+    @Inject( Events )
+    private gEvents: Events;
+
     private fGridTexture: Pixi.Texture;
     private fContainer: Pixi.Container;
     private fSprites: Pixi.Sprite[][] = [];
@@ -30,9 +34,14 @@ class EditorGridPipeline implements IMapDisplayPipelineElement {
      * Initializes graphics required for this pipeline
      */
     public onInitialize(): Pixi.Container {
+
+        this.gEvents.on( EEditorGridEnabledChanged , (data) => {
+            this.fContainer.visible = data.value;
+        } );
         
         this.fGridTexture = Pixi.Texture.from( this.gPaths.getImageDir() + '/editor/grid.png' );
         this.fContainer = new Pixi.Container();
+        this.fContainer.visible = false;
         return this.fContainer;
 
     }

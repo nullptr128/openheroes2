@@ -40,6 +40,7 @@ class EditorStore {
         this.fState = {
             activeTab: EditorActiveTab.TERRAIN ,
             map: this.gEditorMapFactory.createBlankMap( 'Unnamed map' , '' , 144 ) ,
+            isGridEnabled: false ,
             isModified: false ,
             terrainOptions: {
                 terrain: Terrain.WATER ,
