@@ -12,6 +12,9 @@ import Inject from '../../Common/IOC/Inject';
 import Looper from '../../Common/Engine/Misc/Looper';
 import MapDisplay from '../../Common/Render/MapDisplay/MapDisplay';
 import Tools from '../../Common/Support/Tools';
+import MinimapDisplay from '../../Common/Render/Minimap/MinimapDisplay';
+import IMinimapMouse from '../../Common/Render/Minimap/IMinimapMouse';
+import Point from '../../Common/Types/Point';
 
 interface IMovement {
     up: boolean;
@@ -30,6 +33,9 @@ class MapControl {
 
     @Inject( MapDisplay )
     private gMapDisplay: MapDisplay;
+
+    @Inject( MinimapDisplay )
+    private gMinimapDisplay: MinimapDisplay;
 
     private fMovement: IMovement = {
         up: false ,
@@ -57,6 +63,9 @@ class MapControl {
         KeyboardJS.bind( 'w' , () => this.fMovement.zoomOut = true , () => this.fMovement.zoomOut = false );
 
         this.gLooper.subscribe( dt => this.timeSlice(dt) );
+
+        this.gMinimapDisplay.onMouseDown( mouse => this.handleMinimap( mouse ) );
+        this.gMinimapDisplay.onMouseMove( mouse => this.handleMinimap( mouse ) );
 
     }
 
@@ -113,6 +122,7 @@ class MapControl {
 
         if ( Math.abs( moveX ) > 0.001 || Math.abs( moveY ) > 0.001 ) {
             this.gMapDisplay.moveMap( moveX , moveY );
+            this.updateMinimapBox();
         }
 
         if ( Math.abs( zoom ) > 0.001 ) {
@@ -124,12 +134,44 @@ class MapControl {
                 const delta: number = this.fWheelZoomDelta * 10 * dt;
                 this.fWheelZoomDelta = Math.max( 0.000 , this.fWheelZoomDelta - delta );
                 this.gMapDisplay.changeZoom( delta );
+                this.updateMinimapBox();
             } else {
                 const delta: number = this.fWheelZoomDelta * 10 * dt;
                 this.fWheelZoomDelta = Math.min( 0.000 , this.fWheelZoomDelta - delta );
                 this.gMapDisplay.changeZoom( delta );
+                this.updateMinimapBox();
             }
         }
+
+    }
+
+    private handleMinimap( mouse: IMinimapMouse ): void {
+
+        if ( mouse.buttons.left ) {
+            this.gMapDisplay.centerAt( mouse.tilePosition.x , mouse.tilePosition.y );
+            this.updateMinimapBox();
+        }
+
+    }
+
+    private updateMinimapBox(): void {
+        
+        const cameraSize: Point = this.gMapDisplay.getCameraSize();
+
+        const position: Point = new Point(
+            this.gMapDisplay.getCenterPos().x - cameraSize.x / 2.000 ,
+            this.gMapDisplay.getCenterPos().y - cameraSize.y / 2.000 ,
+        );
+        
+        const size: Point = new Point(
+            cameraSize.x ,
+            cameraSize.y ,
+        );
+
+        this.gMinimapDisplay.updateCameraBox(
+            position ,
+            size ,
+        );
 
     }
 

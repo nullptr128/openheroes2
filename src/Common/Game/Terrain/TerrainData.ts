@@ -13,7 +13,7 @@ const TerrainData: ITerrainData[] = new Array<ITerrainData>( 9 );
 
 // Water
 TerrainData[ Terrain.WATER ] = {
-    color: { r: 140 , g: 175 , b: 230 , a: 255 } ,
+    color: { r: 16 , g: 32 , b: 128 , a: 255 } ,
     terrain: Terrain.WATER ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 16 , 29 ) ,
@@ -35,7 +35,7 @@ TerrainData[ Terrain.WATER ] = {
 
 // Grass
 TerrainData[ Terrain.GRASS ] = {
-    color: { r: 130 , g: 168 , b: 109 , a: 255 } ,
+    color: { r: 32 , g: 100 , b: 24 , a: 255 } ,
     terrain: Terrain.GRASS ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 68 , 75 ) ,
@@ -57,7 +57,7 @@ TerrainData[ Terrain.GRASS ] = {
 
 // Dirt
 TerrainData[ Terrain.DIRT ] = {
-    color: { r: 168 , g: 137 , b: 109 , a: 255 } ,
+    color: { r: 104 , g: 52 , b: 16 , a: 255 } ,
     terrain: Terrain.DIRT ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 337 , 344 ) ,
@@ -79,7 +79,7 @@ TerrainData[ Terrain.DIRT ] = {
 
 // Snow 
 TerrainData[ Terrain.SNOW ] = {
-    color: { r: 224 , g: 224 , b: 224 , a: 255 } ,
+    color: { r: 220 , g: 220 , b: 220 , a: 255 } ,
     terrain: Terrain.SNOW ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 130 , 137 ) ,
@@ -101,7 +101,7 @@ TerrainData[ Terrain.SNOW ] = {
 
 // Swamp
 TerrainData[ Terrain.SWAMP ] = {
-    color: { r:  82 , g:  89 , b:  77 , a: 255 } ,
+    color: { r:  4 , g:  48 , b:  0 , a: 255 } ,
     terrain: Terrain.SWAMP ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 184 , 191 ) ,
@@ -123,7 +123,7 @@ TerrainData[ Terrain.SWAMP ] = {
 
 // Lava
 TerrainData[ Terrain.LAVA ] = {
-    color: { r:  91 , g:  80 , b:  80 , a: 255 } ,
+    color: { r:  16 , g:  16 , b:  16 , a: 255 } ,
     terrain: Terrain.LAVA ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 246  , 253 ) ,
@@ -145,7 +145,7 @@ TerrainData[ Terrain.LAVA ] = {
 
 // Rough
 TerrainData[ Terrain.ROUGH ] = {
-    color: { r: 196 , g: 173 , b: 123 , a: 255 } ,
+    color: { r: 230 , g: 141 , b: 61 , a: 255 } ,
     terrain: Terrain.ROUGH ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 399 , 406 ) ,
@@ -167,7 +167,7 @@ TerrainData[ Terrain.ROUGH ] = {
 
 // Desert
 TerrainData[ Terrain.DESERT ] = {
-    color: { r: 216 , g: 213 , b: 151 , a: 255 } ,
+    color: { r: 228 , g: 202 , b: 55 , a: 255 } ,
     terrain: Terrain.DESERT ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 300 , 307 ) ,
@@ -189,7 +189,7 @@ TerrainData[ Terrain.DESERT ] = {
 
 // sand
 TerrainData[ Terrain.SAND ] = {
-    color: { r: 244 , g: 231 , b: 183 , a: 255 } ,
+    color: { r: 231 , g: 198 , b: 165 , a: 255 } ,
     terrain: Terrain.SAND ,
     tilFile: 'GROUND32.TIL' ,
     basicTiles: Arrays.createRange( 415 , 422 ) ,

@@ -1,6 +1,20 @@
 
 .minimap {
+    
+    position: relative;
     width: 220px;
     height: 220px;
     background-color: green;
+    overflow: hidden;
+    
+    canvas {
+        cursor: pointer;
+    }
+    
+    .camera-box {
+        position: absolute;
+        pointer-events: none;
+        border: 1px dashed transparentize( yellow , 0.5 );
+    }
+
 }

@@ -315,6 +315,17 @@ class MapDisplay {
         return this.fMouse;
     }
 
+    public getCameraSize(): Point {
+        
+        const tileSize: number = this.getTileSize();
+
+        return new Point( 
+            this.fCanvas.width / tileSize,
+            this.fCanvas.height / tileSize,
+        );
+
+    }
+
     /**
      * Handles 'mousemove' event on canvas
      * @param evt 

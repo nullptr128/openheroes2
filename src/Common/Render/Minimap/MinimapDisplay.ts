@@ -14,17 +14,26 @@ import IMap from '../../Model/IMap';
 import IColor from '../../Types/IColor';
 import Terrain from '../../Types/Terrain';
 import TerrainData from '../../Game/Terrain/TerrainData';
+import IMinimapMouse from './IMinimapMouse';
+import Point from '../../Types/Point';
+import Inject from '../../IOC/Inject';
 
 // function that retrieves terrain type of tile from position
 type GetTerrainFunc = ( x: number , y: number ) => Terrain;
+
+// minimap mouse handler
+type MinimapMouseFunc = ( data: IMinimapMouse ) => void;
 
 @Injectable()
 class MinimapDisplay {
 
     private fInternalCanvas: Nullable<HTMLCanvasElement>;
     private fTarget: Nullable<HTMLCanvasElement>;
+    private fCameraBox: Nullable<HTMLElement>;
     private fSize: number;
     private fGetTerrainFunc: GetTerrainFunc;
+    private fOnMouseDown: MinimapMouseFunc[] = [];
+    private fOnMouseMove: MinimapMouseFunc[] = [];
 
     /**
      * This internal function creates canvas with target size.
@@ -52,6 +61,12 @@ class MinimapDisplay {
      */
     public setRenderTarget( targetCanvas: HTMLCanvasElement ): void {
         this.fTarget = targetCanvas;
+        this.fTarget.addEventListener( 'mousedown' , (evt) => this.handleMouseDown(evt) );
+        this.fTarget.addEventListener( 'mousemove' , (evt) => this.handleMouseMove(evt) );
+    }
+
+    public setCameraBox( cameraBox: HTMLElement ): void {
+        this.fCameraBox = cameraBox;
     }
 
     /**
@@ -97,6 +112,15 @@ class MinimapDisplay {
 
     }
 
+    public updateCameraBox( position: Point , size: Point ): void {
+        if ( this.fCameraBox && this.fTarget ) {
+            this.fCameraBox.style.left = position.x / this.fSize * this.fTarget.width + 'px';
+            this.fCameraBox.style.top = position.y / this.fSize * this.fTarget.height + 'px';
+            this.fCameraBox.style.width = size.x / this.fSize * this.fTarget.width + 'px';
+            this.fCameraBox.style.height = size.y / this.fSize * this.fTarget.height + 'px';
+        }
+    }   
+
     /**
      * Retrieves color of minimap pixel on tile x/y
      * @param x x-offset of tile
@@ -105,6 +129,47 @@ class MinimapDisplay {
     public getTileColor( x: number , y: number ): Readonly<IColor> {
         const terrain: Terrain = this.fGetTerrainFunc( x , y );
         return TerrainData[ terrain ].color;
+    }
+
+    public onMouseMove( func: MinimapMouseFunc ): void {
+        this.fOnMouseMove.push( func );
+    }
+
+    public onMouseDown( func: MinimapMouseFunc ): void {
+        this.fOnMouseDown.push( func );
+    }
+
+    private getMouseData( event: MouseEvent ): IMinimapMouse {
+        
+        const mapPos: Point = new Point(
+            Math.floor( event.offsetX / this.fTarget!.width * this.fSize ) ,
+            Math.floor( event.offsetY / this.fTarget!.height * this.fSize ) ,
+        );
+
+        const MOUSE_LEFT = 1;
+        const MOUSE_MIDDLE = 2;
+        const MOUSE_RIGHT = 4;
+
+        return {
+            tilePosition: mapPos ,
+            cursorPosition: new Point( event.clientX , event.clientY ) ,
+            buttons: {
+                left: ( event.buttons & MOUSE_LEFT ) == MOUSE_LEFT ,
+                middle: ( event.buttons & MOUSE_MIDDLE ) == MOUSE_MIDDLE ,
+                right: ( event.buttons & MOUSE_RIGHT ) == MOUSE_RIGHT ,
+            } ,
+        }
+
+    }
+
+    private handleMouseMove( event: MouseEvent ): void {
+        const mouse: IMinimapMouse = this.getMouseData( event );
+        this.fOnMouseMove.forEach( fn => fn( mouse ) );
+    }
+
+    private handleMouseDown( event: MouseEvent ): void {
+        const mouse: IMinimapMouse = this.getMouseData( event );
+        this.fOnMouseDown.forEach( fn => fn( mouse ) );
     }
 
 }

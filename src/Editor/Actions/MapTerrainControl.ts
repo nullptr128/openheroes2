@@ -22,6 +22,7 @@ import Arrays from '../../Common/Support/Arrays';
 import Tools from '../../Common/Support/Tools';
 import AutoBorder from '../Utils/AutoBorder/AutoBorder';
 import AutoFixer from '../Utils/AutoBorder/AutoFixer';
+import MinimapDisplay from '../../Common/Render/Minimap/MinimapDisplay';
 
 @Injectable()
 class MapTerrainControl {
@@ -37,6 +38,9 @@ class MapTerrainControl {
 
     @Inject( MapDisplay )
     private gMapDisplay: MapDisplay;
+
+    @Inject( MinimapDisplay )
+    private gMinimapDisplay: MinimapDisplay;
 
     @Inject( AutoBorder )
     private gAutoBorder: AutoBorder;
@@ -179,6 +183,7 @@ class MapTerrainControl {
             this.gAutoFixer.fixMapSection( fromPos.subtract(1) , toPos.add(1) );
             this.gAutoBorder.borderizeMapSection( fromPos , toPos );
             this.gMapDisplay.forceRedraw();
+            this.gMinimapDisplay.redrawMap();
 
         }
 

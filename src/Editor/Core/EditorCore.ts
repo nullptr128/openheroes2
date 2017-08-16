@@ -109,8 +109,7 @@ class EditorCore {
      * Initializes minimap
      */
     private initMinimapDisplay(): void {
-        this.gMinimapDisplay.setTerrainFunc( (x,y) => this.gEditorStore.map.getMapTile(x,y).terrain );
-        this.gMinimapDisplay.redrawMap();
+        this.gMinimapDisplay.setTerrainFunc( (x,y) => this.gEditorStore.map.getMapTile(x,y).terrain );        
     }
 
     /**
