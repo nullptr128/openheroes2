@@ -23,6 +23,8 @@ import EditorGridPipeline from '../Render/MapDisplay/EditorGridPipeline';
 import MapTerrainControl from '../Actions/MapTerrainControl';
 import EEditorTabChanged from '../Events/EEditorTabChanged';
 import EditorActiveTab from '../Types/EditorActiveTab';
+import MapRiverControl from '../Actions/MapRiverControl';
+import RiverPipeline from '../../Common/Render/MapDisplay/RiverPipeline';
 
 @Injectable()
 class EditorCore {
@@ -42,11 +44,17 @@ class EditorCore {
     @Inject( TerrainPipeline )
     private gTerrainPipeline: TerrainPipeline;
 
+    @Inject( RiverPipeline )
+    private gRiverPipeline: RiverPipeline;
+
     @Inject( MapControl )
     private gMapControl: MapControl;
 
     @Inject( MapTerrainControl )
     private gMapTerrainControl: MapTerrainControl;
+
+    @Inject( MapRiverControl )
+    private gMapRiverControl: MapRiverControl;
 
     @Inject( Render )
     private gRender: Render;
@@ -85,9 +93,12 @@ class EditorCore {
 
         // Initialize map control module
         this.gMapControl.initialize();
-
+        
         // Initialize map terrain control module
         this.gMapTerrainControl.initialize();
+
+        // Initialize and configure rivers 
+        this.gMapRiverControl.initialize();
 
         // Start Looper
         this.gLooper.startLooper();
@@ -120,9 +131,13 @@ class EditorCore {
         // setup terrain pipeline
         this.gTerrainPipeline.setTileFunc( (x,y) => this.getTileFunc(x,y) );
 
+        // setup river pipeline
+        this.gRiverPipeline.setTileFunc( (x,y) => this.getTileFunc(x,y) );
+
         // finally add pipelines to mapdisplay
         this.gMapDisplay.setPipeline( [
             this.gTerrainPipeline ,
+            this.gRiverPipeline ,
             this.gEditorGridPipeline ,
             this.gEditorBrushTilePipeline ,
         ] );

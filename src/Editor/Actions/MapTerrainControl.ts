@@ -312,6 +312,10 @@ class MapTerrainControl {
             for( let y = startY ; y < endY ; ++y ) {
                 const spriteId: number = this.getSpriteId( terrainType );
                 this.gEditorStore.map.setTileTerrain( x , y , terrainType , spriteId );
+                if ( terrainType === Terrain.WATER ) {
+                    this.gEditorStore.map.setTileRiver( x ,y , null );
+                    this.gEditorStore.map.setTileRoad( x , y , null );
+                }
             }
         }
 

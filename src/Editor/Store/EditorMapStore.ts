@@ -119,6 +119,20 @@ class EditorMapStore {
         }
     }
 
+    public setTileRiver( x: number , y: number , river: Nullable<number> ): void {
+        const mapSize: number = this.getMapSize();
+        if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
+            this.fState.map.tiles[x][y].river = river;
+        }
+    }
+
+    public setTileRoad( x: number , y: number , road: Nullable<number> ): void {
+        const mapSize: number = this.getMapSize();
+        if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
+            this.fState.map.tiles[x][y].road = road;
+        }
+    }
+
 }
 
 export default EditorMapStore;

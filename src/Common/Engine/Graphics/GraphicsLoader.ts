@@ -16,6 +16,7 @@ import Icn from '../Data/Icn';
 import IH2Tile from './IH2Tile';
 import Til from '../Data/Til';
 import * as Pixi from 'pixi.js';
+import IDataUrl from './IDataUrl';
 
 @Injectable()
 class GraphicsLoader {
@@ -106,7 +107,7 @@ class GraphicsLoader {
      * Converts IH2Sprite to dataUrl string with PNG type.
      * @param sprite h2sprite to convert
      */
-    private h2SpriteToDataUrl( sprite: IH2Sprite ): string {
+    private h2SpriteToDataUrl( sprite: IH2Sprite ): IDataUrl {
 
         const canvas: HTMLCanvasElement = document.createElement( 'canvas' );
 
@@ -132,7 +133,11 @@ class GraphicsLoader {
         }
 
         context.putImageData( imageData , 0 , 0 );
-        return canvas.toDataURL();
+        return {
+            data: canvas.toDataURL() ,
+            offsetX: sprite.offsetX ,
+            offsetY: sprite.offsetY ,
+        };
 
     }
 
@@ -140,7 +145,7 @@ class GraphicsLoader {
      * Converts IH2Tile to dataUrl string with PNG type
      * @param tile h2tile to convert
      */
-    private h2TileToDataUrl( tile: IH2Tile ): string {
+    private h2TileToDataUrl( tile: IH2Tile ): IDataUrl {
 
         const canvas: HTMLCanvasElement = document.createElement( 'canvas' );
 
@@ -166,7 +171,11 @@ class GraphicsLoader {
         }
 
         context.putImageData( imageData , 0 , 0 );
-        return canvas.toDataURL();
+        return {
+            data: canvas.toDataURL() ,
+            offsetX: 0 ,
+            offsetY: 0 ,
+        };
 
     }
 
@@ -176,7 +185,7 @@ class GraphicsLoader {
      * @param icnFileName name of icn file
      * @param index index of sprite
      */
-    public async getIcnFrameAsDataUrl( icnFileName: string , index: number ): Promise<string> {
+    public async getIcnFrameAsDataUrl( icnFileName: string , index: number ): Promise<IDataUrl> {
         const sprite: IH2Sprite = await this.getH2SpriteByIndex( icnFileName , index );
         return this.h2SpriteToDataUrl( sprite );
     }
@@ -185,7 +194,7 @@ class GraphicsLoader {
      * Receives full sprite from ICN with all frames, returning array of data-urls.
      * @param icnFileName name of icn file 
      */
-    public async getIcnAsDataUrl( icnFileName: string ): Promise<string[]> {
+    public async getIcnAsDataUrl( icnFileName: string ): Promise<IDataUrl[]> {
         const sprites: IH2Sprite[] = await this.getH2Sprites( icnFileName );
         return sprites.map( s => this.h2SpriteToDataUrl(s) );
     }
@@ -217,7 +226,7 @@ class GraphicsLoader {
      * @param tilFileName name of .TIL file
      * @param index index of floor tile
      */
-    public async getTilFrameAsDataUrl( tilFileName: string , index: number ): Promise<string> {
+    public async getTilFrameAsDataUrl( tilFileName: string , index: number ): Promise<IDataUrl> {
 
         const tile: IH2Tile = await this.getH2TileByIndex( tilFileName , index );
         return this.h2TileToDataUrl( tile );
@@ -229,7 +238,7 @@ class GraphicsLoader {
      * of data-urls.
      * @param tilFileName name of til file
      */
-    public async getTilAsDataUrl( tilFileName: string ): Promise<string[]> {
+    public async getTilAsDataUrl( tilFileName: string ): Promise<IDataUrl[]> {
 
         const tiles: IH2Tile[] = await this.getH2Tiles( tilFileName );
         return tiles.map( t => this.h2TileToDataUrl( t ) );

@@ -47,6 +47,8 @@ class EditorMapFactory {
                 flip: false ,
                 borderPriority: -1 ,
                 debug: false ,
+                river: null ,
+                road: null ,
             };
         } );
     }

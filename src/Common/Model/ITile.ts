@@ -5,6 +5,7 @@
  */
 
 import Terrain from '../Types/Terrain';
+import Nullable from '../Support/Nullable';
 
 interface ITile {
     x: number;
@@ -14,6 +15,8 @@ interface ITile {
     mirror: boolean;
     flip: boolean;
     borderPriority: number;
+    river: Nullable<number>;
+    road: Nullable<number>;
     debug: boolean;
 }
 

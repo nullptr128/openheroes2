@@ -31,13 +31,14 @@ import GraphicsLoader from '../Graphics/GraphicsLoader';
 import Render from '../Render/Render';
 import Tools from '../../Support/Tools';
 import PerfCounter from '../../Support/PerfCounter';
+import IDataUrl from '../Graphics/IDataUrl';
 
 interface ITextureEntry {
     isLoaded: boolean;
     textures: Pixi.Texture[];
 }
 
-type TextureLoaderFunc = () => Promise<string[]>;
+type TextureLoaderFunc = () => Promise<IDataUrl[]>;
 
 @Injectable()
 class Textures {
@@ -169,14 +170,14 @@ class Textures {
         const loadPromises: Promise<void>[] = [];
 
         // now load all sprites from icn as dataurls
-        const dataUrls: string[] = await loaderFunc();
+        const dataUrls: IDataUrl[] = await loaderFunc();
 
         // finally rebind textures to real ones
         for( let i = 0 ; i < dataUrls.length ; ++i ) {
             // store current dataurl
-            const dataUrl: string = dataUrls[i];
+            const dataUrl: IDataUrl = dataUrls[i];
             // create new Pixi.BaseTexture from dataUrl
-            const baseTexture: Pixi.BaseTexture = Pixi.BaseTexture.from( dataUrl );
+            const baseTexture: Pixi.BaseTexture = Pixi.BaseTexture.from( dataUrl.data );
             // if we already have empty texture in array at that index
             if ( i < entry.textures.length ) {
                 // create promise 
@@ -186,6 +187,8 @@ class Textures {
                         entry.textures[i].baseTexture = baseTexture;
                         entry.textures[i].frame = new Pixi.Rectangle( 0 , 0 , baseTexture.width , baseTexture.height );
                         entry.textures[i].update();
+                        ( entry.textures[i] as any )._offsetX = dataUrl.offsetX;
+                        ( entry.textures[i] as any )._offsetY = dataUrl.offsetY;
                         resolve();
                     } );
                 } );
