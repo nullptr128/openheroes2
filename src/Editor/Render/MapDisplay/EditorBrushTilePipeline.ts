@@ -24,10 +24,11 @@ class EditorBrushTilePipeline implements IMapDisplayPipelineElement {
 
     private fGreenTexture: Pixi.Texture;
     private fOrigin: Point = Point.zero();
-    private fSize: number = 0;
+    private fFinish: Point = Point.zero();
     private fMarkedTiles: Pixi.Sprite[][] = [];
     private fNeedsRefresh: boolean = false;
     private fContainer: Pixi.Container;
+    private fIsVisible: boolean = true;
 
     /**
      * Initializes graphics required for this pipeline
@@ -42,13 +43,23 @@ class EditorBrushTilePipeline implements IMapDisplayPipelineElement {
      * Moves highlight to new position and changes its size
      * @param originX x-position on map
      * @param originY y-position on map
-     * @param size size in tiles
      */
-    public set( originX: number , originY: number , size: number ): void {
+    public set( originX: number , originY: number , finishX: number , finishY: number ): void {
         this.fOrigin.x = originX;
         this.fOrigin.y = originY;
-        this.fSize = size;
+        this.fFinish.x = finishX;
+        this.fFinish.y = finishY;
         this.fNeedsRefresh = true;
+    }
+
+    public show(): void {
+        this.fContainer.visible = true;
+        this.fIsVisible = true;
+    }
+
+    public hide(): void {
+        this.fContainer.visible = false;
+        this.fIsVisible = false;
     }
 
     /**
@@ -59,7 +70,10 @@ class EditorBrushTilePipeline implements IMapDisplayPipelineElement {
 
         const perf: PerfCounter = new PerfCounter();
 
-        this.fMarkedTiles = Arrays.optiResize2dArray( this.fMarkedTiles , this.fSize , this.fSize , {
+        const newWidth: number = this.fFinish.x - this.fOrigin.x + 1;
+        const newHeight: number = this.fFinish.y - this.fOrigin.y + 1;
+
+        this.fMarkedTiles = Arrays.optiResize2dArray( this.fMarkedTiles , newWidth , newHeight , {
             onNew: (x,y) => {
                 const sprite: Pixi.Sprite = new Pixi.Sprite( this.fGreenTexture );
                 sprite.alpha = 0.3;
@@ -80,21 +94,20 @@ class EditorBrushTilePipeline implements IMapDisplayPipelineElement {
      */
     public onUpdate( data: IMapDisplayData ): void {
 
+        if ( !this.fIsVisible ) {
+            return;
+        }
+
         if ( this.fNeedsRefresh ) {
             this.refresh( data );
             this.fNeedsRefresh = false;
         }
 
-        const startX: number = this.fOrigin.x - Math.floor( this.fSize / 2.000 );
-        const startY: number = this.fOrigin.y - Math.floor( this.fSize / 2.000 );
-        const endX: number = startX + this.fSize;
-        const endY: number = startY + this.fSize;
-
-        for( let x = 0 ; x < this.fSize ; ++x ) {
-            for( let y = 0 ; y < this.fSize ; ++y ) {
-                const sprite: Pixi.Sprite = this.fMarkedTiles[x][y];
-                const pX: number = ( x + startX - data.tileStart.x ) * data.tileSize - data.absOffsetX;
-                const pY: number = ( y + startY - data.tileStart.y ) * data.tileSize - data.absOffsetY;
+        for( let x = this.fOrigin.x ; x <= this.fFinish.x ; ++x ) {
+            for( let y = this.fOrigin.y ; y <= this.fFinish.y ; ++y ) {
+                const sprite: Pixi.Sprite = this.fMarkedTiles[x-this.fOrigin.x][y-this.fOrigin.y];
+                const pX: number = ( x - data.tileStart.x ) * data.tileSize - data.absOffsetX;
+                const pY: number = ( y - data.tileStart.y ) * data.tileSize - data.absOffsetY;
                 sprite.position.set( pX , pY );
                 sprite.scale.set( data.scale );
             }

@@ -52,6 +52,9 @@ class MapTerrainControl {
 
     private fBorderFrom: Point;
     private fBorderTo: Point;
+
+    private fVariableBrushOrigin: Point = new Point(-9999,-9999);
+    private fVariableBrushFinish: Point = new Point(-9999,-9999);
     
     /**
      * Initializes MapTerrainControl module
@@ -92,11 +95,28 @@ class MapTerrainControl {
 
     }
 
+    public getVariableBrushBounds(): { from: Point , to: Point } {
+        return {
+            from: new Point( 
+                Math.min( this.fVariableBrushOrigin.x , this.fVariableBrushFinish.x ) ,
+                Math.min( this.fVariableBrushOrigin.y , this.fVariableBrushFinish.y )
+            ) ,
+            to: new Point(
+                Math.max( this.fVariableBrushOrigin.x , this.fVariableBrushFinish.x ) ,
+                Math.max( this.fVariableBrushOrigin.y , this.fVariableBrushFinish.y )
+            ) ,
+        };
+    };
+
+    public isVariableBrush(): boolean {
+        return this.gEditorStore.ui.getTerrainBrushSize() === EditorTerrainBrushSize.CUSTOM;
+    }
+
     /**
      * Called when MapTerrainControl is activated
      */
     public onActivate(): void {
-        this.gEditorBrushTilePipeline.set( 0 , 0 , this.getBrushSize() );
+        this.gEditorBrushTilePipeline.hide();
         this.fIsActive = true;
     }
 
@@ -104,7 +124,7 @@ class MapTerrainControl {
      * Called when MapTerrainControl is deactivated
      */
     public onDeactivate(): void {
-        this.gEditorBrushTilePipeline.set( 0 , 0 , 0 );        
+        this.gEditorBrushTilePipeline.hide();
         this.fIsActive = false;
     }
 
@@ -117,16 +137,34 @@ class MapTerrainControl {
 
         if ( this.fIsActive ) {
 
-            this.gEditorBrushTilePipeline.set(
-                mouse.mapTilePosition.x ,
-                mouse.mapTilePosition.y ,
-                this.getBrushSize() ,
-            );
+            if ( this.isVariableBrush() ) {
 
-            if ( mouse.buttons.left ) {
-                this.placePrimaryTile( mouse.mapTilePosition );
-            } else if ( mouse.buttons.right ) {
-                this.placeSecondaryTile( mouse.mapTilePosition );
+                const bounds = this.getVariableBrushBounds();
+
+                this.gEditorBrushTilePipeline.set(
+                    bounds.from.x ,
+                    bounds.from.y ,
+                    bounds.to.x ,
+                    bounds.to.y ,
+                );
+
+            } else {
+
+                this.gEditorBrushTilePipeline.set(
+                    mouse.mapTilePosition.x - Math.floor( this.getBrushSize() / 2.000 ) ,
+                    mouse.mapTilePosition.y - Math.floor( this.getBrushSize() / 2.000 ) ,
+                    mouse.mapTilePosition.x - Math.floor( this.getBrushSize() / 2.000 ) + this.getBrushSize() - 1,
+                    mouse.mapTilePosition.y - Math.floor( this.getBrushSize() / 2.000 ) + this.getBrushSize() - 1 ,
+                );
+
+                this.gEditorBrushTilePipeline.show();
+
+                if ( mouse.buttons.left ) {
+                    this.placePrimaryTile( mouse.mapTilePosition );
+                } else if ( mouse.buttons.right ) {
+                    this.placeSecondaryTile( mouse.mapTilePosition );
+                }
+
             }
 
         }
@@ -140,8 +178,16 @@ class MapTerrainControl {
     public startDrawing( mouse: IMapDisplayMouse ): void {
 
         if ( this.fIsActive ) {
+
+            if ( this.isVariableBrush() ) {
+                this.fVariableBrushOrigin = new Point( mouse.mapTilePosition.x , mouse.mapTilePosition.y );
+                this.fVariableBrushFinish = new Point( mouse.mapTilePosition.x , mouse.mapTilePosition.y );
+                this.gEditorBrushTilePipeline.show();
+            }
+
             this.fBorderFrom = new Point( mouse.mapTilePosition.x , mouse.mapTilePosition.y );
             this.fBorderTo = new Point( mouse.mapTilePosition.x , mouse.mapTilePosition.y );
+
         }
         
         this.update( mouse );
@@ -160,6 +206,11 @@ class MapTerrainControl {
             this.fBorderTo.x = Math.max( this.fBorderTo.x , mouse.mapTilePosition.x );
             this.fBorderTo.y = Math.max( this.fBorderTo.y , mouse.mapTilePosition.y );
 
+            if ( this.isVariableBrush() ) {
+                this.fVariableBrushFinish.x = mouse.mapTilePosition.x;
+                this.fVariableBrushFinish.y = mouse.mapTilePosition.y;
+            }
+
         }
 
         this.update( mouse );
@@ -174,16 +225,41 @@ class MapTerrainControl {
 
         if ( this.fIsActive ) {
 
-            const fromPos: Point = this.fBorderFrom.subtract( 5 );
-            const toPos: Point = this.fBorderTo.add( 5 );
+            if ( this.isVariableBrush() ) {
 
-            //const fromPos: Point = new Point( 0 , 0 );
-            //const toPos: Point = new Point( this.gEditorStore.map.getMapSize() , this.gEditorStore.map.getMapSize() );
+                const bounds = this.getVariableBrushBounds();
 
-            this.gAutoFixer.fixMapSection( fromPos.subtract(1) , toPos.add(1) );
-            this.gAutoBorder.borderizeMapSection( fromPos , toPos );
-            this.gMapDisplay.forceRedraw();
-            this.gMinimapDisplay.redrawMap();
+                const fromPos: Point = new Point( bounds.from.x , bounds.from.y );
+                const toPos: Point = new Point( bounds.to.x , bounds.to.y );
+
+                const terrainType: Terrain = this.gEditorStore.ui.getTerrainBrushType();
+
+                for( let x = fromPos.x ; x <= toPos.x ; ++x ) {
+                    for( let y = fromPos.y ; y <= toPos.y ; ++y ) {
+                        const spriteId: number = this.getSpriteId( terrainType );
+                        this.gEditorStore.map.setTileTerrain( x , y , terrainType , spriteId );
+                    }
+                }
+
+                this.gEditorBrushTilePipeline.hide();
+
+                this.gAutoFixer.fixMapSection( fromPos.subtract(1) , toPos.add(1) );
+                this.gAutoBorder.borderizeMapSection( fromPos.subtract(5) , toPos.add(5) );
+                this.gMapDisplay.forceRedraw();
+                this.gMinimapDisplay.redrawMap();
+
+
+            } else {
+
+                const fromPos: Point = this.fBorderFrom.subtract( 5 );
+                const toPos: Point = this.fBorderTo.add( 5 );
+
+                this.gAutoFixer.fixMapSection( fromPos.subtract(1) , toPos.add(1) );
+                this.gAutoBorder.borderizeMapSection( fromPos , toPos );
+                this.gMapDisplay.forceRedraw();
+                this.gMinimapDisplay.redrawMap();
+                
+            }
 
         }
 
