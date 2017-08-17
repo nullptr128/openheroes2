@@ -1,10 +1,8 @@
 
-> Editor: Brush variable size support
-> Editor: Normalize Heroes2 files path to /data/heroes2/* and provide info how to run app
-> Editor: Disallow to "drag" or "select" ui elements to fix "canvas drag bug"
-
 > Editor: Add rivers support
 > Editor: Add roads support          
+
+> Editor: Fix detail tiles not appearing
 
 > Add license to all files
 

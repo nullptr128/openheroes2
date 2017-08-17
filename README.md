@@ -8,7 +8,7 @@ https://s1.postimg.org/yyn97py4f/openheroes2editor-1.png
 
 Note: this does not launch without original Heroes2 data files (Heroes2.agg, Heroes2x.agg)
 
-In order to run it, clone repository, copy files from original Heroes2 data directory to ./h2data/* and then:
+In order to run it, clone repository, copy files from original Heroes2 data directory to ./data/heroes2/* and then:
 
 ```
 npm install

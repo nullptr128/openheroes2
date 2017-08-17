@@ -38,8 +38,8 @@ class Engine {
     public async initialize(): Promise<void> {
 
         // load Heroes2.agg and Heroes2x.agg 
-        await this.gAgg.loadAggFile( 'h2data/Heroes2.agg' );
-        await this.gAgg.loadAggFile( 'h2data/Heroes2x.agg' );
+        await this.gAgg.loadAggFile( 'data/heroes2/Heroes2.agg' );
+        await this.gAgg.loadAggFile( 'data/heroes2/Heroes2x.agg' );
 
         // initialize sprite palette
         await this.gPal.openPalFile( await this.gAgg.getFile( 'KB.PAL' ) );
