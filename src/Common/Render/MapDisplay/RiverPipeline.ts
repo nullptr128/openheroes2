@@ -143,7 +143,7 @@ class RiverPipeline implements IMapDisplayPipelineElement {
             }
         }
 
-        console.log( 'TerrainPipeline::onRedraw() -> ' + perf.delta() );
+        console.log( 'RiverPipeline::onRedraw() -> ' + perf.delta() );
 
     }
 
