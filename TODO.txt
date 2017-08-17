@@ -1,5 +1,4 @@
 
-> Editor: Add rivers support
 > Editor: Add roads support          
 
 > Editor: Fix detail tiles not appearing
