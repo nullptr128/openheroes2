@@ -230,17 +230,14 @@ class MapRiverControl {
         for( let i = 0 ; i < tiles.length ; ++i ) {
             
             if ( pattern[i] == '?' ) {
-                console.log( 'ignore because of ?' );
                 continue;
             }
 
             if ( pattern[i] == 'R' && tiles[i] && tiles[i]!.river !== null ) {
-                console.log( 'r -> ' , tiles[i] );
                 continue;
             }
 
             if ( pattern[i] == 'N' && ( !tiles[i] || tiles[i]!.river === null ) ) {
-                console.log( 'n -> ' , tiles[i] );
                 continue;
             }
 
