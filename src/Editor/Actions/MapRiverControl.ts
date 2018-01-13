@@ -33,14 +33,6 @@ class MapRiverControl {
 
     public initialize(): void {
 
-        this.gEvents.on( EEditorTabChanged , data => {
-            if ( data.activeTab == EditorActiveTab.RIVERS ) {
-                this.onActivate();
-            } else {
-                this.onDeactivate();
-            }
-        } );
-
         this.gMapDisplay.onMouseMove( mouse => this.continueDrawing(mouse) );
         this.gMapDisplay.onMouseDown( mouse => this.startDrawing(mouse) );
         this.gMapDisplay.onMouseUp( mouse => this.finishDrawing(mouse) );
@@ -116,7 +108,7 @@ class MapRiverControl {
     }
 
     public eraseRiver( x: number , y: number ): void {
-        this.gStore.map.setTileRiver( x , y , null );
+        this.gStore.map.clearTileRiver( x , y );
     }
 
     public updateSpritesInSection( fromPos: Point , toPos: Point ): void {
@@ -206,12 +198,12 @@ class MapRiverControl {
                                            '?' , 'N' , '?' ] ) ) {
 
             riversToAdd.push( { x: x + 1 , y: y + 1 , sprite: 4 } );
-        } else if ( tiles[4] && tiles[4]!.river !== null ) {
+        } else if ( tiles[4] && tiles[4]!.isRiver ) {
 
-            const up: boolean = ( tiles[1] !== null && tiles[1]!.river !== null );
-            const down: boolean = ( tiles[7] !== null && tiles[7]!.river !== null );
-            const left: boolean = ( tiles[3] !== null && tiles[3]!.river !== null );
-            const right: boolean = ( tiles[5] !== null && tiles[5]!.river !== null );
+            const up: boolean = ( tiles[1] !== null && tiles[1]!.isRiver !== null );
+            const down: boolean = ( tiles[7] !== null && tiles[7]!.isRiver !== null );
+            const left: boolean = ( tiles[3] !== null && tiles[3]!.isRiver !== null );
+            const right: boolean = ( tiles[5] !== null && tiles[5]!.isRiver !== null );
 
             if ( up || down ) {
                 riversToAdd.push( { x: x + 1 , y: y + 1 , sprite: 3 } );
@@ -233,11 +225,11 @@ class MapRiverControl {
                 continue;
             }
 
-            if ( pattern[i] == 'R' && tiles[i] && tiles[i]!.river !== null ) {
+            if ( pattern[i] == 'R' && tiles[i] && tiles[i]!.isRiver ) {
                 continue;
             }
 
-            if ( pattern[i] == 'N' && ( !tiles[i] || tiles[i]!.river === null ) ) {
+            if ( pattern[i] == 'N' && ( !tiles[i] || !tiles[i]!.isRiver ) ) {
                 continue;
             }
 

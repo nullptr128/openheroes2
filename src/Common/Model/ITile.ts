@@ -15,8 +15,10 @@ interface ITile {
     mirror: boolean;
     flip: boolean;
     borderPriority: number;
-    river: Nullable<number>;
-    road: Nullable<number>;
+    isRiver: boolean;
+    isRoad: boolean;
+    riverSprite: Nullable<number>;
+    roadSprite: Nullable<number>;
     debug: boolean;
 }
 

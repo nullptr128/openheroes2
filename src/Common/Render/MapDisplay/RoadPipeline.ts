@@ -13,14 +13,14 @@ import Arrays from '../../Support/Arrays';
 type GetTileFunc = ( x: number , y: number ) => Nullable<ITile>;
 
 @Injectable()
-class RiverPipeline implements IMapDisplayPipelineElement {
+class RoadPipeline implements IMapDisplayPipelineElement {
 
     @Inject( Resources )
     private gResources: Resources;
 
     private fContainer: Pixi.Container = new Pixi.Container();
     private fGetTileFunc: Nullable<GetTileFunc>;
-    private fRiverTextures: Pixi.Texture[] = new Array( 13 );
+    private fRoadTextures: Pixi.Texture[] = new Array( 32 );
     private fSprites: Pixi.Sprite[][] = [];
 
     /**
@@ -36,8 +36,8 @@ class RiverPipeline implements IMapDisplayPipelineElement {
      */
     public onInitialize(): Pixi.Container {
         
-        for( let i = 0 ; i <= 12 ; ++i ) {
-            this.fRiverTextures[i] = this.gResources.getIcnTexture( 'STREAM.ICN' , i );
+        for( let i = 0 ; i <= 31 ; ++i ) {
+            this.fRoadTextures[i] = this.gResources.getIcnTexture( 'ROAD.ICN' , i );
         }
 
         return this.fContainer;
@@ -78,7 +78,7 @@ class RiverPipeline implements IMapDisplayPipelineElement {
             } ,
         } );
 
-        console.log( 'RiverPipeline::reinitializeSprites() -> ' + perf.delta() );
+        console.log( 'RoadPipeline::reinitializeSprites() -> ' + perf.delta() );
 
     }
 
@@ -132,9 +132,9 @@ class RiverPipeline implements IMapDisplayPipelineElement {
                 const sprite: Pixi.Sprite = this.fSprites[x][y];
                 const tile: Nullable<ITile> = this.fGetTileFunc!( tileX , tileY );
 
-                if ( tile && tile.isRiver ) {
+                if ( tile && tile.roadSprite !== null ) {
                     sprite.visible = true;
-                    sprite.texture = this.fRiverTextures[ tile.riverSprite! ];
+                    sprite.texture = this.fRoadTextures[ tile.roadSprite! ];
                     this.reposSprite( sprite , x , y , false , false , data );
                 } else {
                     sprite.visible = false;
@@ -152,4 +152,4 @@ class RiverPipeline implements IMapDisplayPipelineElement {
 
 }
 
-export default RiverPipeline;
+export default RoadPipeline;

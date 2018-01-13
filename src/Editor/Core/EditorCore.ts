@@ -25,6 +25,8 @@ import EEditorTabChanged from '../Events/EEditorTabChanged';
 import EditorActiveTab from '../Types/EditorActiveTab';
 import MapRiverControl from '../Actions/MapRiverControl';
 import RiverPipeline from '../../Common/Render/MapDisplay/RiverPipeline';
+import RoadPipeline from '../../Common/Render/MapDisplay/RoadPipeline';
+import MapRoadControl from '../Actions/MapRoadControl';
 
 @Injectable()
 class EditorCore {
@@ -46,6 +48,9 @@ class EditorCore {
 
     @Inject( RiverPipeline )
     private gRiverPipeline: RiverPipeline;
+    
+    @Inject( RoadPipeline )
+    private gRoadPipeline: RoadPipeline;
 
     @Inject( MapControl )
     private gMapControl: MapControl;
@@ -55,6 +60,9 @@ class EditorCore {
 
     @Inject( MapRiverControl )
     private gMapRiverControl: MapRiverControl;
+
+    @Inject( MapRoadControl )
+    private gMapRoadControl: MapRoadControl;
 
     @Inject( Render )
     private gRender: Render;
@@ -100,6 +108,12 @@ class EditorCore {
         // Initialize and configure rivers 
         this.gMapRiverControl.initialize();
 
+        // Initialize and configure roads
+        this.gMapRoadControl.initialize();
+
+        // Initialize tabs
+        this.initializeTabs();
+
         // Start Looper
         this.gLooper.startLooper();
 
@@ -134,10 +148,14 @@ class EditorCore {
         // setup river pipeline
         this.gRiverPipeline.setTileFunc( (x,y) => this.getTileFunc(x,y) );
 
+        // setup road pipeline
+        this.gRoadPipeline.setTileFunc( (x,y) => this.getTileFunc(x,y) );
+
         // finally add pipelines to mapdisplay
         this.gMapDisplay.setPipeline( [
             this.gTerrainPipeline ,
             this.gRiverPipeline ,
+            this.gRoadPipeline ,
             this.gEditorGridPipeline ,
             this.gEditorBrushTilePipeline ,
         ] );
@@ -153,6 +171,46 @@ class EditorCore {
         } else {
             return null;
         }
+    }
+
+    private initializeTabs(): void {
+
+        interface IActiveable {
+            onActivate: () => void;
+            onDeactivate: () => void;
+        };
+
+        const tabControllers: IActiveable[] = [
+            this.gMapTerrainControl ,
+            this.gMapRiverControl ,
+            this.gMapRoadControl ,
+        ];
+
+        this.gEvents.on( EEditorTabChanged , data => {
+
+            tabControllers.forEach( c => c.onDeactivate() );
+
+            switch ( data.activeTab ) {
+                
+                case EditorActiveTab.TERRAIN:
+                    this.gMapTerrainControl.onActivate();
+                    break;
+
+                case EditorActiveTab.RIVERS:
+                    this.gMapRiverControl.onActivate();
+                    break;
+
+                case EditorActiveTab.ROADS:
+                    this.gMapRoadControl.onActivate();
+                    break;
+
+                default:
+                    break;
+
+            }
+
+        } );
+
     }
 
 }

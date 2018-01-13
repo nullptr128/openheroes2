@@ -61,14 +61,6 @@ class MapTerrainControl {
      */
     public initialize(): void {
 
-        this.gEvents.on( EEditorTabChanged , data => {
-            if ( data.activeTab == EditorActiveTab.TERRAIN ) {
-                this.onActivate();
-            } else {
-                this.onDeactivate();
-            }
-        } );
-
         this.gMapDisplay.onMouseDown( mouse => this.startDrawing(mouse) );
         this.gMapDisplay.onMouseMove( mouse => this.continueDrawing(mouse) );
         this.gMapDisplay.onMouseUp( mouse => this.finishDrawing(mouse) );
@@ -313,8 +305,8 @@ class MapTerrainControl {
                 const spriteId: number = this.getSpriteId( terrainType );
                 this.gEditorStore.map.setTileTerrain( x , y , terrainType , spriteId );
                 if ( terrainType === Terrain.WATER ) {
-                    this.gEditorStore.map.setTileRiver( x ,y , null );
-                    this.gEditorStore.map.setTileRoad( x , y , null );
+                    this.gEditorStore.map.clearTileRiver( x ,y );
+                    this.gEditorStore.map.clearTileRoad( x , y );
                 }
             }
         }

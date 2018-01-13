@@ -16,6 +16,7 @@ import MapTerrainControl from '../Actions/MapTerrainControl';
 import AutoBorder from '../Utils/AutoBorder/AutoBorder';
 import AutoFixer from '../Utils/AutoBorder/AutoFixer';
 import MapRiverControl from '../Actions/MapRiverControl';
+import MapRoadControl from '../Actions/MapRoadControl';
 
 export default function EditorProvider( container: Container ): void {
     container.bind( EditorCore );
@@ -26,6 +27,7 @@ export default function EditorProvider( container: Container ): void {
     container.bind( MapControl );
     container.bind( MapTerrainControl );
     container.bind( MapRiverControl );
+    container.bind( MapRoadControl );
     container.bind( AutoBorder );
     container.bind( AutoFixer );
 }

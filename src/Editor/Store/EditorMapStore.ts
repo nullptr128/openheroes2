@@ -119,17 +119,35 @@ class EditorMapStore {
         }
     }
 
-    public setTileRiver( x: number , y: number , river: Nullable<number> ): void {
+    public setTileRiver( x: number , y: number , river: number ): void {
         const mapSize: number = this.getMapSize();
         if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
-            this.fState.map.tiles[x][y].river = river;
+            this.fState.map.tiles[x][y].isRiver = true;
+            this.fState.map.tiles[x][y].riverSprite = river;
         }
     }
 
-    public setTileRoad( x: number , y: number , road: Nullable<number> ): void {
+    public clearTileRiver( x: number , y: number ): void {
         const mapSize: number = this.getMapSize();
         if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
-            this.fState.map.tiles[x][y].road = road;
+            this.fState.map.tiles[x][y].isRiver = false;
+            this.fState.map.tiles[x][y].riverSprite = null;
+        }
+    }
+
+    public setTileRoad( x: number , y: number , road: Nullable<number> , isRoad: boolean = true ): void {
+        const mapSize: number = this.getMapSize();
+        if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
+            this.fState.map.tiles[x][y].isRoad = isRoad;
+            this.fState.map.tiles[x][y].roadSprite = road;
+        }
+    }
+
+    public clearTileRoad( x: number , y: number ): void {
+        const mapSize: number = this.getMapSize();
+        if ( Tools.inRange( x , { min: 0 , max: mapSize - 1 } ) && Tools.inRange( y , { min: 0 , max: mapSize - 1 } ) ) {
+            this.fState.map.tiles[x][y].isRoad = false;
+            this.fState.map.tiles[x][y].roadSprite = null;
         }
     }
 
