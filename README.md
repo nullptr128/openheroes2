@@ -4,7 +4,7 @@ My attempt of recreating Heroes of Might and Magic 2 game engine using TypeScrip
 The only runnable part is map editor and its under active development.
 
 Preview screen:
-https://s1.postimg.org/yyn97py4f/openheroes2editor-1.png
+https://s27.postimg.org/bnugx5qnn/Open_Heroes2_-_Editor_009.png
 
 Note: this does not launch without original Heroes2 data files (Heroes2.agg, Heroes2x.agg)
 
