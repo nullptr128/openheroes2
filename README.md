@@ -12,6 +12,7 @@ In order to run it, clone repository, copy files from original Heroes2 data dire
 
 ```
 npm install
+npm run build-editor
 npm run editor-dev
 ```
 

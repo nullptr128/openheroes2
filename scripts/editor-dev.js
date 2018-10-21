@@ -11,7 +11,7 @@ webpackLauncher.on( 'close' , () => {
     //devServer.stdout.on( 'data' , data => console.log( data.toString() ) );
 
     setTimeout( () => {
-        var electron = childProcess.spawn( './node_modules/electron/dist/electron' , [ './bin/editor/launch-editor.js' , '--dev' , '--js-flags="--trace-ic --trace-deopt --print-opt-code"' ] , { stdio: 'inherit' } );
+        var electron = childProcess.spawn( './node_modules/.bin/electron' , [ './bin/editor/launch-editor.js' , '--dev' , '--js-flags="--trace-ic --trace-deopt --print-opt-code"' ] , { stdio: 'inherit' } );
         //electron.stdout.on( 'data' , data => console.log( data.toString() ) );
     } , 3*1000 );
 
