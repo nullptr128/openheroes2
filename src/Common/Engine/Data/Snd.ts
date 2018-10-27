@@ -20,7 +20,7 @@ class Snd {
 
         const audioDataSize: number = sndFile.byteLength;
 
-        const wavHeader: Buffer = new Buffer( 44 );
+        const wavHeader: Buffer = Buffer.alloc( 44 );
 
         //
         // Code based on:

@@ -31,7 +31,7 @@ class BinaryFile {
      */
     public read( position: number , count: number ): Promise<Buffer> {
         return new Promise<Buffer>( (resolve,reject) => {
-            const readBuffer: Buffer = new Buffer( count );
+            const readBuffer: Buffer = Buffer.alloc( count );
             FS.read( this.fFileDescriptor , readBuffer , 0 , count , position , (err,bytesRead) => {
                 if ( err ) {
                     reject( err );
