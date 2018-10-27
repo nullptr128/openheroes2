@@ -7,7 +7,7 @@
     "test": "nyc mocha ./test/**/*.ts --recursive",
     "editor-dev": "node ./scripts/editor-dev.js",
     "editor": "electron ./bin/editor/launch-editor.js",
-    "build-editor": "webpack --config ./webpack/editor-launcher.js && webpack --config ./webpack/editor.js",
+    "build-editor": "webpack --config ./webpack/editor-launcher.js && webpack --config ./webpack/editor.dev.js",
     "codecheck": "node ./scripts/vscode-check.js"
   },
   "author": "",
@@ -44,6 +44,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.65",
     "@types/material-ui": "^0.17.17",
+    "electron": "^3.0.5",
     "font-awesome": "^4.7.0",
     "inversify": "^4.1.1",
     "inversify-inject-decorators": "^3.0.1",
