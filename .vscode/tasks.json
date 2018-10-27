@@ -4,6 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "auto": true,
             "type": "npm",
             "script": "codecheck",
             "problemMatcher": "$tsc-watch",
