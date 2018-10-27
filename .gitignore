@@ -1,9 +1,7 @@
-.nyc_output
 node_modules/
 bin/editor/launch-editor.js
 bin/editor/launch-editor.js.map
-bin/editor/build/editor.js
-bin/editor/build/editor.js.map
+bin/editor/build/*
 coverage/
 data/heroes2/Heroes2.agg
 data/heroes2/Heroes2x.agg

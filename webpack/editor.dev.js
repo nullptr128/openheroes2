@@ -11,7 +11,7 @@ module.exports = {
     } ,
 
     output: {
-        path: __dirname + '/../bin/editor' ,
+        // path: __dirname + '/../bin/editor/build' ,
         filename: '[name].js' ,
         publicPath: 'http://localhost:8080/' ,
     } ,
@@ -30,8 +30,10 @@ module.exports = {
         hot: true ,
     },
 
+    mode: 'development',
+
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.ts$/ ,
                 exclude: /(node_modules|bower_modules)/ ,

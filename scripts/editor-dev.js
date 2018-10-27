@@ -1,18 +1,23 @@
 
-//var childProcess = require( 'child_process' );
-//var devServer = childProcess.spawn( 'node' , [ 'node_modules/webpack-dev-server/bin/webpack-dev-server.js' , '--hot' , '--inline' , '--config' , './webpack/editor.dev.js' ] , { stdio: 'inherit' } );
-
 var childProcess = require( 'child_process' );
+var os = require( 'os' );
+var path = process.cwd();
 
-var webpackLauncher = childProcess.spawn( 'node' , [ 'node_modules/webpack/bin/webpack.js' , '--config' , './webpack/editor-launcher.js' ] , { stdio: 'inherit' } );
+var WINDOWS = (os.platform() === 'win32');
+
+const webpackPath = path + '/node_modules/.bin/webpack' + (WINDOWS ? '.cmd' : '');
+const webpackDevServerPath = path + '/node_modules/.bin/webpack-dev-server' + (WINDOWS ? '.cmd' : '');
+const electronPath = path + '/node_modules/.bin/electron' + (WINDOWS ? '.cmd' : '');
+
+const webpackLauncher = childProcess.spawn( webpackPath , [ '--config' , './webpack/editor-launcher.js' ] , { stdio: 'inherit' } );
 webpackLauncher.on( 'close' , () => {
 
-    var devServer = childProcess.spawn( 'node' , [ 'node_modules/webpack-dev-server/bin/webpack-dev-server.js' , '--hot' , '--inline' , '--config' , './webpack/editor.dev.js' ] , { stdio: 'inherit' } );
-    //devServer.stdout.on( 'data' , data => console.log( data.toString() ) );
+    childProcess.spawn( webpackDevServerPath , [ '--hot' , '--inline' , '--config' , './webpack/editor.dev.js' ] , { stdio: 'inherit', shell: true } );
 
     setTimeout( () => {
-        var electron = childProcess.spawn( './node_modules/.bin/electron' , [ './bin/editor/launch-editor.js' , '--dev' , '--js-flags="--trace-ic --trace-deopt --print-opt-code"' ] , { stdio: 'inherit' } );
-        //electron.stdout.on( 'data' , data => console.log( data.toString() ) );
+        const electron = childProcess.spawn( electronPath , [ './bin/editor/launch-editor.js' , '--dev' , '--js-flags="--trace-ic"' ] , { 
+            stdio: 'inherit',
+        } );
     } , 3*1000 );
 
 } );

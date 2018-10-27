@@ -118,7 +118,7 @@ class AutoBorder {
         } else if ( matrix.length == 9 ) {
             return new Point( i % 3 , Math.floor( i / 3.00 ) );
         } else {
-            throw new Error( 'Invalid matrix length: ' + matrix.length );
+            throw new Error( 'Invalid matrix length' );
         }
     }
 
@@ -160,7 +160,7 @@ class AutoBorder {
             };
 
         } else {
-            throw new Error( 'Invalid matcher length: ' + matcher.in.length );
+            throw new Error( 'Invalid matcher length.' );
         }
 
     }
@@ -201,7 +201,7 @@ class AutoBorder {
             };
 
         } else {
-            throw new Error( 'Invalid matcher length: ' + matcher.in.length );
+            throw new Error( 'Invalid matcher length.' );
         }
 
     }
