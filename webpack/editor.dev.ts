@@ -1,10 +1,10 @@
 
-var webpack = require( 'webpack' );
-var path = require( 'path' );
+import * as Webpack from 'webpack';
+import * as Path from 'path';
 
-module.exports = {
+const config: Webpack.Configuration = {
 
-    devtool: 'sourcemap' ,
+    devtool: 'source-map' ,
 
     entry: {
         'editor': [ 'reflect-metadata' , './src/Editor/Editor.ts' ] ,
@@ -18,17 +18,12 @@ module.exports = {
 
     resolve: {
         modules: [
-            path.resolve( __dirname , '../node_modules' ) ,
-            path.resolve( __dirname , '../src' ) ,
-            path.resolve( __dirname , '../resource' ) ,
+            Path.resolve( __dirname , '../node_modules' ) ,
+            Path.resolve( __dirname , '../src' ) ,
+            Path.resolve( __dirname , '../resource' ) ,
         ] ,
         extensions: [ '.js' , '.ts' , '.tsx' ] ,
     } ,
-
-    devServer: {
-        contentBase: './bin/editor' ,
-        hot: true ,
-    },
 
     mode: 'development',
 
@@ -81,3 +76,5 @@ module.exports = {
     target: 'electron-renderer' ,
 
 };
+
+export default config;

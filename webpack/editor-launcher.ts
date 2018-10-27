@@ -1,10 +1,10 @@
 
-var webpack = require( 'webpack' );
-var path = require( 'path' );
+import * as Webpack from 'webpack';
+import * as Path from 'path';
 
-module.exports = {
+const config: Webpack.Configuration = {
 
-    devtool: 'sourcemap' ,
+    devtool: 'source-map' ,
 
     entry: {
         'launch-editor': [ './src/EditorLauncher.ts' ] ,
@@ -17,8 +17,8 @@ module.exports = {
 
     resolve: {
         modules: [
-            path.resolve( __dirname , '../node_modules' ) ,
-            path.resolve( __dirname , '../src' ) ,
+            Path.resolve( __dirname , '../node_modules' ) ,
+            Path.resolve( __dirname , '../src' ) ,
         ] ,
         extensions: [ '.js' , '.ts' ] ,
     } ,
@@ -52,3 +52,5 @@ module.exports = {
     target: 'electron-main' ,
 
 };
+
+export default config;
