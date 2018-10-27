@@ -11,7 +11,7 @@ module.exports = {
     } ,
 
     output: {
-        path: __dirname + '/../bin/editor/build' ,
+        // path: __dirname + '/../bin/editor/build' ,
         filename: '[name].js' ,
         publicPath: 'http://localhost:8080/' ,
     } ,

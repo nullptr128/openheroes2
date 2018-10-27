@@ -15,7 +15,7 @@ webpackLauncher.on( 'close' , () => {
     childProcess.spawn( webpackDevServerPath , [ '--hot' , '--inline' , '--config' , './webpack/editor.dev.js' ] , { stdio: 'inherit', shell: true } );
 
     setTimeout( () => {
-        const electron = childProcess.spawn( electronPath , [ './bin/editor/launch-editor.js' , '--dev' , '--js-flags="--trace-ic --trace-deopt --print-opt-code"' ] , { 
+        const electron = childProcess.spawn( electronPath , [ './bin/editor/launch-editor.js' , '--dev' , '--js-flags="--trace-ic"' ] , { 
             stdio: 'inherit',
         } );
     } , 3*1000 );
