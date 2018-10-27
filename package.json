@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha ./test/**/*.ts --recursive",
     "editor-dev": "node ./scripts/editor-dev.js",
     "editor": "electron ./bin/editor/launch-editor.js",
     "build-editor": "webpack --config ./webpack/editor-launcher.js && webpack --config ./webpack/editor.dev.js",
@@ -16,7 +15,6 @@
     "@types/electron": "^1.4.38",
     "@types/glob": "^5.0.30",
     "@types/keyboardjs": "^2.2.30",
-    "@types/mocha": "^2.2.41",
     "@types/pixi.js": "^4.5.2",
     "@types/react": "^15.0.27",
     "@types/react-dom": "^15.5.0",
@@ -25,9 +23,7 @@
     "css-loader": "^0.28.4",
     "file-loader": "^0.11.2",
     "glob": "^7.1.2",
-    "mocha": "^3.4.2",
     "node-sass": "^4.5.3",
-    "nyc": "^11.0.3",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "require-directory": "^2.1.1",
@@ -56,18 +52,5 @@
     "reflect-metadata": "^0.1.10",
     "reset-css": "^2.2.0",
     "serialijse": "^0.1.1"
-  },
-  "nyc": {
-    "extension": [
-      ".ts",
-      ".tsx"
-    ],
-    "exclude": [
-      "**/*.d.ts",
-      "test/**/*"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
   }
 }
