@@ -22,7 +22,7 @@ window.addEventListener( 'load' , async () => {
     console.clear();
 
     // this one is required by react-material-ui
-    InjectTapEventPlugin();
+    // InjectTapEventPlugin(); broken after webpack & rect update
 
     // find element with #app id
     const appElement: Nullable<HTMLElement> = document.getElementById( 'app' );

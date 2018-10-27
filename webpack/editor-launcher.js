@@ -23,8 +23,10 @@ module.exports = {
         extensions: [ '.js' , '.ts' ] ,
     } ,
 
+    mode: 'development',
+
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.ts$/ ,
                 exclude: /(node_modules|bower_modules)/ ,
@@ -47,6 +49,6 @@ module.exports = {
 
     plugins: [] ,
 
-    target: 'electron' ,
+    target: 'electron-main' ,
 
 };
