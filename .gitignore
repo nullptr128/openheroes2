@@ -1,4 +1,3 @@
-.nyc_output
 node_modules/
 bin/editor/launch-editor.js
 bin/editor/launch-editor.js.map
